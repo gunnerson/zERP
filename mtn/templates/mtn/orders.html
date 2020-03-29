@@ -1,0 +1,15 @@
+{% extends "mtn/maint.html" %}
+
+{% block workorders %}
+
+	<ul>
+	  {% for order in orders %}
+	      <li>
+	        <a href="{% url 'mtn:order' order.id %}">{{ order }}</a>
+          </li>
+	  {% empty %}
+		    <li>No orders have been added yet.</li>
+      {% endfor %}
+	</ul>
+	
+{% endblock workorders %}

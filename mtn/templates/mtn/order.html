@@ -1,0 +1,43 @@
+{% extends "mtn/maint.html" %}
+
+{% block workorders %}
+
+  <p><b>MWO No: </b>{{ order }}</p>
+  
+  {% for entry in entries  %}
+      <p><b>Date: </b>{{ entry.date_added|date:'M d, Y' }}</p>
+      <p><b>Originator: </b>{{ entry.origin }}</p>
+      <p><b>Machine # or location of problem: </b>{{ entry.local }}</p>
+      <p><b>Description of problem: </b>{{ entry.descr }}</p>
+      <p>
+        {% if order.entry_filled %}
+          <a href="{% url 'mtn:edit_entry' entry.won %}" role="button" class="btn btn-primary btn-sm">Edit Entry</a>
+        {% endif %}  
+      </p>
+  {% empty %}
+      There are no entries for this order yet.
+      <br>
+      <br>
+      <a href="{% url 'mtn:new_entry' order.id %}" role="button" class="btn btn-primary btn-sm">Add New Entry</a>
+  {% endfor%}
+  
+  <br>    
+  <br>
+  <p><b>Repair: </b></p>
+  {% for repair in repairs  %}
+      <p><b>Repaired by: </b>{{ repair.repby }}</p>
+      <p><b>Date: </b>{{ repair.date_added|date:'M d, Y' }}</p>
+      <p><b>Cause of repair: </b>{{ repair.cause }}</p>
+      <p><b>Description of repair: </b>{{ repair.descrrep }}</p>
+      <p><b>Time to repair: </b>{{ repair.timerep }}</p>
+      <p>
+        {% if order.repair_filled %}
+          <a href="{% url 'mtn:edit_repair' repair.won %}" role="button" class="btn btn-primary btn-sm">Edit Repair</a>
+        {% endif %}  
+      </p>
+
+  {% empty %}
+        <a href="{% url 'mtn:new_repair' order.id %}" role="button" class="btn btn-primary btn-sm">Add New Repair</a>
+  {% endfor%}
+     
+{% endblock workorders %}

@@ -1,0 +1,13 @@
+{% extends "mtn/maint.html" %}
+
+{% block workorders %}
+
+  <p>Add a new order:</p>
+
+  <form action="{% url 'mtn:new_order' %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit">add order</button>
+  </form>
+  
+{% endblock workorders %}

@@ -1,0 +1,20 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+  <div>
+    <p>
+      <form action="{% url 'mtn:new_order' %}" method='post'>
+      {% csrf_token %}
+      <button name="submit" role="button" class="btn btn-primary btn-lg btn-block">Create New Manitenance Work Order</button>
+      </form>
+      <br>
+      <a href="{% url 'mtn:orders' %}" class="btn btn-primary active" role="button" aria-pressed="true">Open Orders</a> - 
+      <a href="{% url 'mtn:closed_orders' %}" class="btn btn-primary active" role="button" aria-pressed="true">Closed Orders</a> - 
+    </p>
+  </div>
+  
+  <div>
+    {% block workorders %}{% endblock workorders %}
+  </div>
+
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends "mtn/maint.html" %}
+
+{% block workorders %}
+
+  <p><a href="{% url 'mtn:order' order.id %}" role="button" class="btn btn-primary btn-sm">{{ order }}</a></p>	
+  
+  <p>Edit repair:</p>
+
+  <form action="{% url 'mtn:edit_repair' repair.won %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit" role="button" class="btn btn-primary btn-sm">Save Changes</button>
+  </form>
+
+{% endblock workorders %}
