@@ -4,12 +4,13 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import Order, Entry, Repair
-from .forms import OrderForm, EntryForm, RepairForm
+from .forms import EntryForm, RepairForm
 
 def index(request):
 	"""The home page for EPR"""
 	return render(request, 'mtn/index.html')
 
+@login_required
 def maint(request):
 	"""The home page for Maintenance"""
 	return render(request, 'mtn/maint.html')
@@ -44,21 +45,9 @@ def order(request, order_id):
 @login_required
 def new_order(request):
 	"""Add new order"""
-	if request.method != 'POST':
-		# No data submitted; create a blank form.
-		form = OrderForm()
-	else:
-		# POST data submitted; process data.
-		form = OrderForm(request.POST)
-		if form.is_valid():
-			new_order = form.save(commit=False)
-			new_order.owner = request.user
-			new_order.save()
-			form.save()
-			return HttpResponseRedirect(reverse('mtn:orders'))
-			
-	context = {'form': form}
-	return render(request, 'mtn/new_order.html', context)
+	new_order = Order(owner=request.user)
+	new_order.save()
+	return HttpResponseRedirect(reverse('mtn:orders'))
 	
 @login_required
 def new_entry(request, order_id):

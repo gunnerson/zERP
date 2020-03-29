@@ -36,11 +36,22 @@ class Repair(models.Model):
 		(DAMAGE, 'Damage'),
 		(UNKNOWN, 'Unknown'),
 	]
+	VADIM = 'VA'
+	ROMAN = 'RO'
+	BRAD = 'BR'
+	REPAIRMEN = [
+		(BRAD, 'Brad'),
+		(ROMAN, 'Roman'),
+		(VADIM, 'Vadim'),
+	]
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
-	repby = models.CharField(max_length=20)
+	repby = models.CharField(
+		max_length=10,
+		choices=REPAIRMEN,
+	)
 	cause =  models.CharField(
-		max_length=2,
+		max_length=10,
 		choices=CAUSE_OF_REPAIR,
 		default=UNKNOWN,
 	)

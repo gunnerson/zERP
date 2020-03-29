@@ -1,12 +1,6 @@
 from django import forms
 
-from .models import Order, Entry, Repair
-
-class OrderForm(forms.ModelForm):
-	class Meta:
-		model = Order
-		fields = ['id']
-		labels = {'id': 'MWO No'}
+from .models import Entry, Repair
 
 class EntryForm(forms.ModelForm):
 	class Meta:

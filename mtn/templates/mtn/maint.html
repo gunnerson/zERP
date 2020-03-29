@@ -3,10 +3,7 @@
 {% block content %}
   <div>
     <p>
-      <form action="{% url 'mtn:new_order' %}" method='post'>
-      {% csrf_token %}
-      <button name="submit" role="button" class="btn btn-primary btn-lg btn-block">Create New Manitenance Work Order</button>
-      </form>
+      <a href="{% url 'mtn:new_order' %}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Create New Manitenance Work Order</a>
       <br>
       <a href="{% url 'mtn:orders' %}" class="btn btn-primary active" role="button" aria-pressed="true">Open Orders</a> - 
       <a href="{% url 'mtn:closed_orders' %}" class="btn btn-primary active" role="button" aria-pressed="true">Closed Orders</a> - 
