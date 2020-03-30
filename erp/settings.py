@@ -25,8 +25,8 @@ import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'x$ruwio0cp5lm1bx2r@)_6v97gl=@2cjirn43-or3ibzb#@a3z')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = True
+#DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = []
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     #My apps
     'mtn',
     'users',
+    'staff',
 ]
 
 MIDDLEWARE = [
@@ -154,7 +155,7 @@ if os.getcwd() == '/app':
 	# Static asset configuration
 	BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 	STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-	STATIC_URL = '/home/vadim/python_projects/rahco/erp/static/'
+	STATIC_URL = '/static/'
 	STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
