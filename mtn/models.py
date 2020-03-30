@@ -47,11 +47,11 @@ class Repair(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
 	repby = models.CharField(
-		max_length=10,
+		max_length=2,
 		choices=REPAIRMEN,
 	)
 	cause =  models.CharField(
-		max_length=10,
+		max_length=2,
 		choices=CAUSE_OF_REPAIR,
 		default=UNKNOWN,
 	)

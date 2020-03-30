@@ -47,7 +47,9 @@ def new_order(request):
 	"""Add new order"""
 	new_order = Order(owner=request.user)
 	new_order.save()
-	return HttpResponseRedirect(reverse('mtn:orders'))
+	order_id = new_order.id
+	return HttpResponseRedirect(reverse('mtn:new_entry',
+										args=[order_id]))
 	
 @login_required
 def new_entry(request, order_id):

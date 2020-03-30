@@ -4,8 +4,6 @@
 
   <p><a href="{% url 'mtn:order' order.id %}" role="button" class="btn btn-primary btn-sm">{{ order }}</a></p>	
   
-  <p>Add a new entry:</p>
-
   <form action="{% url 'mtn:new_entry' order.id %}" method='post'>
     {% csrf_token %}
     {{ form.as_p }}
