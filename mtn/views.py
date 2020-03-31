@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Order, Entry, Repair
 from .forms import EntryForm, RepairForm
+from staff.models import Employee
 
 def index(request):
 	"""The home page for EPR"""
@@ -61,6 +62,8 @@ def new_entry(request, order_id):
 	if request.method != 'POST':
 		# No data submitted; create a blank form.
 		form = EntryForm()
+		form.fields["origin"].queryset = Employee.objects.filter(
+			role="SV").order_by('first_name')
 	else:
 	# POST data submitted; process data.
 		form = EntryForm(data=request.POST)
@@ -88,6 +91,8 @@ def edit_entry(request, entry_id):
 	if request.method != 'POST':
 		# Initial request; pre-fill form with the current entry.
 		form = EntryForm(instance=entry)
+		form.fields["origin"].queryset = Employee.objects.filter(
+			role="SV").order_by('first_name')		
 	else:
 		# POST data submitted; process data.
 		form = EntryForm(instance=entry, data=request.POST)
@@ -108,6 +113,8 @@ def new_repair(request, order_id):
 	if request.method != 'POST':
 		# No data submitted; create a blank form.
 		form = RepairForm()
+		form.fields["repby"].queryset = Employee.objects.filter(
+			role="MT").order_by('first_name')		
 	else:
 	# POST data submitted; process data.
 		form = RepairForm(data=request.POST)
@@ -136,8 +143,11 @@ def edit_repair(request, repair_id):
 	if request.method != 'POST':
 		# Initial request; pre-fill form with the current repair.
 		form = RepairForm(instance=repair)
+		form.fields["repby"].queryset = Employee.objects.filter(
+			role="MT").order_by('first_name')		
+			
 	else:
-		# POST data submitted; process data.
+	# POST data submitted; process data.
 		form = RepairForm(instance=repair, data=request.POST)
 		if form.is_valid():
 			form.save()

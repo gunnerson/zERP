@@ -18,7 +18,7 @@ class Order(models.Model):
 class Entry(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
-	origin = models.ForeignKey(Employee, on_delete=models.CASCADE)
+	origin = models.ForeignKey(Employee,on_delete=models.CASCADE)
 	local =  models.CharField(max_length=200)
 	descr = models.TextField()
 	date_added = models.DateField(auto_now_add=True)
@@ -29,7 +29,7 @@ class Entry(models.Model):
 	def __str__(self):
 		return str(self.descr)[:50] +"..."
 
-class Repair(models.Model):
+class Repair(models.Model):	
 	NORMAL = 'NW'
 	DAMAGE = 'DM'
 	UNKNOWN = 'UN'
@@ -38,20 +38,10 @@ class Repair(models.Model):
 		(DAMAGE, 'Damage'),
 		(UNKNOWN, 'Unknown'),
 	]
-	VADIM = 'VA'
-	ROMAN = 'RO'
-	BRAD = 'BR'
-	REPAIRMEN = [
-		(BRAD, 'Brad'),
-		(ROMAN, 'Roman'),
-		(VADIM, 'Vadim'),
-	]
+
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
-	repby = models.CharField(
-		max_length=2,
-		choices=REPAIRMEN,
-	)
+	repby = models.ForeignKey(Employee,on_delete=models.CASCADE)
 	cause =  models.CharField(
 		max_length=2,
 		choices=CAUSE_OF_REPAIR,
