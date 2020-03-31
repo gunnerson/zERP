@@ -22,6 +22,7 @@ class Entry(models.Model):
 		models.SET_NULL,
 		blank=True,
 		null=True,
+		limit_choices_to={'role': "SV"},
 	)
 	local =  models.CharField(max_length=200)
 	descr = models.TextField()
@@ -49,11 +50,11 @@ class Repair(models.Model):
 		models.SET_NULL,
 		blank=True,
 		null=True,
+		limit_choices_to={'role': "MT"},
 	)
 	cause =  models.CharField(
 		max_length=2,
 		choices=CAUSE_OF_REPAIR,
-		default=UNKNOWN,
 	)
 	descrrep = models.TextField()
 	timerep = models.CharField(max_length=4)

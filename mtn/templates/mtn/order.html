@@ -25,7 +25,7 @@
   <br>
   <p><b>Repair: </b></p>
   {% for repair in repairs  %}
-      <p><b>Repaired by: </b>{{ repair.get_repby_display }}</p>
+      <p><b>Repaired by: </b>{{ repair.repby }}</p>
       <p><b>Date: </b>{{ repair.date_added|date:'M d, Y' }}</p>
       <p><b>Cause of repair: </b>{{ repair.get_cause_display }}</p>
       <p><b>Description of repair: </b>{{ repair.descrrep }}</p>
