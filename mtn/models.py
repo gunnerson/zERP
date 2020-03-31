@@ -18,7 +18,11 @@ class Order(models.Model):
 class Entry(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
-	origin = models.ForeignKey(Employee,on_delete=models.CASCADE)
+	origin = models.ForeignKey(Employee,
+		models.SET_NULL,
+		blank=True,
+		null=True,
+	)
 	local =  models.CharField(max_length=200)
 	descr = models.TextField()
 	date_added = models.DateField(auto_now_add=True)
@@ -41,7 +45,11 @@ class Repair(models.Model):
 
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
-	repby = models.ForeignKey(Employee,on_delete=models.CASCADE)
+	repby = models.ForeignKey(Employee,
+		models.SET_NULL,
+		blank=True,
+		null=True,
+	)
 	cause =  models.CharField(
 		max_length=2,
 		choices=CAUSE_OF_REPAIR,
