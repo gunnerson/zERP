@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from staff.models import Employee
+
 class Order(models.Model):
 	"""Maintenance work orders"""
 	date_added = models.DateTimeField(auto_now_add=True)
@@ -16,7 +18,7 @@ class Order(models.Model):
 class Entry(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
-	origin = models.CharField(max_length=20)
+	origin = models.ForeignKey(Employee, on_delete=models.CASCADE)
 	local =  models.CharField(max_length=200)
 	descr = models.TextField()
 	date_added = models.DateField(auto_now_add=True)
