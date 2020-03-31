@@ -18,10 +18,10 @@ from django.urls import path
 
 from . import views
 
-app_name = "staff"
+app_name = "equip"
 
 urlpatterns = [
-	# Personnel page
-    path('staff/', views.employees, name='staff'),
+	# Equipment page
+    path('equipment/', views.equip, name='equip'),
     
 ]
