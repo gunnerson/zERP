@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from staff.models import Employee
+from equip.models import Press
 
 class Order(models.Model):
 	"""Maintenance work orders"""
@@ -19,12 +20,14 @@ class Entry(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
 	origin = models.ForeignKey(Employee,
-		models.SET_NULL,
-		blank=True,
+		on_delete=models.SET_NULL,
 		null=True,
 		limit_choices_to={'role': "SV"},
 	)
-	local =  models.CharField(max_length=200)
+	local =  models.ForeignKey(Press,
+		models.SET_NULL,
+		null=True,		
+	)
 	descr = models.TextField()
 	date_added = models.DateField(auto_now_add=True)
 		
@@ -47,8 +50,7 @@ class Repair(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
 	repby = models.ForeignKey(Employee,
-		models.SET_NULL,
-		blank=True,
+		on_delete=models.SET_NULL,
 		null=True,
 		limit_choices_to={'role': "MT"},
 	)
@@ -57,7 +59,7 @@ class Repair(models.Model):
 		choices=CAUSE_OF_REPAIR,
 	)
 	descrrep = models.TextField()
-	timerep = models.CharField(max_length=4)
+	timerep = models.IntegerField(blank=True)
 	date_added = models.DateField(auto_now_add=True)
 	closed = models.BooleanField(default=False)
 		

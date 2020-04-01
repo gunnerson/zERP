@@ -29,7 +29,8 @@
       <p><b>Date: </b>{{ repair.date_added|date:'M d, Y' }}</p>
       <p><b>Cause of repair: </b>{{ repair.get_cause_display }}</p>
       <p><b>Description of repair: </b>{{ repair.descrrep }}</p>
-      <p><b>Time to repair: </b>{{ repair.timerep }}</p>
+      {% load poll_extras %}
+      <p><b>Time to repair: </b>{{ repair.timerep }} hours</p>
       <p>
         {% if order.repair_filled %}
           <a href="{% url 'mtn:edit_repair' repair.won %}" role="button" class="btn btn-primary btn-sm">Edit Repair</a>

@@ -99,7 +99,7 @@ def edit_entry(request, entry_id):
 												args=[order.id]))
 	context = {'entry': entry, 'order': order, 'form': form}
 	return render(request, 'mtn/edit_entry.html', context)	
-
+	
 @login_required
 def new_repair(request, order_id):
 	"""Add a new repair for a particular order."""
