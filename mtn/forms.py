@@ -5,9 +5,9 @@ from .models import Entry, Repair
 class EntryForm(forms.ModelForm):
 	class Meta:
 		model = Entry
-		fields = ['origin', 'local', 'descr']
+		fields = ['origin', 'local', 'ordertype', 'descr', ]
 		labels = {'origin': 'Originator', 'local': 'Location', 
-					'descr': 'Description', }
+					'ordertype': 'Type','descr': 'Description', }
 		widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
 class RepairForm(forms.ModelForm):

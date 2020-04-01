@@ -6,8 +6,21 @@ from equip.models import Press
 
 class Order(models.Model):
 	"""Maintenance work orders"""
+	REPAIR = 'RE'
+	SETUP = 'ST'
+	PM = 'PM'
+	ORDER_TYPE = [
+		(REPAIR, 'Repair'),
+		(SETUP, 'Setup'),
+		(PM, 'PM'),
+	]
+	ordertype = models.CharField(
+		max_length=2,
+		choices=ORDER_TYPE,
+	)
 	date_added = models.DateTimeField(auto_now_add=True)
 	owner = models.ForeignKey(User,on_delete=models.CASCADE)
+	
 	entry_filled = models.BooleanField(default=False)
 	repair_filled = models.BooleanField(default=False)
 	closed = models.BooleanField(default=False)
@@ -46,7 +59,6 @@ class Repair(models.Model):
 		(DAMAGE, 'Damage'),
 		(UNKNOWN, 'Unknown'),
 	]
-
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	won = models.IntegerField()
 	repby = models.ForeignKey(Employee,

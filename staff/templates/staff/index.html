@@ -1,0 +1,16 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+  <ul>
+    {% for employee in employees %}
+    <li>{{ employee.first_name }} {{ employee.last_name }}</li>
+    {% empty %}
+      <li>No employees have been added yet.</li>
+    {% endfor %}
+</ul>
+  
+{% endblock content %}
+
+
+
