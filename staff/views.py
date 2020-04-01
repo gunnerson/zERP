@@ -7,4 +7,4 @@ def employees(request):
 	employees = Employee.objects.order_by('last_name')
 	context = {'employees': employees}
 	
-	return render(request, 'staff/all.html', context)
+	return render(request, 'staff/index.html', context)

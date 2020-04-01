@@ -7,4 +7,4 @@ def equip(request):
 	presses = Press.objects.order_by('pname')
 	context = {'presses': presses}
 	
-	return render(request, 'equip/all.html', context)
+	return render(request, 'equip/index.html', context)
