@@ -11,11 +11,14 @@ class OrderForm(forms.ModelForm):
 		widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
 class RepairForm(forms.ModelForm):
-	#timerep = forms.FloatField(min_value=0.1, max_value=99.9)
+	timerep = forms.FloatField(min_value=0.1, max_value=99.9)
 	class Meta:
 		model = Order
-		fields = ['repby', 'cause', 'descrrep', 'timerep', 'closed']
-		labels = {'repby': 'Repaired by', 'cause': 'Cause of repair', 
+		fields = ['origin', 'local', 'ordertype', 'descr', 'repby', 
+			'cause', 'descrrep', 'timerep', 'closed']
+		labels = {'origin': 'Originator', 'local': 'Location', 
+					'ordertype': 'Type','descr': 'Description', 
+					'repby': 'Repaired by', 'cause': 'Cause of repair', 
 					'descrrep': 'Description', 'timerep': 'Time of repair',
 					'closed': 'Closed', }
 		widgets = {'descrrep': forms.Textarea(attrs={'cols': 80})}

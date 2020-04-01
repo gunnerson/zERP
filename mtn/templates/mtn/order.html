@@ -20,7 +20,7 @@
       </p>
       {% if request.user|has_group:"maintenance" %} 
          <p>
-          <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm">Edit Repair</a>
+          <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
          </p>
       {% else %}
       <p>User doesn't have permission to change order.</p>

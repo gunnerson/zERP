@@ -5,7 +5,17 @@
 	<ul>
 	  {% for order in orders %}
 	      <li>
-	        <a href="{% url 'mtn:order' order.id %}">{{ order }}</a>
+			{% if order.ordertype == "ST" %}
+	        <a href="{% url 'mtn:order' order.id %}" 
+	          role="button" class="btn btn-primary btn-sm btn-warning">{{ order }}</a>
+	        {% elif order.ordertype == "PM" %}
+	          <a href="{% url 'mtn:order' order.id %}" 
+	            role="button" class="btn btn-primary btn-sm btn-success">{{ order }}</a>
+	        {% else %}
+	          <a href="{% url 'mtn:order' order.id %}" 
+	            role="button" class="btn btn-primary btn-sm btn-danger">{{ order }}</a>
+	        {% endif %}
+	        <br>
           </li>
 	  {% empty %}
 		    <li>No orders have been added yet.</li>
