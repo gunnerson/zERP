@@ -21,10 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'x$ruwio0cp5lm1bx2r@)_6v97gl=@2cjirn43-or3ibzb#@a3z'
+
 import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'x$ruwio0cp5lm1bx2r@)_6v97gl=@2cjirn43-or3ibzb#@a3z')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 #DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
@@ -87,9 +89,12 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'erpdb',
+        'USER': 'erpdbuser',
+        'PASSWORD': 'yVa5uJ51',
+        'HOST': 'localhost',
+        'PORT': '',   }
 }
 
 
