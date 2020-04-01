@@ -9,71 +9,56 @@ class Order(models.Model):
 	REPAIR = 'RE'
 	SETUP = 'ST'
 	PM = 'PM'
+	NORMAL = 'NW'
+	DAMAGE = 'DM'
+	UNKNOWN = 'UN'
 	ORDER_TYPE = [
 		(REPAIR, 'Repair'),
 		(SETUP, 'Setup'),
 		(PM, 'PM'),
 	]
+	CAUSE_OF_REPAIR = [
+		(NORMAL, 'Normal Wear'),
+		(DAMAGE, 'Damage'),
+		(UNKNOWN, 'Unknown'),
+	]
 	ordertype = models.CharField(
 		max_length=2,
 		choices=ORDER_TYPE,
 	)
-	date_added = models.DateTimeField(auto_now_add=True)
-	owner = models.ForeignKey(User,on_delete=models.CASCADE)
-	
-	entry_filled = models.BooleanField(default=False)
-	repair_filled = models.BooleanField(default=False)
-	closed = models.BooleanField(default=False)
-
-	def __str__(self):
-		"""return a string representation of the model."""
-		return str(self.id)
-
-class Entry(models.Model):
-	order = models.ForeignKey(Order,on_delete=models.CASCADE)
-	won = models.IntegerField()
 	origin = models.ForeignKey(Employee,
 		on_delete=models.SET_NULL,
 		null=True,
 		limit_choices_to={'role': "SV"},
+		related_name='+',
 	)
 	local =  models.ForeignKey(Press,
 		models.SET_NULL,
 		null=True,		
 	)
 	descr = models.TextField()
-	date_added = models.DateField(auto_now_add=True)
-		
-	class Meta:
-		verbose_name_plural = 'entries'
-		
-	def __str__(self):
-		return str(self.descr)[:50] +"..."
-
-class Repair(models.Model):	
-	NORMAL = 'NW'
-	DAMAGE = 'DM'
-	UNKNOWN = 'UN'
-	CAUSE_OF_REPAIR = [
-		(NORMAL, 'Normal Wear'),
-		(DAMAGE, 'Damage'),
-		(UNKNOWN, 'Unknown'),
-	]
-	order = models.ForeignKey(Order,on_delete=models.CASCADE)
-	won = models.IntegerField()
+	date_added = models.DateTimeField(auto_now_add=True)
 	repby = models.ForeignKey(Employee,
 		on_delete=models.SET_NULL,
 		null=True,
+		blank=True,
 		limit_choices_to={'role': "MT"},
 	)
 	cause =  models.CharField(
+		null=True,
+		blank=True,
 		max_length=2,
 		choices=CAUSE_OF_REPAIR,
 	)
-	descrrep = models.TextField()
-	timerep = models.FloatField(blank=True)
-	date_added = models.DateField(auto_now_add=True)
+	descrrep = models.TextField(null=True, blank=True)
+	timerep = models.FloatField(blank=True, null=True,)
+	repdate = models.DateField(blank=True, null=True,)
+	owner = models.ForeignKey(User,
+		on_delete=models.SET_NULL,
+		null=True,
+	)
 	closed = models.BooleanField(default=False)
-		
+
 	def __str__(self):
-		return str(self.descrrep)[:50] +"..."
+		"""return a string representation of the model."""
+		return str(self.id)

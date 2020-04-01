@@ -40,20 +40,8 @@ urlpatterns = [
     
     # Page for adding new work orders
     re_path(r'^maint/new_order/$', views.new_order, name='new_order'),
-    
-    # Page for adding a new entry
-	re_path(r'^maint/new_entry/(?P<order_id>\d+)/$', views.new_entry, 
-			name='new_entry'),
-	
-	# Page for editing an entry
-	re_path(r'^maint/edit_entry/(?P<entry_id>\d+)/$', views.edit_entry, 
-			name='edit_entry'),
-			
-    # Page for adding a new repair
-	re_path(r'^maint/new_repair/(?P<order_id>\d+)/$', views.new_repair, 
-			name='new_repair'),
 	
 	# Page for editing a repair
-	re_path(r'^maint/edit_repair/(?P<repair_id>\d+)/$', views.edit_repair, 
-			name='edit_repair'),
+	re_path(r'^maint/edit_order/(?P<order_id>\d+)/$', views.edit_order, 
+			name='edit_order'),
 ]

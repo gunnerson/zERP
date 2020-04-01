@@ -4,7 +4,7 @@
 
   <p><a href="{% url 'mtn:order' order.id %}" role="button" class="btn btn-primary btn-sm">{{ order }}</a></p>	
   
-  <form action="{% url 'mtn:edit_entry' entry.won %}" method='post'>
+  <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
     {{ form.as_p }}
     <button name="submit" role="button" class="btn btn-primary btn-sm">Save Changes</button>
