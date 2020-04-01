@@ -59,7 +59,7 @@ class Repair(models.Model):
 		choices=CAUSE_OF_REPAIR,
 	)
 	descrrep = models.TextField()
-	timerep = models.IntegerField(blank=True)
+	timerep = models.FloatField(blank=True)
 	date_added = models.DateField(auto_now_add=True)
 	closed = models.BooleanField(default=False)
 		
