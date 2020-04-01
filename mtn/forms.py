@@ -11,6 +11,7 @@ class EntryForm(forms.ModelForm):
 		widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
 class RepairForm(forms.ModelForm):
+	timerep = forms.FloatField(min_value=0.1, max_value=99.9)
 	class Meta:
 		model = Repair
 		fields = ['repby', 'cause', 'descrrep', 'timerep', 'closed']
