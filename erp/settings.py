@@ -91,12 +91,15 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'erpdb',
-        'USER': 'erpdbuser',
-        'PASSWORD': 'yVa5uJ51',
-        'HOST': 'localhost',
-        'PORT': '',   }
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'NAME': 'erpdb',
+        #'USER': 'erpdbuser',
+        #'PASSWORD': 'yVa5uJ51',
+        #'HOST': 'localhost',
+        #'PORT': '',   
+        }
 }
 
 
