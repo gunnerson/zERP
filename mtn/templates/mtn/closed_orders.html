@@ -2,15 +2,6 @@
 
 {% block workorders %}
 
-$('#datetimepicker').datetimepicker({
-    format: 'mm/dd/yyyy',
-    startDate: '-3d'
-})
-
-.bootstrap-datetimepicker-widget.dropdown-menu {
-	width: auto !important;
-}
-
 	<ul>
 	  {% for order in orders %}
 	      <li>

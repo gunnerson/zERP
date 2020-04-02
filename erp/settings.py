@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'tempus_dominus',
     'django_tables2',
+    'crispy_forms',
     
     #My apps
     'mtn',
@@ -172,3 +173,5 @@ if os.getcwd() == '/app':
 	STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'erp/static'),
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

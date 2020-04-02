@@ -2,9 +2,11 @@
 
 {% block workorders %}
 
+{% load crispy_forms_tags %}
+
   <form action="{% url 'mtn:new_order' %}" method='post'>
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <button name="submit" role="button" class="btn btn-primary btn-sm">Save order</button>
   </form>
 </form>
