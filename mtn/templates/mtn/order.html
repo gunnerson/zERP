@@ -2,25 +2,104 @@
 
 {% block workorders %}
 
-  <p><b>MWO No: </b>{{ order }}</p>
-  
-      <p><b>Date: </b>{{ order.date_added|date:'M d, Y' }}</p>
-      <p><b>Originator: </b>{{ order.origin }}</p>
-      <p><b>Machine # or location of problem: </b>{{ order.local }}</p>
-      <p><b>Description of problem: </b>{{ order.descr }}</p>
-  <br>    
-  <br>
-  <p><b>Repair: </b></p>
-      <p><b>Repaired by: </b>{{ order.repby }}</p>
-      <p><b>Date: </b>{{ order.date_added|date:'M d, Y' }}</p>
-      <p><b>Cause of repair: </b>{{ order.get_cause_display }}</p>
-      <p><b>Description of repair: </b>{{ order.descrrep }}</p>
-      <p><b>Time to repair: </b>{{ order.timerep }} hours</p>
+    <table width = "100%" border = "1">
+      <tr valign = "top" >
+        <td width = "20%">
+          <b>MWO No</b>
+        </td>
+        <td>
+          {{ order }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b>Type</b>
+        </td>
+        <td>
+          {{ order.get_ordertype_display }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Date created</b>
+        </td>
+        <td>
+          {{ order.date_added|date:'M d, Y' }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Originator</b>
+        </td>
+        <td>
+          {{ order.origin }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Location</b>
+        </td>
+        <td>
+          {{ order.local }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Description</b>
+        </td>
+        <td>
+          {{ order.descr }}
+        </td>
+      </tr>
+      <tr><td>Repair information</td></tr>
+     <tr>
+        <td>
+          <b>Repaired by</b>
+        </td>
+        <td>
+          {{ order.repby }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Repair date</b>
+        </td>
+        <td>
+          {{ order.repdate|date:'M d, Y' }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Cause of repair</b>
+        </td>
+        <td>
+          {{ order.get_cause_display }}
+        </td>
+      </tr>
+     <tr>
+        <td>
+          <b>Description of repair</b>
+        </td>
+        <td>
+          {{ order.descrrep }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b>Time of repair</b>
+        </td>
+        <td>
+          {{ order.timerep }}
+        </td>
+      </tr>
+    </table> 
+
       {% load poll_extras %}
       </p>
       {% if request.user|has_group:"maintenance" %} 
          <p>
-          <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm">Edit Repair</a>
+          <a href="{% url 'mtn:edit_order' order.id %}" role="button" 
+			class="btn btn-primary btn-sm">Edit</a>
          </p>
       {% else %}
       <p>User doesn't have permission to change order.</p>

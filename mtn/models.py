@@ -52,7 +52,7 @@ class Order(models.Model):
 	)
 	descrrep = models.TextField(null=True, blank=True)
 	timerep = models.FloatField(blank=True, null=True,)
-	repdate = models.DateField(blank=True, null=True,)
+	repdate = models.DateField(null=True,)
 	owner = models.ForeignKey(User,
 		on_delete=models.SET_NULL,
 		null=True,
