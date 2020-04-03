@@ -9,10 +9,10 @@
 
     <title>Rahco ERP</title>
     {% bootstrap_css %}
-	{% bootstrap_javascript %}
-	{% load static %}
+    {% bootstrap_javascript %}
+    {% load static %}
 	
-	{# Include FontAwesome; required for icon display #}
+    {# Include FontAwesome; required for icon display #}
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
 
     {# Include Bootstrap 4 and jQuery #}
@@ -22,22 +22,24 @@
     {# Django Tempus Dominus assets are included in `{{ form.media }}` #}
     {{ form.media }}
 
-</head>
+    <link rel="stylesheet" type="text/css" href="custom.css">
 
-<body>
+  </head>
+
+  <body>
 	
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <a class="navbar-brand" href="{% url 'mtn:index' %}">ERP</a>
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	  </button>
-
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
-		  <li class="nav-item active">
-			<a class="nav-link" href="{% url 'mtn:maint' %}">Maintence <span class="sr-only">(current)</span></a>
-		  </li>
-		  <li class="nav-item">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'mtn:index' %}">ERP</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'mtn:maint' %}">Maintence <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
           </li>
           <li class="nav-item">
@@ -53,18 +55,21 @@
             <li><a href="{% url 'users:login' %}">log in</a></li>
           {% endif %}
         </ul>
-	  </div>
-	</nav>		
+      </div>
+    </nav>		
+    
+    <div class="container">
   
-  <div class="container">
+      <div class="page-header">
+        {% block header %}{% endblock header %}
+      </div>
+      <div>
+        {% block content %}{% endblock content %}
+      </div>
+  
+    </div> <!-- /container -->
 
-    <div class="page-header">
-      {% block header %}{% endblock header %}
-    </div>
-    <div>
-      {% block content %}{% endblock content %}
-    </div>
+  </body>
 
-  </div> <!-- /container -->
-</body>
 </html>
+  

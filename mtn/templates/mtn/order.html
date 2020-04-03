@@ -1,106 +1,63 @@
 {% extends "mtn/maint.html" %}
 
+{% load poll_extras %}
+
 {% block workorders %}
 
-    <table width = "100%" border = "0">
-      <tr valign = "top" >
-        <td width = "20%">
-          <b>MWO No</b>
-        </td>
-        <td>
-          {{ order }}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <b>Type</b>
-        </td>
-        <td>
-          {{ order.get_ordertype_display }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Date created</b>
-        </td>
-        <td>
-          {{ order.date_added|date:'M d, Y' }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Originator</b>
-        </td>
-        <td>
-          {{ order.origin }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Location</b>
-        </td>
-        <td>
-          {{ order.local }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Description</b>
-        </td>
-        <td>
-          {{ order.descr }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Repaired by</b>
-        </td>
-        <td>
-          {{ order.repby }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Repair date</b>
-        </td>
-        <td>
-          {{ order.repdate|date:'M d, Y' }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Cause of repair</b>
-        </td>
-        <td>
-          {{ order.get_cause_display }}
-        </td>
-      </tr>
-     <tr>
-        <td>
-          <b>Description of repair</b>
-        </td>
-        <td>
-          {{ order.descrrep }}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <b>Time of repair</b>
-        </td>
-        <td>
-          {{ order.timerep }}
-        </td>
-      </tr>
-    </table> 
-
-      {% load poll_extras %}
-      </p>
-      {% if request.user|has_group:"maintenance" %} 
-         <p>
-          <a href="{% url 'mtn:edit_order' order.id %}" role="button" 
-			class="btn btn-primary btn-sm">Edit</a>
-         </p>
-      {% else %}
-      <p>User doesn't have permission to change order.</p>
-      {% endif %}
-  {% endblock workorders %}
+  <div class="container break-text">
+		<div class="row">
+		  <div class="col-sm">
+        <b>Originator:</b>
+        <p>{{ order.origin }}
+		  </div>
+		  <div class="col-sm">
+        <b>Location:</b>
+        <p>{{ order.local }}
+		  </div>
+		  <div class="col-sm">
+        <b>Type:</b>
+        <p>{{ order.ordertype }}
+		  </div>
+		  <div class="col-sm">
+        <b>Date:</b>
+        <p>{{ order.date_added|date:'M d, Y' }}
+		  </div>
+		</div>
+		<div class="row">
+		  <div class="col-12">
+        <b>Description:</b>
+        <p>{{ order.descr }}
+		  </div>
+		</div>
+		<br>
+		<hr>
+		<div class="row">
+		  <div class="col-sm">
+        <b>Repaired by:</b>
+        <p>{{ order.repby }}
+		  </div>
+		  <div class="col-sm">
+        <b>Repair date:</b>
+        <p>{{ order.repdate }}
+		  </div>
+		  <div class="col-sm">
+        <b>Cause of repair:</b>
+        <p>{{ order.cause }}
+		  </div>
+		  <div class="col-sm">
+        <b>Repair time:</b>
+        <p>{{ order.timerep }} hours
+		  </div>
+		</div>
+      <b>Description of repair:</b>
+      <p>{{ order.descrrep }}
+	</div>
+  
+  {% if request.user|has_group:"maintenance" %} 
+    <a href="{% url 'mtn:edit_order' order.id %}" role="button" 
+      class="btn btn-primary btn-sm btn-block">Edit</a>
+  {% else %}
+    <h3>User doesn't have permission to change order.</h3>
+  {% endif %}
+    
+{% endblock workorders %}

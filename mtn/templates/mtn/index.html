@@ -1,17 +1,19 @@
 {% extends "mtn/base.html" %}
 
 {% block header %}
+
   <div class='jumbotron'>
     <h1>Manage your business.</h1>
   </div>
+  
 {% endblock header %}
 
 {% block content %}
+
   <h2>
     <a href="{% url 'users:register' %}">Register an account</a> to get 
     access to ERP.
   </h2>
-  <h2>
-	Create and manage maintenance work orders.
-  </h2>
+  <h2>Create and manage maintenance work orders.</h2>
+  
 {% endblock content %}

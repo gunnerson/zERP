@@ -21,16 +21,16 @@ def maint(request):
 @login_required
 def orders(request):
 	"""Show all open orders."""
-	orders = Order.objects.filter(owner=request.user, closed=False).order_by('date_added')
+	orders = Order.objects.filter(owner=request.user, closed=False).order_by('-date_added')
 	context = {'orders': orders}
 	return render(request, 'mtn/orders.html', context)
 
 @login_required
 def closed_orders(request):
 	"""Show all closed orders."""
-	orders = Order.objects.filter(owner=request.user, closed=True).order_by('date_added')
+	orders = Order.objects.filter(owner=request.user, closed=True).order_by('-date_added')
 	context = {'orders': orders}
-	return render(request, 'mtn/closed_orders.html', context)
+	return render(request, 'mtn/orders.html', context)
 
 @login_required
 def order(request, order_id):

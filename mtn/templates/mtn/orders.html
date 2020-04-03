@@ -1,25 +1,30 @@
 {% extends "mtn/maint.html" %}
 
 {% block workorders %}
-
+  
 	<ul>
 	  {% for order in orders %}
 	      <li>
-			{% if order.ordertype == "ST" %}
-	        <a href="{% url 'mtn:order' order.id %}" 
-	          role="button" class="btn btn-primary btn-sm btn-warning">{{ order }}</a>
-	        {% elif order.ordertype == "PM" %}
-	          <a href="{% url 'mtn:order' order.id %}" 
-	            role="button" class="btn btn-primary btn-sm btn-success">{{ order }}</a>
-	        {% else %}
-	          <a href="{% url 'mtn:order' order.id %}" 
-	            role="button" class="btn btn-primary btn-sm btn-danger">{{ order }}</a>
-	        {% endif %}
-	        <br>
-          </li>
+          <div class="container">
+            <div class="row" style="height: 35px">
+              <div class="col-6">
+                {% if order.ordertype == "ST" %}
+                  <a href="{% url 'mtn:order' order.id %}" 
+                    role="button" class="text-left btn btn-primary btn-sm btn-block btn-warning">No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr|truncatechars:30 }}</a>
+                {% elif order.ordertype == "PM" %}
+                  <a href="{% url 'mtn:order' order.id %}" 
+                    role="button" class="text-left btn btn-primary btn-sm btn-block btn-success">No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr|truncatechars:30 }}</a>
+                {% else %}
+                  <a href="{% url 'mtn:order' order.id %}" 
+                    role="button" class="text-left btn btn-primary btn-sm btn-block btn-danger">No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr|truncatechars:30 }}</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>  
+        </li>
 	  {% empty %}
-		    <li>No orders have been added yet.</li>
-      {% endfor %}
+		  <li>No orders have been added yet.</li>
+    {% endfor %}
 	</ul>
 	
 {% endblock workorders %}
