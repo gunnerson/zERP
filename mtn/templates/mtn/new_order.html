@@ -6,7 +6,23 @@
 
   <form action="{% url 'mtn:new_order' %}" method='post'>
     {% csrf_token %}
-    {{ form|crispy }}
+   
+    <div class="container-fluid">
+		<div class="row">
+		  <div class="col-sm">
+			{{ form.origin|as_crispy_field }}
+		  </div>
+		  <div class="col-sm">
+			{{ form.local|as_crispy_field }}
+		  </div>
+		  <div class="col-sm">
+			{{ form.ordertype|as_crispy_field }}
+		  </div>
+		</div>
+		{{ form.descr|as_crispy_field }}
+	</div>
+    
+
     <button name="submit" role="button" class="btn btn-primary btn-sm">Save order</button>
   </form>
 </form>

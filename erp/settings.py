@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third party apps
-    'bootstrap3',
+    'bootstrap4',
     'tempus_dominus',
     'django_tables2',
     'crispy_forms',

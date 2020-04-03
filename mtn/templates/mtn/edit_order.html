@@ -8,8 +8,49 @@
   
   <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
-    {{ form|crispy }}
-    <button name="submit" role="button" class="btn btn-primary btn-sm">Save Changes</button>
+    
+    <div class="container-fluid">
+		<div class="row">
+		  <div class="col-sm">
+			{{ form.origin|as_crispy_field }}
+		  </div>
+		  <div class="col-sm">
+			{{ form.local|as_crispy_field }}
+		  </div>
+		  <div class="col-sm">
+			{{ form.ordertype|as_crispy_field }}
+		  </div>
+		</div>
+		{{ form.descr|as_crispy_field }}
+		<br>
+		<hr>
+		<div class="row">
+		  <div class="col-sm">
+			{{ form.repby|as_crispy_field }}
+		  </div>
+		  <div class="col-sm">
+			{{ form.repdate|as_crispy_field }}
+		  </div>
+		  <div class="col-sm">
+			{{ form.cause|as_crispy_field }}
+		  </div>
+		</div>
+		{{ form.descrrep|as_crispy_field }}
+		<div class="row">
+		  <div class="col-2">
+			{{ form.timerep|as_crispy_field }}
+		  </div>
+		</div>
+		{{ form.closed|as_crispy_field }}
+	</div>
+    
+    
+    <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Save Changes</button>
+	<br>
+	<br>
   </form>
 
 {% endblock workorders %}
+
+'origin', 'local', 'ordertype', 'descr', 'repdate', 
+			'repby', 'cause', 'descrrep', 'timerep', 'closed'

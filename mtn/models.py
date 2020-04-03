@@ -41,17 +41,15 @@ class Order(models.Model):
 	repby = models.ForeignKey(Employee,
 		on_delete=models.SET_NULL,
 		null=True,
-		blank=True,
 		limit_choices_to={'role': "MT"},
 	)
 	cause =  models.CharField(
 		null=True,
-		blank=True,
 		max_length=2,
 		choices=CAUSE_OF_REPAIR,
 	)
-	descrrep = models.TextField(null=True, blank=True)
-	timerep = models.FloatField(blank=True, null=True,)
+	descrrep = models.TextField(null=True)
+	timerep = models.FloatField(null=True,)
 	repdate = models.DateField(null=True,)
 	owner = models.ForeignKey(User,
 		on_delete=models.SET_NULL,
