@@ -10,13 +10,22 @@
               <div class="col-6">
                 {% if order.ordertype == "ST" %}
                   <a href="{% url 'mtn:order' order.id %}" 
-                    role="button" class="text-left btn btn-primary btn-sm btn-block btn-warning">No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr|truncatechars:30 }}</a>
+                    role="button" class="text-left btn btn-sm 
+                    btn-block btn-warning">No <b>{{ order }}</b> -- 
+                    {{ order.local }} -- {{ order.descr|truncatechars:30 }}
+                  </a>
                 {% elif order.ordertype == "PM" %}
                   <a href="{% url 'mtn:order' order.id %}" 
-                    role="button" class="text-left btn btn-primary btn-sm btn-block btn-success">No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr|truncatechars:30 }}</a>
+                    role="button" class="text-left btn btn-sm 
+                    btn-block btn-success">No <b>{{ order }}</b> -- 
+                    {{ order.local }} -- {{ order.descr|truncatechars:30 }}
+                  </a>
                 {% else %}
                   <a href="{% url 'mtn:order' order.id %}" 
-                    role="button" class="text-left btn btn-primary btn-sm btn-block btn-danger">No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr|truncatechars:30 }}</a>
+                    role="button" class="text-left btn btn-sm 
+                    btn-block btn-danger">No <b>{{ order }}</b> -- 
+                    {{ order.local }} -- {{ order.descr|truncatechars:30 }}
+                  </a>
                 {% endif %}
               </div>
             </div>
@@ -26,5 +35,22 @@
 		  <li>No orders have been added yet.</li>
     {% endfor %}
 	</ul>
+  
+  <div class="container text-center">
+            <div class="row" style="height: 35px">
+              <div class="col-2">
+                <button class="btn btn-primary btn-sm btn-block 
+                  btn-danger"> REPAIR </button>
+              </div>
+              <div class="col-2">
+                <button class="btn btn-primary btn-sm btn-block 
+                  btn-warning"> SETUP </button>
+              </div>
+              <div class="col-2">
+                <button class="btn btn-primary btn-sm btn-block 
+                  btn-success"> PM </button>
+              </div>
+            </div>
+          </div>  
 	
 {% endblock workorders %}

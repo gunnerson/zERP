@@ -16,7 +16,7 @@
 		  </div>
 		  <div class="col-sm">
         <b>Type:</b>
-        <p>{{ order.ordertype }}
+        <p>{{ order.get_ordertype_display }}
 		  </div>
 		  <div class="col-sm">
         <b>Date:</b>
@@ -42,7 +42,7 @@
 		  </div>
 		  <div class="col-sm">
         <b>Cause of repair:</b>
-        <p>{{ order.cause }}
+        <p>{{ order.get_cause_display }}
 		  </div>
 		  <div class="col-sm">
         <b>Repair time:</b>

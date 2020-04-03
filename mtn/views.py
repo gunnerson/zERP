@@ -90,3 +90,11 @@ def edit_order(request, order_id):
 
 	context = {'order': order, 'form': form}
 	return render(request, 'mtn/edit_order.html', context)	
+
+@login_required
+def orders_bypress(request, press_id):
+	"""Show all orders for this press."""
+	orders = Order.objects.filter(local=press_id).order_by('-date_added')
+	context = {'orders': orders}
+	return render(request, 'mtn/orders.html', context)
+

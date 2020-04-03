@@ -139,15 +139,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "erp/static"),
+    '/home/vadim/python_projects/rahco/erp/static/',
     
 ]
 
 # My settings
 LOGIN_URL = '/users/login/'
 
-# Settings for django-bootstrap3
-BOOTSTRAP3 = {
+# Settings for django-bootstrap
+BOOTSTRAP = {
 'include_jquery': True,
 }
 

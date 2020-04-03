@@ -3,14 +3,17 @@
 {% block content %}
 
   <div>
+    <a href="{% url 'mtn:new_order' %}" class="btn btn-primary btn-lg 
+      btn-block" role="button">Create New Manitenance 
+      Work Order</a>
     <br>
-      <a href="{% url 'mtn:new_order' %}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Create New Manitenance Work Order</a>
-      <br>
-      <a href="{% url 'mtn:orders' %}" class="btn btn-primary active" role="button" aria-pressed="true">Open Orders</a> - 
-      <a href="{% url 'mtn:closed_orders' %}" class="btn btn-primary active" role="button" aria-pressed="true">Closed Orders</a>
+    <a href="{% url 'mtn:orders' %}" class="btn btn-primary" 
+    role="button">Open Orders</a> - 
+    <a href="{% url 'mtn:closed_orders' %}" class="btn btn-primary" 
+    role="button">Closed Orders</a>
   </div>
-  
   <br>
+  
   <div>
     {% block workorders %}{% endblock workorders %}
   </div>
