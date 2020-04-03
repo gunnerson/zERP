@@ -44,6 +44,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'equip:equip' %}">Equipment</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'invent:invent' %}">Inventory</a>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}

@@ -35,11 +35,13 @@ def closed_orders(request):
 @login_required
 def order(request, order_id):
 	"""Show a single order and all its entries."""
-	order = get_object_or_404(Order, id=order_id)
-	# Make sure the topic belongs to the current user.
-	if order.owner != request.user:
-		raise Http404
+	if (has_group(request.user, 'maintenance') or 
+		has_group(request.user, 'supervisor')):
+			order = get_object_or_404(Order, id=order_id)
 		
+	else:
+		raise Http404
+
 	context = {'order': order,}
 	return render(request, 'mtn/order.html', context)
 
@@ -71,8 +73,8 @@ def new_order(request):
 @login_required
 def edit_order(request, order_id):
 	"""Edit an existing repair."""
-	order = Order.objects.get(id=order_id)
 	if has_group(request.user, 'maintenance'):
+		order = Order.objects.get(id=order_id)
 
 		if request.method != 'POST':
 			# Initial request; pre-fill form with the current repair.

@@ -1,4 +1,4 @@
-"""erp URL Configuration
+"""staff URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -13,14 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+
+from django.urls import path, re_path
+
+from . import views
+
+app_name = "invent"
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', include('users.urls'), name='users'),
-    path('', include('mtn.urls'), name='mtn'),
-    path('', include('staff.urls'), name='staff'),
-    path('', include('equip.urls'), name='equip'),
-    path('', include('invent.urls'), name='invent'),
+	# Inventory page
+    path('inventory/', views.invent, name='invent'),
+    
+    # Page for adding new work part
+    re_path(r'^inventory/new_part/$', views.new_part, name='new_part'),
+	
 ]

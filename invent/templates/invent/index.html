@@ -1,0 +1,30 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+	<div>
+    <a href="{% url 'invent:new_part' %}" class="btn btn-primary btn-lg 
+      btn-block" role="button">Create New Inventory Item</a>
+    <br>
+  </div>
+
+	<ul>
+	  {% for part in parts %}
+	      <li>
+          <div class="container">
+            <div class="row" style="height: 35px">
+              <div class="col-6">
+                {{ part.partnum }}
+              </div>
+            </div>
+          </div>  
+        </li>
+	  {% empty %}
+		  <li>No parts have been added yet.</li>
+    {% endfor %}
+	</ul>
+	
+{% endblock content %}
+
+
+

@@ -1,0 +1,49 @@
+{% extends "mtn/maint.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+  <form action="{% url 'invent:new_part' %}" method='post'>
+    {% csrf_token %}
+   
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-8">
+          {{ form.partnum|as_crispy_field }}
+        </div>
+        <div class="col-4">
+          {{ form.cat|as_crispy_field }}
+        </div>
+      </div>
+      {{ form.descr|as_crispy_field }}
+      <div class="row">
+        <div class="col-1">
+          {{ form.amount|as_crispy_field }}
+        </div>
+        <div class="col-1">
+          {{ form.quant|as_crispy_field }}
+        </div>
+        <div class="col-sm">
+          {{ form.addr|as_crispy_field }}
+        </div>
+      </div>
+       <div class="row">
+        <div class="col-1">
+          {{ form.vendor|as_crispy_field }}
+        </div>
+        <div class="col-1">
+          {{ form.price|as_crispy_field }}
+        </div>
+      </div>
+      {{ form.venci|as_crispy_field }}
+    </div>
+
+    <button name="submit" role="button" class="btn btn-primary btn-sm">Save part</button>
+  </form>
+</form>
+  
+{% endblock content %}
+
+'partnum', 'cat', 'amount', 'quant', 'addr', 'descr', 
+			'vendor', 'venci', 'price'
