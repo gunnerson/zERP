@@ -30,13 +30,11 @@ def new_part(request):
 		# POST data submitted; process data.
 			form = PartForm(data=request.POST)
 			if form.is_valid():
-				new_part = form.save(commit=False)
-				new_part.owner = request.user
-				new_part.save()
+				form.save()
 				return HttpResponseRedirect(reverse('invent:invent'))
 	
 	else:
-		raise Http404		
-											
+		raise Http404	
+								
 	context = {'form': form}
 	return render(request, 'invent/new_part.html', context)

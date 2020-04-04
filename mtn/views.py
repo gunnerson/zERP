@@ -67,7 +67,7 @@ def new_order(request):
 	else:
 		raise Http404		
 											
-	context = {'order': order, 'form': form}
+	context = {'form': form}
 	return render(request, 'mtn/new_order.html', context)
 	
 @login_required

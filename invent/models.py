@@ -4,14 +4,13 @@ from equip.models import Press
 		
 class Part(models.Model):
 	"""List of company equipment"""
-	partnum = models.CharField(max_length=20, blank=True, null=True)
+	partnum = models.CharField(max_length=20)
 	descr = models.TextField(blank=True, null=True)
 	cat = models.ManyToManyField(Press)
 	amount = models.PositiveIntegerField()
 	unit = models.CharField(max_length=5)
-	addr = models.CharField(max_length=30, blank=True, null=True)
-	price = models.FloatField()
-	vendr = models.ManyToManyField('Vendor')
+	price = models.FloatField(blank=True, null=True)
+	vendr = models.ManyToManyField('Vendor', blank=True)
 	
 	def __str__(self):
 		return str(self.id)
@@ -27,4 +26,7 @@ class Vendor(models.Model):
 	email = models.CharField(max_length=62, blank=True, null=True)
 	phone = models.CharField(max_length=20, blank=True, null=True)
 	vcomm = models.TextField(blank=True, null=True)
-	parts = models.ManyToManyField(Part)
+	parts = models.ManyToManyField(Part, blank=True)
+
+	def __str__(self):
+		return str(self.name)

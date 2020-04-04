@@ -2,15 +2,15 @@ from django import forms
 from .models import Part
 
 class PartForm(forms.ModelForm):
-	price = forms.FloatField(min_value=0, initial=0)
 	amount = forms.IntegerField(min_value=0, initial=0)
+	unit = forms.CharField(initial='items')
+
 	class Meta:
 		model = Part
-		fields = ['partnum', 'cat', 'amount', 'unit', 'addr', 'descr', 
-			'vendr', 'price',
+		fields = ['partnum', 'cat', 'amount', 'unit', 'vendr', 'price',
+			'descr'
 		]
 		labels = {'partnum': 'Part number', 'cat': 'Category', 'amount': 
-			'Amount', 'unit': 'Unit', 'addr': 'Location', 'vendr': 
-			'Vendors', 'price': 'Price', 'descr': 'Description', 
+			'Amount', 'unit': 'Unit', 'vendr': 'Vendors', 'price': 'Price', 
+			'descr': 'Description', 
 		}
-	initial = {'unit': 'items', }
