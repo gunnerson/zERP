@@ -1,0 +1,52 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+  <form action="{% url 'invent:new_vendor' %}" method='post'>
+    {% csrf_token %}
+    
+    <div class="row">
+      <div class="col">
+        {{ form.name }}    
+        <br>
+        {{ form.addr1 }}
+        <br>
+        {{ form.addr2 }}    
+        <br>
+        <div class="row">
+          <div class="col">{{ form.city }} </div>
+          <div class="col-2">{{ form.state }} </div>
+          <div class="col-3">{{ form.zipcode }} </div>
+        </div>
+        <br>
+        {{ form.phone }}    
+        <br>
+        {{ form.email }}    
+        <br>
+      </div>
+      <div class="col">
+        {{ form.vcomm }}      
+      </div>
+    </div>
+    
+          
+
+         
+    <br>
+    <button name="submit" role="button" class="btn btn-primary btn-sm
+      btn-block">Save vendor</button>
+  </form>
+
+  
+{% endblock content %}
+
+          <div class="row">{{ form.addr1|as_crispy_field }}</div>
+          <div class="row">{{ form.addr2|as_crispy_field }}</div>
+          <div class="row">{{ form.city|as_crispy_field }}</div>
+          <div class="row">{{ form.state|as_crispy_field }}</div>
+          <div class="row">{{ form.zipcode|as_crispy_field }}</div>
+          
+          
+{{ form.email|as_crispy_field }}

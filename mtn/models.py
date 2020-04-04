@@ -49,7 +49,7 @@ class Order(models.Model):
 		choices=CAUSE_OF_REPAIR,
 	)
 	descrrep = models.TextField(null=True)
-	timerep = models.FloatField(null=True,)
+	timerep = models.FloatField(null=True)
 	repdate = models.DateField(null=True,)
 	owner = models.ForeignKey(User,
 		on_delete=models.SET_NULL,

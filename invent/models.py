@@ -23,7 +23,7 @@ class Vendor(models.Model):
 	city = models.CharField(max_length=35, blank=True, null=True)
 	state = models.CharField(max_length=2, blank=True, null=True)
 	zipcode = models.CharField(max_length=10, blank=True, null=True)
-	email = models.CharField(max_length=62, blank=True, null=True)
+	email = models.EmailField(blank=True, null=True)
 	phone = models.CharField(max_length=20, blank=True, null=True)
 	vcomm = models.TextField(blank=True, null=True)
 	parts = models.ManyToManyField(Part, blank=True)

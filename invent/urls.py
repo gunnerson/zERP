@@ -27,4 +27,7 @@ urlpatterns = [
     # Page for adding new work part
     re_path(r'^inventory/new_part/$', views.new_part, name='new_part'),
 	
+    # Page for adding new work part
+    re_path(r'^inventory/new_vendor/$', views.new_vendor, name='new_vendor'),
+	
 ]
