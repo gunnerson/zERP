@@ -1,18 +1,30 @@
 from django.db import models
 
 from equip.models import Press
-
+		
 class Part(models.Model):
 	"""List of company equipment"""
 	partnum = models.CharField(max_length=20, blank=True, null=True)
 	descr = models.TextField(blank=True, null=True)
 	cat = models.ManyToManyField(Press)
 	amount = models.PositiveIntegerField()
-	quant = models.CharField(max_length=4)
-	price = models.FloatField(blank=True, null=True)
-	vendor = models.CharField(max_length=20, blank=True, null=True)
-	venci = models.CharField(max_length=35, blank=True, null=True)
-	addr = models.CharField(max_length=20, blank=True, null=True)
+	unit = models.CharField(max_length=5)
+	addr = models.CharField(max_length=30, blank=True, null=True)
+	price = models.FloatField()
+	vendr = models.ManyToManyField('Vendor')
 	
 	def __str__(self):
 		return str(self.id)
+
+class Vendor(models.Model):
+	"""List of Vendors"""
+	name = models.CharField(max_length=50)
+	addr1 = models.CharField(max_length=95, blank=True, null=True)
+	addr2 = models.CharField(max_length=10, blank=True, null=True)
+	city = models.CharField(max_length=35, blank=True, null=True)
+	state = models.CharField(max_length=2, blank=True, null=True)
+	zipcode = models.CharField(max_length=10, blank=True, null=True)
+	email = models.CharField(max_length=62, blank=True, null=True)
+	phone = models.CharField(max_length=20, blank=True, null=True)
+	vcomm = models.TextField(blank=True, null=True)
+	parts = models.ManyToManyField(Part)

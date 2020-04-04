@@ -53,7 +53,7 @@
             <li><a>Hello, {{ user.username }}. &nbsp</a></li>
             <li><a href="{% url 'users:logout' %}">log out</a></li>
           {% else %}
-            <li><a href="{% url 'users:register' %}">register</a></li>
+            <li><a href="{% url 'users:register' %}">register &nbsp</a></li>
             <li><a href="{% url 'users:login' %}">log in</a></li>
           {% endif %}
         </ul>

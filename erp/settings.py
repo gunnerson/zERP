@@ -84,7 +84,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'erp.wsgi.application'
 
 
 # Database
@@ -92,12 +91,9 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'erpdb',
-        'USER': 'erpdbuser',
-        'PASSWORD': 'yVa5uJ51',
-        'HOST': 'localhost',
-        'PORT': '',   }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+     }
 }
 
 
@@ -151,28 +147,5 @@ LOGIN_URL = '/users/login/'
 BOOTSTRAP = {
 'include_jquery': True,
 }
-
-# Heroku settings
-if os.getcwd() == '/app':
-	import dj_database_url
-	DATABASES = {
-		'default': dj_database_url.config(default='postgres://localhost')
-	}
-	
-	# Honor the 'X-Forwarded-Proto' header for request.is_secure().
-	SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-	
-	# Allow only Heroku to host the project.
-	ALLOWED_HOSTS = ['rahco.herokuapp.com']
-
-	DEBUG = False	
-		
-	# Static asset configuration
-	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-	STATIC_ROOT = 'staticfiles'
-	STATIC_URL = '/static/'
-	STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'erp/static'),
-)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

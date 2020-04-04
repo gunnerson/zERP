@@ -1,2 +1,4 @@
-erp_ve/
+ve/
 __pycache__/
+erp/settings.py
+*.sqlite3
