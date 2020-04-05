@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,21 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!--
-    {% load bootstrap4 %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-    {% load static %}
-    -->
-    
     <title>Rahco ERP</title>
 
-    {# Include Bootstrap 4 and jQuery #}
+    {# Include Bootstrap 4 and jQuery and Font Awesome #}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'template.css' %}">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    
+    <script src="https://kit.fontawesome.com/7ad714b2f7.js" crossorigin="anonymous"></script>
     {# Django Tempus Dominus assets are included in `{{ form.media }}` #}
     {{ form.media }}
 
@@ -27,7 +23,7 @@
 
   <body>
 	
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top" >
       <a class="navbar-brand" href="{% url 'mtn:index' %}">RAHCO</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -35,31 +31,33 @@
   
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'mtn:orders' %}">Maintence <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'equip:equip' %}">Equipment</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'invent:part-list' %}">Inventory</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'invent:partslist' %}">Inventory</a>
           </li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right" style="color:white;">
           {% if user.is_authenticated %}
             <li><a>Hello, {{ user.username }}. &nbsp</a></li>
-            <li><a href="{% url 'users:logout' %}">log out</a></li>
+            <li><a href="{% url 'users:logout' %}" style="color:white;">log out</a></li>
           {% else %}
-            <li><a href="{% url 'users:register' %}">register &nbsp</a></li>
-            <li><a href="{% url 'users:login' %}">log in</a></li>
+            <li><a href="{% url 'users:register' %}" style="color:white;">register &nbsp</a></li>
+            <li><a href="{% url 'users:login' %}" style="color:white;">log in</a></li>
           {% endif %}
         </ul>
       </div>
     </nav>
     <br>		
+    <br>
+    <br>
     
     <div class="container">
   

@@ -1,0 +1,33 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+  <form method="GET" action=".">
+    <div class="form-row">
+      <div class="form-group col">
+        <div class="input-group">
+          <input class="form-conrol py-2 border-right-0 border" 
+            type="search" placeholder="Find part" name="search_part">
+            <span class="input-group-append">
+              <div class="input-group-text bg-transparent">
+                <i class="fa fa-search"></i>
+              </div>
+            </span>                      
+        </div>
+      </div>          
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm btn-block">Search</button>    
+  </form>
+  
+  <hr />
+  <div class="row">
+    <ul>
+      {% for part in queryset %}
+        <li>
+          <a href="{% url 'invent:partslist' %}">{{ part.partnum }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+	
+{% endblock content %}
