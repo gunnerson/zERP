@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path, re_path
+from django.urls import path
 
 from . import views
 
@@ -22,26 +22,26 @@ app_name = "mtn"
 
 urlpatterns = [
 	# Home page
-    re_path(r'^$', views.index, name='index'),
+    path('', views.index, name='index'),
     
     # Maintenance page
-    re_path(r'^maint/$', views.maint, name='maint'),
+    path('maint/', views.maint, name='maint'),
     
     # Show all open work orders
-    re_path(r'^maint/orders/$', views.orders, name='orders'),
+    path('maint/orders/', views.orders, name='orders'),
 
     # Show all open work orders
-    re_path(r'^maint/closed_orders/$', views.closed_orders, 
+    path('maint/closed_orders/', views.closed_orders, 
 			name='closed_orders'),
     
     # Detail page for a single work order
-    re_path(r'^maint/orders/(?P<order_id>\d+)/$', views.order, 
+    path('maint/orders/<int:order_id>/', views.order, 
 			name='order'),
     
     # Page for adding new work orders
-    re_path(r'^maint/new_order/$', views.new_order, name='new_order'),
+    path('maint/new_order/', views.new_order, name='new_order'),
 	
-	# Page for editing a repair
-	re_path(r'^maint/edit_order/(?P<order_id>\d+)/$', views.edit_order, 
-			name='edit_order'),
+    # Page for editing a repair
+    path('maint/edit_order/<int:order_id>/', views.edit_order, 
+		    name='edit_order'),
 ]

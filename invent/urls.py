@@ -14,22 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path, re_path
+from django.urls import path
 
 from . import views
 
 app_name = "invent"
 
 urlpatterns = [
-	# Inventory page
-    path('inventory/', views.invent, name='invent'),
-    
-    # Page for adding new work part
-    re_path(r'^inventory/new_part/$', views.new_part, name='new_part'),
-	
-    # Page for adding new work part
-    re_path(r'^inventory/new_vendor/$', views.new_vendor, name='new_vendor'),
+    path('inventory/', views.PartListView.as_view(), name='part-list'),
+    path('inventory/new_part/', views.new_part, name='new_part'),
+    path('inventory/new_vendor/', views.new_vendor, name='new_vendor'),
 
-    # Filter parts list for 
-    path('inventory/', views.invent, name='invent'),	
 ]

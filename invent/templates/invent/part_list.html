@@ -10,21 +10,23 @@
     <br>
   </div>
 
-	<ul>
-	  {% for part in parts %}
-	      <li>
-          <div class="container">
-            <div class="row" style="height: 35px">
-              <div class="col-6">
-                {{ part.partnum }}
-              </div>
-            </div>
-          </div>  
+    <div class="container">
+    
+    <form method='GET'>
+      {{ filter.form }}
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    
+    <ul>
+      {% for part in filter.qs %}
+        <li>
+          <a href="{% url 'invent:part-list' %}">{{ part.partnum }}</a>
         </li>
-	  {% empty %}
-		  <li>No parts have been added yet.</li>
-    {% endfor %}
-	</ul>
+      {% endfor %}
+    </ul>
+    
+    </div>
+
 	
 {% endblock content %}
 
