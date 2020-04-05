@@ -1,4 +1,7 @@
 ve/
 __pycache__/
+**/*.pyc
+**/__pycache__
 erp/settings.py
 *.sqlite3
+node_modules
