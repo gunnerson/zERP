@@ -29,5 +29,7 @@ urlpatterns = [
 	
     # Page for adding new work part
     re_path(r'^inventory/new_vendor/$', views.new_vendor, name='new_vendor'),
-	
+
+    # Filter parts list for 
+    path('inventory/', views.invent, name='invent'),	
 ]

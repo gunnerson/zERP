@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'tempus_dominus',
     'django_tables2',
     'crispy_forms',
+    'django_filters',
     
     #My apps
     'mtn',

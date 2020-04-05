@@ -2,7 +2,6 @@
 
 {% block content %}
 
-{% load crispy_forms_tags %}
 
   <form action="{% url 'invent:new_vendor' %}" method='post'>
     {% csrf_token %}
@@ -30,10 +29,18 @@
         {{ form.vcomm }}      
       </div>
     </div>
-    
-          
-
-         
+    <p>
+      <button class="btn btn-primary" type="button" data-toggle="collapse" 
+        data-target="#collapseExample" aria-expanded="false" 
+        aria-controls="collapseExample">
+        Add Parts
+      </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        {{ form.parts }}
+      </div>
+    </div>    
     <br>
     <button name="submit" role="button" class="btn btn-primary btn-sm
       btn-block">Save vendor</button>
@@ -41,12 +48,3 @@
 
   
 {% endblock content %}
-
-          <div class="row">{{ form.addr1|as_crispy_field }}</div>
-          <div class="row">{{ form.addr2|as_crispy_field }}</div>
-          <div class="row">{{ form.city|as_crispy_field }}</div>
-          <div class="row">{{ form.state|as_crispy_field }}</div>
-          <div class="row">{{ form.zipcode|as_crispy_field }}</div>
-          
-          
-{{ form.email|as_crispy_field }}
