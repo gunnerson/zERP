@@ -35,13 +35,13 @@ urlpatterns = [
 			name='closed_orders'),
     
     # Detail page for a single work order
-    path('maint/orders/<int:order_id>/', views.order, 
+    path('maint/order/<int:id>/', views.order, 
 			name='order'),
     
     # Page for adding new work orders
     path('maint/new_order/', views.new_order, name='new_order'),
 	
     # Page for editing a repair
-    path('maint/edit_order/<int:order_id>/', views.edit_order, 
+    path('maint/edit_order/<int:id>/', views.edit_order, 
 		    name='edit_order'),
 ]

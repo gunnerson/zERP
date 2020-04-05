@@ -60,3 +60,6 @@ class Order(models.Model):
 	def __str__(self):
 		"""return a string representation of the model."""
 		return str(self.id)
+
+	def get_absolute_url(self):
+		return reverse("order", kwargs={"id": self.id})

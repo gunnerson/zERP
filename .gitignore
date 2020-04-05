@@ -5,3 +5,4 @@ __pycache__/
 settings.py
 *.sqlite3
 node_modules/
+rahco.sublime**
