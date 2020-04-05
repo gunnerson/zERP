@@ -6,22 +6,31 @@ from django.db.models import Q
 
 from .models import Part, Vendor
 from .forms import PartForm, VendorForm
-from .filters import PartFilter
 
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists() 
+    
+def is_valid_queryparam(param):
+	return param != '' and param is not None
 
 def PartsList(request):
 	qs = Part.objects.all()
+	vendors = Vendor.objects.all()
 	search_part_query = request.GET.get('search_part')
+	by_vendor = request.GET.get('by_vendor')
 
-	if search_part_query != '' and search_part_query is not None:
+
+	if is_valid_queryparam(search_part_query):
 		qs = qs.filter(Q(partnum__icontains=search_part_query) 
 			| Q(descr__icontains=search_part_query)
 			).distinct()
 
+	if is_valid_queryparam(by_vendor) and by_vendor != 'Choose vendor...':
+		qs = qs.filter(vendr__name=by_vendor)
+
 	context = {	
-		'queryset': qs
+		'queryset': qs,
+		'vendors': vendors,
 	}
 	return render(request, "invent/partslist.html", context)
  
