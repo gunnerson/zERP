@@ -32,25 +32,28 @@ class OrderListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         qs = Order.objects.all().order_by('-date_added')
         check_closed = self.request.GET.get('check_closed')
+       
         if is_valid_queryparam(check_closed):
             qs = qs.filter(closed=check_closed)
+       
         else:
             qs = qs.filter(closed=False)        
         return qs
 
-@login_required
-def order(request, order_id):
-    """Show a single order and all its entries."""
-    if (has_group(request.user, 'maintenance') or 
-        has_group(request.user, 'supervisor')):
-            order = get_object_or_404(Order, id=order_id)
+class OrderDetailView(LoginRequiredMixin, DetailView):
+
+    model = Order
+
+    def get_context_data(self, **kwargs):
+        if (has_group(self.request.user, 'maintenance') or 
+        has_group(self.request.user, 'supervisor')):
+            context = super(OrderDetailView, self).get_context_data(**kwargs)
+
+        else:
+            raise Http404        
+
+        return context
         
-    else:
-        raise Http404
-
-    context = {'order': order,}
-    return render(request, 'mtn/order.html', context)
-
 @login_required
 def new_order(request):
     """Add new order"""
