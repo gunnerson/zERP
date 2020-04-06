@@ -4,11 +4,12 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Order
-from .forms import OrderForm, RepairForm
+from .forms import OrderCreateForm, RepairForm
 
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists() 
@@ -44,41 +45,22 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
 
     model = Order
 
-    def get_context_data(self, **kwargs):
-        if (has_group(self.request.user, 'maintenance') or 
-        has_group(self.request.user, 'supervisor')):
-            context = super(OrderDetailView, self).get_context_data(**kwargs)
+class OrderCreateView(LoginRequiredMixin, CreateView):
+   
+    model = Order
+    form_class = OrderCreateForm
 
-        else:
-            raise Http404        
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(reverse('mtn:order-list'))
 
-        return context
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super(OrderCreateView, self).get_form_kwargs(*args, **kwargs)
+        kwargs['owner'] = self.request.user
+        return kwargs
         
-@login_required
-def new_order(request):
-    """Add new order"""
-    if (has_group(request.user, 'maintenance') or 
-        has_group(request.user, 'supervisor')):
-    
-        if request.method != 'POST':
-            # No data submitted; create a blank form.
-            form = OrderForm()
-
-        else:
-        # POST data submitted; process data.
-            form = OrderForm(data=request.POST)
-            if form.is_valid():
-                new_order = form.save(commit=False)
-                new_order.owner = request.user
-                new_order.save()
-                return HttpResponseRedirect(reverse('mtn:order-list'))
-    
-    else:
-        raise Http404       
-                                            
-    context = {'form': form}
-    return render(request, 'mtn/new_order.html', context)
-    
 @login_required
 def edit_order(request, order_id):
     """Edit an existing repair."""

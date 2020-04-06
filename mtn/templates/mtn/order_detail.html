@@ -55,8 +55,6 @@
   
   {% if request.user|has_group:"maintenance" %} 
     <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
-  {% else %}
-    <h3>User doesn't have permission to change order.</h3>
   {% endif %}
     
 {% endblock workorders %}

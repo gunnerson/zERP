@@ -62,4 +62,4 @@ class Order(models.Model):
 		return str(self.id)
 
 	def get_absolute_url(self):
-		return reverse("order", kwargs={"id": self.id})
+		return reverse("order", kwargs={'pk': self.pk})
