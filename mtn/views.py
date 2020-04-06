@@ -101,16 +101,16 @@ def orders_bypress(request, press_id):
 	context = {'orders': orders}
 	return render(request, 'mtn/orders.html', context)
 
-def add_part(request, order_id):
-	order = Order.objects.get(pk=order_id)
-	PartFormset = inlineformset_factory(Order, Part, fields=('partname',), extra=1)
+# def add_part(request, order_id):
+# 	order = Order.objects.get(pk=order_id)
+# 	PartFormset = inlineformset_factory(Order, Part, fields=('partname',), extra=1)
 
-	if request.method == 'POST':
-		formset = PartFormset(request.POST, instance=order)
-		if formset.is_valid():
-			formset.save
-			return redirect('', order_id=order.id)
+# 	if request.method == 'POST':
+# 		formset = PartFormset(request.POST, instance=order)
+# 		if formset.is_valid():
+# 			formset.save
+# 			return redirect('', order_id=order.id)
 
-formset = PartFormset(instance=order)
+# formset = PartFormset(instance=order)
 
-return render(request, 'index.html', {'formset': formset})
+# return render(request, 'index.html', {'formset': formset})
