@@ -27,50 +27,47 @@ def maint(request):
     return render(request, 'mtn/maint.html')
     
 class OrderListView(LoginRequiredMixin, ListView):
-
     model = Order
-    paginate_by = 10
-
+    paginate_by = 5
+ 
     def get_queryset(self):
         qs = Order.objects.all().order_by('-date_added')
         check_closed = self.request.GET.get('check_closed')
-       
         if is_valid_queryparam(check_closed):
-            qs = qs.filter(closed=check_closed)
-       
+            qs = qs.filter(closed=check_closed)       
         else:
             qs = qs.filter(closed=False)        
         return qs
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
-
     model = Order
 
 class OrderCreateView(LoginRequiredMixin, CreateView):
-   
     model = Order
     form_class = OrderCreateForm
-
+   
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
         self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+        if has_group(self.request.user, 'maintenance'):
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return redirect('mtn:order-list')
 
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super(OrderCreateView, self).get_form_kwargs(*args, **kwargs)
         kwargs['owner'] = self.request.user
         return kwargs
 
-class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-   
+class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):   
     model = Order
     form_class = OrderUpdateForm
     template_name_suffix = '_update_form'
-
+  
     def test_func(self):
         if has_group(self.request.user, 'maintenance'):
-            return redirect('mtn:index')
+            return redirect('mtn:order-list')
 
 
 # def add_part(request, order_id):
