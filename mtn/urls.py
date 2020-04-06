@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from mtn.views import OrderListView, OrderDetailView, OrderCreateView
+from mtn.views import OrderListView, OrderDetailView, OrderCreateView, OrderUpdateView
 
 app_name = "mtn"
 
@@ -17,6 +17,6 @@ urlpatterns = [
 
     path('mwo/create_order/', OrderCreateView.as_view(), name='new_order'),
 	
-    path('mwo/edit_order/<int:order_id>/', views.edit_order, 
+    path('mwo/update_order/<int:pk>/', OrderUpdateView.as_view(), 
 		    name='edit_order'),
 ]

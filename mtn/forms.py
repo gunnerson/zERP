@@ -14,7 +14,7 @@ class OrderCreateForm(forms.ModelForm):
         self.owner = kwargs.pop('owner')
         super(OrderCreateForm, self).__init__(*args, **kwargs)
 
-class RepairForm(forms.ModelForm):
+class OrderUpdateForm(forms.ModelForm):
     timerep = forms.FloatField(min_value=0.1, max_value=99.9, initial='0.1')
     repdate = forms.DateField(widget=DatePicker())
     class Meta:

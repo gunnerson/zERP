@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -6,10 +6,10 @@ from django.forms import inlineformset_factory
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
-from .forms import OrderCreateForm, RepairForm
+from .forms import OrderCreateForm, OrderUpdateForm
 
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists() 
@@ -29,6 +29,7 @@ def maint(request):
 class OrderListView(LoginRequiredMixin, ListView):
 
     model = Order
+    paginate_by = 10
 
     def get_queryset(self):
         qs = Order.objects.all().order_by('-date_added')
@@ -54,35 +55,23 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
         self.object.save()
-        return HttpResponseRedirect(reverse('mtn:order-list'))
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super(OrderCreateView, self).get_form_kwargs(*args, **kwargs)
         kwargs['owner'] = self.request.user
         return kwargs
-        
-@login_required
-def edit_order(request, order_id):
-    """Edit an existing repair."""
-    if has_group(request.user, 'maintenance'):
-        order = Order.objects.get(id=order_id)
 
-        if request.method != 'POST':
-            # Initial request; pre-fill form with the current repair.
-            form = RepairForm(instance=order)
+class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+   
+    model = Order
+    form_class = OrderUpdateForm
+    template_name_suffix = '_update_form'
 
-        else:
-        # POST data submitted; process data.
-            form = RepairForm(instance=order, data=request.POST)
-            if form.is_valid():
-                form.save()
-                return HttpResponseRedirect(reverse('mtn:order',
-                                                args=[order.id]))
-    else:
-        raise Http404
+    def test_func(self):
+        if has_group(self.request.user, 'maintenance'):
+            return redirect('mtn:index')
 
-    context = {'order': order, 'form': form}
-    return render(request, 'mtn/edit_order.html', context)  
 
 # def add_part(request, order_id):
 #   order = Order.objects.get(pk=order_id)

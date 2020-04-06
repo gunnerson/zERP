@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 from staff.models import Employee
 from equip.models import Press
@@ -62,4 +63,4 @@ class Order(models.Model):
 		return str(self.id)
 
 	def get_absolute_url(self):
-		return reverse("order", kwargs={'pk': self.pk})
+		return reverse('mtn:order', kwargs={'pk': self.id})
