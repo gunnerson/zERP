@@ -26,7 +26,6 @@ class Vendor(models.Model):
 	email = models.EmailField(blank=True, null=True)
 	phone = models.CharField(max_length=20, blank=True, null=True)
 	vcomm = models.TextField(blank=True, null=True)
-	parts = models.ManyToManyField(Part, blank=True)
 
 	def __str__(self):
 		return str(self.name)

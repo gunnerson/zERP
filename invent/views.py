@@ -15,23 +15,26 @@ def is_valid_queryparam(param):
 
 def PartsList(request):
 	qs = Part.objects.all()
-	vendors = Vendor.objects.all()
 	search_part_query = request.GET.get('search_part')
 	by_vendor = request.GET.get('by_vendor')
-
+	vendors = Vendor.objects.exclude(name__exact=by_vendor)
 
 	if is_valid_queryparam(search_part_query):
 		qs = qs.filter(Q(partnum__icontains=search_part_query) 
 			| Q(descr__icontains=search_part_query)
 			).distinct()
 
-	if is_valid_queryparam(by_vendor) and by_vendor != 'Choose vendor...':
+	if (is_valid_queryparam(by_vendor) and by_vendor != 'Choose vendor...' 
+		and by_vendor != 'All vendors'):
 		qs = qs.filter(vendr__name=by_vendor)
 
 	context = {	
 		'queryset': qs,
 		'vendors': vendors,
+		'search_part_query': search_part_query,
+		'by_vendor': by_vendor
 	}
+
 	return render(request, "invent/partslist.html", context)
  
 @login_required

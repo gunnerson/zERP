@@ -6,8 +6,8 @@
     <div class="form-row justify-content-start">
       <div class="form-group col-md align-self-center">
         <div class="input-group">
-          <input class="form-conrol py-2 border-right-0 border" type="search" placeholder="Find part" name="search_part">
-            <span class="input-group-append">
+          <input class="form-conrol py-2 border-right-0 border" type="search" placeholder="Find part" name="search_part" value="{{ search_part_query|default:"" }}">
+            <span class="input-group-append">             
               <div class="input-group-text bg-transparent">
                 <i class="fa fa-search"></i>
               </div>
@@ -16,9 +16,10 @@
       </div>          
       <div class="form-group col-md-4 align-self-center">
         <select id="vendr" class="form-control" name="by_vendor">
-          <option selected>Choose vendor...</option>
+          <option selected>{{ by_vendor|default:"Choose vendor..." }}</option>
+          <option>All vendors</option>
           {% for vendor in vendors %}
-            <option value="{{ vendor }}">{{ vendor }}</option>
+              <option value="{{ vendor }}">{{ vendor }}</option>
           {% endfor %}
         </select>
       </div>  

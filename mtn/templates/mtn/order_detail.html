@@ -56,9 +56,18 @@
     </div>
       <b>Description of repair:</b>
       <p>{{ order.descrrep }}
+      <br>
+      <br>
+      <b>Parts: </b>
+      {% for part in order.parts.all %}
+        <a href="">{{ part }},&nbsp</a>
+      {% endfor %}
   </div>
-  
+
   {% if request.user|has_group:"maintenance" %} 
+    <a href="{% url 'mtn:add_part' order.id %}" role="button" class="btn btn-primary btn-sm">Add parts</a>
+    <br>
+    <br>
     <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
   {% endif %}
     

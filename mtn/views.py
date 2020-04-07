@@ -9,7 +9,8 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
-from .forms import OrderCreateForm, OrderUpdateForm
+from .forms import OrderCreateForm, OrderUpdateForm, AddPartForm
+from invent.models import Part
 
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists() 
@@ -69,18 +70,43 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if has_group(self.request.user, 'maintenance'):
             return redirect('mtn:order-list')
 
+class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):   
+    model = Order
+    form_class = AddPartForm
+    template_name_suffix = '_add_part'
+  
+    def test_func(self):
+        if has_group(self.request.user, 'maintenance'):
+            return redirect('mtn:order-list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(request=self.request)
+        return kwargs
+        
 # def add_part(request, order_id):
-#   order = Order.objects.get(pk=order_id)
-#   PartFormset = inlineformset_factory(Order, Part, fields=('partname',), extra=1)
+#     order = Order.objects.get(pk=order_id)
 
-#   if request.method == 'POST':
-#       formset = PartFormset(request.POST, instance=order)
-#       if formset.is_valid():
-#           formset.save
-#           return redirect('', order_id=order.id)
+#     if request.method != 'POST':
+#         form = AddPartForm()
+#     else:
+#         form = AddPartForm(data=request.POST)
+#         if form.is_valid():
+#             add_part.save()
+#             return HttpResponseRedirect(self.get_success_url())
 
-# formset = PartFormset(instance=order)
+#     context = {'order': order, 'form': form}
+#     return render(request,' mtn/add_part.html', context)
 
-# return render(request, 'index.html', {'formset': formset})
+    # order = Order.objects.get(pk=order_id)
+    # PartFormset = inlineformset_factory(Order, Part, fields=('partname',), extra=1)
 
+    # if request.method == 'POST':
+    #     formset = PartFormset(request.POST, instance=order)
+    #     if formset.is_valid():
+    #         formset.save
+    #         return redirect('', order_id=order.id)
+
+    # formset = PartFormset(instance=order)
+
+    # return render(request, 'index.html', {'formset': formset})

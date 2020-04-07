@@ -20,12 +20,12 @@ class VendorForm(forms.ModelForm):
 	class Meta:
 		model = Vendor
 		fields = ['name', 'addr1', 'addr2', 'city', 'state', 'zipcode',
-			'email', 'phone', 'vcomm', 'parts',
+			'email', 'phone', 'vcomm',
 		]
 		labels = {'name': 'Name', 'addr1': 'Address', 'addr2': 
 			'Address (line 2)', 'city': 'City', 'state': 'State', 
 			'zipcode': 'Zip Code', 'email': 'E-Mail', 'phone': 'Phone number', 
-			'vcomm': 'Commentary', 'parts': 'Parts',
+			'vcomm': 'Commentary',
 		}
 		widgets = {
 			'name': forms.TextInput(attrs={
