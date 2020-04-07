@@ -41,17 +41,17 @@ class AddPartForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['parts', ]
-        labels = {'parts': "Parts", }
+        labels = {'parts': "", }
 
     def filter_list(self, request):
-        qs = Part.objects.all()
+        qs = Part.objects.all().order_by('partnum')
         search_part_query = request.GET.get('search_part')
         
         if is_valid_queryparam(search_part_query):
             qs = qs.filter(Q(partnum__icontains=search_part_query) 
                 | Q(descr__icontains=search_part_query)
                 ).distinct()
-        
+
         return qs         
 
     def __init__(self, *args, request=None, **kwargs):
