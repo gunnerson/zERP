@@ -28,7 +28,7 @@ def maint(request):
     
 class OrderListView(LoginRequiredMixin, ListView):
     model = Order
-    paginate_by = 20
+    paginate_by = 10
  
     def get_queryset(self):
         qs = Order.objects.all().order_by('-date_added')

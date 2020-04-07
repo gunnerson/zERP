@@ -1,60 +1,65 @@
-{% extends "mtn/maint.html" %}
+{% extends "mtn/base.html" %}
+
+{% block content %}
 
 {% load poll_extras %}
 
-{% block workorders %}
+  <div>
+    <a href="{% url 'mtn:order-list' %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
+  </div>
+  <br>
 
   <div class="container break-text">
-		<div class="row">
-		  <div class="col-sm">
+    <div class="row">
+      <div class="col-sm">
         <b>Originator:</b>
         <p>{{ order.origin }}
-		  </div>
-		  <div class="col-sm">
+      </div>
+      <div class="col-sm">
         <b>Location:</b>
         <p>{{ order.local }}
-		  </div>
-		  <div class="col-sm">
+      </div>
+      <div class="col-sm">
         <b>Type:</b>
         <p>{{ order.get_ordertype_display }}
-		  </div>
-		  <div class="col-sm">
+      </div>
+      <div class="col-sm">
         <b>Date:</b>
         <p>{{ order.date_added|date:'M d, Y' }}
-		  </div>
-		</div>
-		<div class="row">
-		  <div class="col-12">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
         <b>Description:</b>
         <p>{{ order.descr }}
-		  </div>
-		</div>
-		<br>
-		<hr>
-		<div class="row">
-		  <div class="col-sm">
+      </div>
+    </div>
+    <br>
+    <hr>
+    <div class="row">
+      <div class="col-sm">
         <b>Repaired by:</b>
         <p>{{ order.repby }}
-		  </div>
-		  <div class="col-sm">
+      </div>
+      <div class="col-sm">
         <b>Repair date:</b>
         <p>{{ order.repdate }}
-		  </div>
-		  <div class="col-sm">
+      </div>
+      <div class="col-sm">
         <b>Cause of repair:</b>
         <p>{{ order.get_cause_display }}
-		  </div>
-		  <div class="col-sm">
+      </div>
+      <div class="col-sm">
         <b>Repair time:</b>
         <p>{{ order.timerep }} hours
-		  </div>
-		</div>
+      </div>
+    </div>
       <b>Description of repair:</b>
       <p>{{ order.descrrep }}
-	</div>
+  </div>
   
   {% if request.user|has_group:"maintenance" %} 
     <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
   {% endif %}
     
-{% endblock workorders %}
+{% endblock content %}

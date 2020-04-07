@@ -8,8 +8,6 @@ app_name = "mtn"
 urlpatterns = [
 
     path('', views.index, name='index'),
-    
-    path('mwo/', views.maint, name='maint'),
 
     path('mwo/order-list/', OrderListView.as_view(), name='order-list'),
 

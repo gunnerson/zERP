@@ -1,6 +1,11 @@
-{% extends "mtn/maint.html" %}
+{% extends "mtn/base.html" %}
 
-{% block workorders %}
+{% block content %}
+
+  <div>
+    <a href="{% url 'mtn:new_order' %}" class="btn btn-primary btn-lg btn-block" role="button">Create New Manitenance Work Order</a>
+  </div>
+  <br>
 
   <div class="form-row justify-content-start">
     <div class="form-group col-md-2 align-self-left">    
@@ -91,4 +96,4 @@
     </div>
   </div>  
 
-{% endblock workorders %}
+{% endblock content %}

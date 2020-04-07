@@ -13,7 +13,7 @@ class Part(models.Model):
 	vendr = models.ManyToManyField('Vendor', blank=True)
 	
 	def __str__(self):
-		return str(self.id)
+		return str(self.partnum)
 
 class Vendor(models.Model):
 	"""List of Vendors"""

@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from staff.models import Employee
 from equip.models import Press
+from invent.models import Part
 
 class Order(models.Model):
 	"""Maintenance work orders"""
@@ -57,6 +58,7 @@ class Order(models.Model):
 		null=True,
 	)
 	closed = models.BooleanField(default=False)
+	parts = models.ManyToManyField(Part, blank=True)
 
 	def __str__(self):
 		"""return a string representation of the model."""
