@@ -1,14 +1,17 @@
 from django import forms
-from django.forms.widgets import CheckboxSelectMultiple
+from django.forms.widgets import Select
 from django.db.models import Q
 from .models import Order
 from tempus_dominus.widgets import DatePicker
 from invent.models import Part
 
+
 def is_valid_queryparam(param):
     return param != '' and param is not None
 
+
 class OrderCreateForm(forms.ModelForm):
+   
     class Meta:
         model = Order
         fields = ['origin', 'local', 'ordertype', 'descr', ]
@@ -37,7 +40,9 @@ class OrderUpdateForm(forms.ModelForm):
             'descrrep': forms.Textarea(attrs={'cols': 80}),
         }
 
+
 class AddPartForm(forms.ModelForm):
+   
     class Meta:
         model = Order
         fields = ['parts', ]
@@ -54,9 +59,7 @@ class AddPartForm(forms.ModelForm):
 
         return qs         
 
-    def __init__(self, *args, request=None, **kwargs):
-        
-        super(AddPartForm, self).__init__(*args, **kwargs)
-        
-        self.fields["parts"].widget = CheckboxSelectMultiple()
+    def __init__(self, *args, request=None, **kwargs):        
+        super(AddPartForm, self).__init__(*args, **kwargs)        
+        self.fields["parts"].widget = Select()
         self.fields["parts"].queryset = self.filter_list(request)

@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from staff.models import Employee
 from equip.models import Press
-from invent.models import Part
+from invent.models import Part, UsedPart
 
 class Order(models.Model):
 	"""Maintenance work orders"""

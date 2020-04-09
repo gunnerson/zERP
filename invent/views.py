@@ -7,11 +7,14 @@ from django.db.models import Q
 from .models import Part, Vendor
 from .forms import PartForm, VendorForm
 
+
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists() 
     
+
 def is_valid_queryparam(param):
 	return param != '' and param is not None
+
 
 def PartsList(request):
 	qs = Part.objects.all()
@@ -37,6 +40,7 @@ def PartsList(request):
 
 	return render(request, "invent/partslist.html", context)
  
+
 @login_required
 def new_part(request):
 	"""Add new part"""
@@ -58,6 +62,7 @@ def new_part(request):
 								
 	context = {'form': form}
 	return render(request, 'invent/new_part.html', context)
+
 
 @login_required
 def new_vendor(request):

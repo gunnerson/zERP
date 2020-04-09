@@ -11,9 +11,18 @@ class Part(models.Model):
 	unit = models.CharField(max_length=5)
 	price = models.FloatField(blank=True, null=True)
 	vendr = models.ManyToManyField('Vendor', blank=True)
-	
+
 	def __str__(self):
 		return str(self.partnum)
+
+
+class UsedPart(models.Model):
+    """List of company equipment"""
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
+    amount_used = models.PositiveIntegerField()
+    
+    def __str__(self):
+        return str(self.part)
 
 class Vendor(models.Model):
 	"""List of Vendors"""

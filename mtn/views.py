@@ -10,23 +10,28 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
 from .forms import OrderCreateForm, OrderUpdateForm, AddPartForm
-from invent.models import Part
+from invent.models import Part, UsedPart
+
 
 def has_group(user, group_name):
     return user.groups.filter(name=group_name).exists() 
 
+
 def is_valid_queryparam(param):
     return param != '' and param is not None
-    
+  
+
 def index(request):
     """The home page for EPR"""
     return render(request, 'mtn/index.html')
+
 
 @login_required
 def maint(request):
     """The home page for Maintenance"""
     return render(request, 'mtn/maint.html')
     
+
 class OrderListView(LoginRequiredMixin, ListView):
     model = Order
     paginate_by = 10
@@ -40,8 +45,10 @@ class OrderListView(LoginRequiredMixin, ListView):
             qs = qs.filter(closed=False)        
         return qs
 
+
 class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
+
 
 class OrderCreateView(LoginRequiredMixin, CreateView):
     model = Order
@@ -61,6 +68,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         kwargs['owner'] = self.request.user
         return kwargs
 
+
 class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):   
     model = Order
     form_class = OrderUpdateForm
@@ -69,6 +77,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         if has_group(self.request.user, 'maintenance'):
             return redirect('mtn:order-list')
+
 
 class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):   
     model = Order
@@ -83,30 +92,10 @@ class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update(request=self.request)
         return kwargs
-        
-# def add_part(request, order_id):
-#     order = Order.objects.get(pk=order_id)
 
-#     if request.method != 'POST':
-#         form = AddPartForm()
-#     else:
-#         form = AddPartForm(data=request.POST)
-#         if form.is_valid():
-#             add_part.save()
-#             return HttpResponseRedirect(self.get_success_url())
-
-#     context = {'order': order, 'form': form}
-#     return render(request,' mtn/add_part.html', context)
-
-    # order = Order.objects.get(pk=order_id)
-    # PartFormset = inlineformset_factory(Order, Part, fields=('partname',), extra=1)
-
-    # if request.method == 'POST':
-    #     formset = PartFormset(request.POST, instance=order)
-    #     if formset.is_valid():
-    #         formset.save
-    #         return redirect('', order_id=order.id)
-
-    # formset = PartFormset(instance=order)
-
-    # return render(request, 'index.html', {'formset': formset})
+    def post(self, request, *args, **kwargs):
+        used_part = self.request.POST.get('parts')
+        used_part_instance = Part.objects.get(id=used_part)
+        new_used_part = UsedPart(part=used_part_instance, amount_used=1)
+        new_used_part.save()
+        return super().post(request, *args, **kwargs)

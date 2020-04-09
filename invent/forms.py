@@ -1,6 +1,7 @@
 from django import forms
 from .models import Part, Vendor
 
+
 class PartForm(forms.ModelForm):
 	amount = forms.IntegerField(min_value=0, initial=0)
 	unit = forms.CharField(initial='items')
@@ -14,6 +15,7 @@ class PartForm(forms.ModelForm):
 			'Amount', 'unit': 'Unit', 'vendr': 'Vendors', 'price': 'Price', 
 			'descr': 'Description', 
 		}
+
 
 class VendorForm(forms.ModelForm):
 
