@@ -31,27 +31,22 @@
     </div>
   </form>
 
-  {% if count >= 0 and query != None %}
-    <div class='row my-3'>
-        <div class='col-12 py-0'>
-          {% if by_vendor == "Choose vendor..." %}
-            <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>All vendors</b></h3>
-          {% else %}
-            <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>{{ by_vendor|default:"All vendors" }}</b></h3>
-          {% endif %}
-        </div>
+  <form method="POST" action=".">
+    {% csrf_token %}
+    <div class="row">
+      <ul>
+        {% for object in object_list %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="used_part" value={{ object.pk }}>
+            <label class="form-check-label" for="exampleRadios1">
+              {{ object.partnum }}
+            </label>
+          </div>
+        {% endfor %}
+      </ul>
     </div>
-  {% endif %}
-
-  <hr />
-  <div class="row">
-    <ul>
-      {% for object in object_list %}
-        <li>
-          <a href="{% url 'invent:partlist' %}">{{ object.partnum }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+    <button name="submit" role="button" class="btn btn-primary btn-sm
+      btn-block">Add part</button>
+  </form>
 
 {% endblock content %}

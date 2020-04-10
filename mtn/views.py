@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
-from .forms import OrderCreateForm, OrderUpdateForm, AddPartForm
+from .forms import OrderCreateForm, OrderUpdateForm
 from invent.models import Part, UsedPart
 
 
@@ -24,12 +24,6 @@ def is_valid_queryparam(param):
 def index(request):
     """The home page for EPR"""
     return render(request, 'mtn/index.html')
-
-
-@login_required
-def maint(request):
-    """The home page for Maintenance"""
-    return render(request, 'mtn/maint.html')
 
 
 class OrderListView(LoginRequiredMixin, ListView):
@@ -79,26 +73,17 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return redirect('mtn:order-list')
 
 
-class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Order
-    form_class = AddPartForm
-    template_name_suffix = '_add_part'
+# class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     model = Order
+#     form_class = AddPartForm
+#     template_name_suffix = '_add_part'
 
-    def test_func(self):
-        if has_group(self.request.user, 'maintenance'):
-            return redirect('mtn:order-list')
+#     def test_func(self):
+#         if has_group(self.request.user, 'maintenance'):
+#             return redirect('mtn:order-list')
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(request=self.request)
-        return kwargs
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         kwargs.update(request=self.request)
+#         return kwargs
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        # used_part = self.request.POST.get_queryset('parts')
-        # used_part_instance = Part.objects.get(id=used_part)
-        # if UsedPart.objects.filter(part=used_part).exists() == False:
-        # 	new_used_part = UsedPart(part=used_part_instance, amount_used=1)
-        # 	new_used_part.save()
-        # self.usedpart_set.add(used_part_instance)
-        return super().post(request, *args, **kwargs)

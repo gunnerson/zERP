@@ -3,11 +3,9 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.db.models import Q
 from .models import Order
 from tempus_dominus.widgets import DatePicker
-from invent.models import Part
 
+from invent.models import Part, is_valid_param
 
-def is_valid_queryparam(param):
-    return param != '' and param is not None
 
 
 class OrderCreateForm(forms.ModelForm):
@@ -41,25 +39,27 @@ class OrderUpdateForm(forms.ModelForm):
         }
 
 
-class AddPartForm(forms.ModelForm):
+# class AddPartForm(forms.ModelForm):
 
-    class Meta:
-        model = Order
-        fields = ['parts', ]
-        labels = {'parts': "", }
+#     class Meta:
+#         model = Order
+#         fields = ['parts', ]
+#         labels = {'parts': "", }
 
-    def filter_list(self, request):
-        qs = Part.objects.all().order_by('partnum')
-        search_part_query = request.GET.get('search_part')
+#     def filter_list(self, request):
+#         query = request.GET.get('query', None)
+#         by_vendor = request.GET.get('by_vendor', None)
 
-        if is_valid_queryparam(search_part_query):
-            qs = qs.filter(Q(partnum__icontains=search_part_query)
-                | Q(descr__icontains=search_part_query)
-                ).distinct()
+#         if is_valid_param(query) or is_valid_param(by_vendor):
+#             search_results = Part.objects.search(query, by_vendor)
+#             qs = sorted(search_results,
+#                         key=lambda instance: instance.pk,
+#                         reverse=True)
+#             self.count = len(qs)
+#             return qs
+#         return Part.objects.all()
 
-        return qs
-
-    def __init__(self, *args, request=None, **kwargs):
-        super(AddPartForm, self).__init__(*args, **kwargs)
-        self.fields["parts"].widget = CheckboxSelectMultiple()
-        self.fields["parts"].queryset = self.filter_list(request)
+#     def __init__(self, *args, request=None, **kwargs):
+#         super(AddPartForm, self).__init__(*args, **kwargs)
+#         self.fields["parts"].widget = CheckboxSelectMultiple()
+#         self.fields["parts"].queryset = self.filter_list(request)
