@@ -36,7 +36,7 @@ class Order(models.Model):
 	)
 	local =  models.ForeignKey(Press,
 		models.SET_NULL,
-		null=True,		
+		null=True,
 	)
 	descr = models.TextField()
 	date_added = models.DateTimeField(auto_now_add=True)
@@ -58,7 +58,7 @@ class Order(models.Model):
 		null=True,
 	)
 	closed = models.BooleanField(default=False)
-	parts = models.ManyToManyField(Part, blank=True)
+	parts = models.ManyToManyField(Part, through='invent.UsedPart')
 
 	def __str__(self):
 		"""return a string representation of the model."""

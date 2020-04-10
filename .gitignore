@@ -1,10 +1,11 @@
+.gitignore
 ve/
 erp_ve/
 __pycache__/
 **/*.pyc
 **/__pycache__
-erp/settings.py
-erp/.settings_backup.py
 *.sqlite3
 node_modules/
 rahco.sublime**
+erp/settings.py
+
