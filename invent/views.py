@@ -55,7 +55,9 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         order = Order.objects.get(id=order_id)
         used_part_id = self.request.POST.get('used_part', None)
         used_part = Part.objects.get(id=used_part_id)
-        new_used_part = UsedPart(part=used_part, order=order)
+        amount = self.request.POST.get('amount', None)
+        new_used_part = UsedPart(part=used_part, order=order,
+            amount_used=amount)
         new_used_part.save()
         return redirect('mtn:order', pk=order_id)
 
