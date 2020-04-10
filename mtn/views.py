@@ -95,7 +95,7 @@ class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        # used_part = self.request.POST.get('parts')
+        # used_part = self.request.POST.get_queryset('parts')
         # used_part_instance = Part.objects.get(id=used_part)
         # if UsedPart.objects.filter(part=used_part).exists() == False:
         # 	new_used_part = UsedPart(part=used_part_instance, amount_used=1)

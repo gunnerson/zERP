@@ -1,6 +1,31 @@
 from django.db import models
+from django.db.models import Q
 
 from equip.models import Press
+
+
+def is_valid_param(param):
+    if param == 'query':
+        return param != '' and param is not None
+    else:
+        return (param is not None
+            and param != 'Choose vendor...'
+            and param != 'All vendors'
+        )
+
+
+class PartManager(models.Manager):
+
+    def search(self, query=None, by_vendor=None):
+        qs = self.get_queryset()
+        if is_valid_param(query):
+            qs = qs.filter(Q(partnum__icontains=query)
+                | Q(descr__icontains=query)
+                ).distinct()
+        if is_valid_param(by_vendor):
+            qs = qs.filter(vendr__name=by_vendor)
+        return qs
+
 
 class Part(models.Model):
     """List of company equipment"""
@@ -11,6 +36,8 @@ class Part(models.Model):
     unit = models.CharField(max_length=5)
     price = models.FloatField(blank=True, null=True)
     vendr = models.ManyToManyField('Vendor', blank=True)
+
+    objects = PartManager()
 
     def __str__(self):
         return str(self.partnum)
