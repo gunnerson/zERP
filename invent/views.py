@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 
 from .models import Part, UsedPart, Vendor, PartManager, is_valid_param
 from .forms import PartForm, VendorForm
@@ -44,25 +45,21 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             return qs
         return Part.objects.all()
 
-    def get_template_names(self):
-        referer = self.request.META['HTTP_REFERER']
-        if "/mwo/order/" in referer:
-            return ['invent/use_part.html']
-        return ['invent/part_list.html']
-
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs['pk']
         order = Order.objects.get(id=order_id)
         used_part_id = self.request.POST.get('used_part', None)
         used_part = Part.objects.get(id=used_part_id)
-        amount_in_stock = used_part.amount
         amount = self.request.POST.get('amount', None)
-        if int(amount) <= amount_in_stock:
+        if int(amount) <= used_part.amount:
             new_used_part = UsedPart(part=used_part, order=order,
                 amount_used=amount)
             new_used_part.save()
+            used_part.amount -= int(amount)
+            used_part.save(update_fields=['amount'])
             return redirect('mtn:order', pk=order_id)
         else:
+            messages.add_message(request, messages.INFO, 'Not enough items in stock')
             return redirect(request.META['HTTP_REFERER'])
 
 

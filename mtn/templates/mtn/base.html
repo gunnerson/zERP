@@ -35,15 +35,15 @@
             <a class="nav-link" href="{% url 'mtn:order-list' %}">Work Orders</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
+            <a class="nav-link" href="{% url 'invent:partlist' %}">Inventory</a>
+          </li>
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'equip:equip' %}">Equipment</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'invent:partlist' %}">Inventory</a>
-          </li>
-        </ul>
+            <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
+          </ul>
         <ul class="nav navbar-nav navbar-right" style="color:white;">
           {% if user.is_authenticated %}
             <li><a>Hello, {{ user.username }}. &nbsp</a></li>

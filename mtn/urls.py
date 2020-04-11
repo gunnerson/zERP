@@ -24,7 +24,8 @@ urlpatterns = [
     path('mwo/update_order/<int:pk>/', OrderUpdateView.as_view(),
 		    name='edit_order'),
 
-    path('mwo/order/<int:pk>/add_part/', PartListView.as_view(),
-            name='add_part'),
+    path('mwo/order/<int:pk>/add_part/',
+        PartListView.as_view(template_name='invent/use_part.html'),
+        name='add_part'),
 
 ]
