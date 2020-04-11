@@ -55,11 +55,15 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         order = Order.objects.get(id=order_id)
         used_part_id = self.request.POST.get('used_part', None)
         used_part = Part.objects.get(id=used_part_id)
+        amount_in_stock = used_part.amount
         amount = self.request.POST.get('amount', None)
-        new_used_part = UsedPart(part=used_part, order=order,
-            amount_used=amount)
-        new_used_part.save()
-        return redirect('mtn:order', pk=order_id)
+        if int(amount) <= amount_in_stock:
+            new_used_part = UsedPart(part=used_part, order=order,
+                amount_used=amount)
+            new_used_part.save()
+            return redirect('mtn:order', pk=order_id)
+        else:
+            return redirect(request.META['HTTP_REFERER'])
 
 
 @login_required

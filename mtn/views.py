@@ -43,6 +43,13 @@ class OrderListView(LoginRequiredMixin, ListView):
 class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        order_id = self.object.id
+        used_parts = UsedPart.objects.filter(order_id=order_id)
+        context['used_parts'] = used_parts
+        return context
+
 
 class OrderCreateView(LoginRequiredMixin, CreateView):
     model = Order
