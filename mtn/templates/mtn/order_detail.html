@@ -62,6 +62,8 @@
       {% for part in used_parts %}
         <a href="">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
       {% endfor %}
+      <p><b>Cost of Repair:</b> ${{ cost_of_repair }}
+      <br>
   </div>
 
   {% if request.user|has_group:"maintenance" %}

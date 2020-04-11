@@ -6,7 +6,7 @@
 
   <form action="{% url 'invent:new_part' %}" method='post'>
     {% csrf_token %}
-   
+
     <div class="container-fluid">
       <div class="row">
         <div class="col-8">
@@ -25,6 +25,9 @@
           {{ form.unit|as_crispy_field }}
         </div>
         <div class="col-2">
+          {{ form.price|as_crispy_field }}
+        </div>
+        <div class="col-2">
           {{ form.vendr|as_crispy_field }}
         </div>
       </div>
@@ -32,5 +35,5 @@
     <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Save part</button>
   </form>
 
-  
+
 {% endblock content %}

@@ -15,7 +15,6 @@ def is_valid_param(param):
 
 
 class PartManager(models.Manager):
-
     def search(self, query=None, by_vendor=None):
         qs = self.get_queryset()
         if is_valid_param(query):
@@ -34,8 +33,8 @@ class Part(models.Model):
     cat = models.ManyToManyField(Press)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)
-    price = models.FloatField(blank=True, null=True)
-    vendr = models.ManyToManyField('Vendor', blank=True)
+    price = models.FloatField()
+    vendr = models.ManyToManyField('Vendor')
 
     objects = PartManager()
 
@@ -47,7 +46,7 @@ class UsedPart(models.Model):
     """Intermediary"""
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE)
-    amount_used = models.PositiveIntegerField(null=True)
+    amount_used = models.PositiveIntegerField()
 
     def __str__(self):
         return str(self.order)

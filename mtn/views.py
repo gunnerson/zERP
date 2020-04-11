@@ -45,9 +45,10 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        order_id = self.object.id
-        used_parts = UsedPart.objects.filter(order_id=order_id)
+        used_parts = self.object.usedpart_set.all()
+        cost_of_repair = round(Order.cost_of_repair(self), 2)
         context['used_parts'] = used_parts
+        context['cost_of_repair'] = cost_of_repair
         return context
 
 

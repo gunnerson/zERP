@@ -11,9 +11,9 @@ class PartForm(forms.ModelForm):
 		fields = ['partnum', 'cat', 'amount', 'unit', 'vendr', 'price',
 			'descr'
 		]
-		labels = {'partnum': 'Part number', 'cat': 'Category', 'amount': 
-			'Amount', 'unit': 'Unit', 'vendr': 'Vendors', 'price': 'Price', 
-			'descr': 'Description', 
+		labels = {'partnum': 'Part number', 'cat': 'Category', 'amount':
+			'Amount', 'unit': 'Unit', 'vendr': 'Vendors', 'price': 'Price',
+			'descr': 'Description',
 		}
 
 
@@ -24,9 +24,9 @@ class VendorForm(forms.ModelForm):
 		fields = ['name', 'addr1', 'addr2', 'city', 'state', 'zipcode',
 			'email', 'phone', 'vcomm',
 		]
-		labels = {'name': 'Name', 'addr1': 'Address', 'addr2': 
-			'Address (line 2)', 'city': 'City', 'state': 'State', 
-			'zipcode': 'Zip Code', 'email': 'E-Mail', 'phone': 'Phone number', 
+		labels = {'name': 'Name', 'addr1': 'Address', 'addr2':
+			'Address (line 2)', 'city': 'City', 'state': 'State',
+			'zipcode': 'Zip Code', 'email': 'E-Mail', 'phone': 'Phone number',
 			'vcomm': 'Commentary',
 		}
 		widgets = {
@@ -74,5 +74,5 @@ class VendorForm(forms.ModelForm):
 				'class': 'form-control',
 				'placeholder': 'Commentary',
 				}
-			),			
+			),
 		}
