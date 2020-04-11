@@ -1,7 +1,7 @@
 from django.urls import path
 
-from . import views
-from mtn.views import (
+from .views import (
+    index,
     OrderListView,
     OrderDetailView,
     OrderCreateView,
@@ -13,7 +13,7 @@ app_name = "mtn"
 
 urlpatterns = [
 
-    path('', views.index, name='index'),
+    path('', index, name='index'),
 
     path('mwo/order-list/', OrderListView.as_view(), name='order-list'),
 

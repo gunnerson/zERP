@@ -1,16 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, Http404
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from django.forms import inlineformset_factory
-from django.views.generic import ListView, DetailView, CreateView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
 from .forms import OrderCreateForm, OrderUpdateForm
-from invent.models import Part, UsedPart
 
 
 def has_group(user, group_name):
@@ -52,23 +46,19 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class OrderCreateView(LoginRequiredMixin, CreateView):
+class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Order
     form_class = OrderCreateForm
+
+    def test_func(self):
+        return (has_group(self.request.user, 'maintenance') or
+            has_group(self.request.user, 'supervisor'))
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
         self.object.save()
-        if has_group(self.request.user, 'maintenance'):
-            return HttpResponseRedirect(self.get_success_url())
-        else:
-            return redirect('mtn:order-list')
-
-    def get_form_kwargs(self, *args, **kwargs):
-        kwargs = super(OrderCreateView, self).get_form_kwargs(*args, **kwargs)
-        kwargs['owner'] = self.request.user
-        return kwargs
+        return redirect(self.get_success_url())
 
 
 class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -77,21 +67,9 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update_form'
 
     def test_func(self):
-        if has_group(self.request.user, 'maintenance'):
-            return redirect('mtn:order-list')
+        return has_group(self.request.user, 'maintenance')
 
-
-# class AddPartView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-#     model = Order
-#     form_class = AddPartForm
-#     template_name_suffix = '_add_part'
-
-#     def test_func(self):
-#         if has_group(self.request.user, 'maintenance'):
-#             return redirect('mtn:order-list')
-
-#     def get_form_kwargs(self):
-#         kwargs = super().get_form_kwargs()
-#         kwargs.update(request=self.request)
-#         return kwargs
-
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     kwargs.update(request=self.request)
+    #     return kwargs

@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Press(models.Model):
 	"""List of company equipment"""
 	pname = models.CharField(max_length=12)

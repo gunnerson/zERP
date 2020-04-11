@@ -1,26 +1,21 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, Http404
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.shortcuts import redirect
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
 from .models import Part, UsedPart, Vendor, PartManager, is_valid_param
-from .forms import PartForm, VendorForm
+from .forms import PartCreateForm, VendorCreateForm
 from mtn.views import has_group
 from mtn.models import Order
 
 
 class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    template_name = 'invent/part_list.html'
     # paginate_by = 20
     count = 0
 
     def test_func(self):
-        if has_group(self.request.user, 'maintenance'):
-            return redirect('mtn:order-list')
+        return has_group(self.request.user, 'maintenance')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -63,47 +58,16 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             return redirect(request.META['HTTP_REFERER'])
 
 
-@login_required
-def new_part(request):
-    """Add new part"""
-    if has_group(request.user, 'maintenance'):
+class PartCreateView(LoginRequiredMixin, CreateView):
+    model = Part
+    form_class = PartCreateForm
 
-        if request.method != 'POST':
-            # No data submitted; create a blank form.
-            form = PartForm()
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
 
-        else:
-        # POST data submitted; process data.
-            form = PartForm(data=request.POST)
-            if form.is_valid():
-                form.save()
-                return HttpResponseRedirect(reverse('invent:partlist'))
+class VendorCreateView(LoginRequiredMixin, CreateView):
+    model = Vendor
+    form_class = VendorCreateForm
 
-    else:
-        raise Http404
-
-    context = {'form': form}
-    return render(request, 'invent/new_part.html', context)
-
-
-@login_required
-def new_vendor(request):
-    """Add new part"""
-    if has_group(request.user, 'maintenance'):
-
-        if request.method != 'POST':
-            # No data submitted; create a blank form.
-            form = VendorForm()
-
-        else:
-        # POST data submitted; process data.
-            form = VendorForm(data=request.POST)
-            if form.is_valid():
-                form.save()
-                return HttpResponseRedirect(reverse('invent:partlist'))
-
-    else:
-        raise Http404
-
-    context = {'form': form}
-    return render(request, 'invent/new_vendor.html', context)
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')

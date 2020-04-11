@@ -41,14 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third party apps
     'bootstrap4',
     'tempus_dominus',
     'django_tables2',
     'crispy_forms',
     'django_filters',
-    
+
     #My apps
     'mtn',
     'users',

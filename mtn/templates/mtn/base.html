@@ -43,7 +43,13 @@
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
-          </ul>
+          </li>
+          {% if user.is_superuser %}
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+            </li>
+          {% endif %}
+        </ul>
         <ul class="nav navbar-nav navbar-right" style="color:white;">
           {% if user.is_authenticated %}
             <li><a>Hello, {{ user.username }}. &nbsp</a></li>

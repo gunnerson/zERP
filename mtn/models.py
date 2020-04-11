@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from pprint import pprint
 
 from staff.models import Employee
 from equip.models import Press
-from invent.models import Part, UsedPart
+from invent.models import Part
+
 
 class Order(models.Model):
     """Maintenance work orders"""
@@ -62,8 +62,6 @@ class Order(models.Model):
     parts = models.ManyToManyField(Part, through='invent.UsedPart')
 
     def cost_of_repair(self):
-        # order_id = self.id
-        # used_parts = UsedPart.objects.filter(order_id=order_id)
         cost_of_repair = 0
         used_parts = self.object.usedpart_set.all()
         for part in used_parts:
@@ -72,8 +70,7 @@ class Order(models.Model):
         return cost_of_repair
 
     def __str__(self):
-        """return a string representation of the model."""
-        return str(self.id)
+        return str(f'{self.id:05}')
 
     def get_absolute_url(self):
         return reverse('mtn:order', kwargs={'pk': self.id})

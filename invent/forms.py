@@ -2,7 +2,7 @@ from django import forms
 from .models import Part, Vendor
 
 
-class PartForm(forms.ModelForm):
+class PartCreateForm(forms.ModelForm):
 	amount = forms.IntegerField(min_value=0, initial=0)
 	unit = forms.CharField(initial='items')
 
@@ -17,7 +17,7 @@ class PartForm(forms.ModelForm):
 		}
 
 
-class VendorForm(forms.ModelForm):
+class VendorCreateForm(forms.ModelForm):
 
 	class Meta:
 		model = Vendor
