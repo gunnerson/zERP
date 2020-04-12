@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
@@ -60,6 +60,13 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class PartCreateView(LoginRequiredMixin, CreateView):
     model = Part
     form_class = PartCreateForm
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+
+class PartDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Part
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')

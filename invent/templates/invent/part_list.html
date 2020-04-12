@@ -2,6 +2,18 @@
 
 {% block content %}
 
+  <div class="row justify-content-start">
+    <div class="col-sm-4">
+      <a href="{% url 'invent:new_part' %}" class="btn btn-primary btn-block" role="button">Add new part</a>
+    </div>
+    <div class="col-sm-4">
+      <a href="{% url 'invent:new_vendor' %}" class="btn btn-primary btn-block" role="button">Add new vendor</a>
+    </div>
+  </div>
+  <br>
+  <hr>
+  <br>
+
   <form method="GET" action=".">
     <div class="form-row justify-content-start">
       <div class="form-group col-3 align-self-center">
@@ -48,7 +60,7 @@
     <ul>
       {% for object in object_list %}
         <li>
-          <a href="{% url 'invent:partlist' %}">{{ object.partnum }}</a>
+          <a href="{% url 'invent:part' object.id %}">{{ object.partnum }}</a>
         </li>
       {% endfor %}
     </ul>

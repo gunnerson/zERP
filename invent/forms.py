@@ -4,6 +4,7 @@ from .models import Part, Vendor
 
 class PartCreateForm(forms.ModelForm):
 	amount = forms.IntegerField(min_value=0, initial=0)
+	price = forms.FloatField(min_value=0, initial=0)
 	unit = forms.CharField(initial='items')
 
 	class Meta:

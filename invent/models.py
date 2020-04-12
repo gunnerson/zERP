@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.db.models import Q
 
 from equip.models import Press
@@ -40,6 +41,9 @@ class Part(models.Model):
 
     def __str__(self):
         return str(self.partnum)
+
+    def get_absolute_url(self):
+        return reverse('invent:part', kwargs={'pk': self.id})
 
 
 class UsedPart(models.Model):
