@@ -45,8 +45,14 @@
             <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
           </li>
           {% if user.is_superuser %}
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Admin
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin page</a>
+                <a class="dropdown-item" href="{% url 'invent:usedpartlist' %}">Used Parts</a>
+              </div>
             </li>
           {% endif %}
         </ul>

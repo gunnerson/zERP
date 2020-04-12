@@ -47,6 +47,7 @@ class UsedPart(models.Model):
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE)
     amount_used = models.PositiveIntegerField()
+    marked_to_delete =models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.order)

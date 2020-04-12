@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from .models import Part, UsedPart, Vendor, PartManager, is_valid_param
 from .forms import PartCreateForm, VendorCreateForm
-from mtn.views import has_group
+from mtn.views import has_group, is_valid_queryparam
 from mtn.models import Order
 
 
@@ -30,7 +30,6 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         request = self.request
         query = request.GET.get('query', None)
         by_vendor = request.GET.get('by_vendor', None)
-
         if is_valid_param(query) or is_valid_param(by_vendor):
             search_results = Part.objects.search(query, by_vendor)
             qs = sorted(search_results,
@@ -64,6 +63,29 @@ class PartCreateView(LoginRequiredMixin, CreateView):
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
+
+
+class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = UsedPart
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        qs = UsedPart.objects.all().order_by('-order')
+        check_marked = self.request.GET.get('check_marked')
+        if check_marked:
+            qs = qs.filter(marked_to_delete=check_marked)
+        return qs
+
+    def post(self, request, *args, **kwargs):
+        delete_confirm = self.request.POST.get('delete_confirm')
+        if delete_confirm:
+            UsedPart.objects.filter(marked_to_delete=True).delete()
+            messages.add_message(request, messages.INFO,
+                'Marked entries successfully deleted')
+        return redirect(request.META['HTTP_REFERER'])
+
 
 class VendorCreateView(LoginRequiredMixin, CreateView):
     model = Vendor

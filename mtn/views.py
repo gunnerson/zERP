@@ -16,7 +16,6 @@ def is_valid_queryparam(param):
 
 
 def index(request):
-    """The home page for EPR"""
     return render(request, 'mtn/index.html')
 
 
