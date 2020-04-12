@@ -1,0 +1,17 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+{% load poll_extras %}
+
+  <div>
+    <a href="." class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
+  </div>
+  <br>
+
+
+  {% if request.user|has_group:"maintenance" %}
+    <a href="." role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
+  {% endif %}
+
+{% endblock content %}

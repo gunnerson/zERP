@@ -54,14 +54,14 @@ class UsedPart(models.Model):
     marked_to_delete =models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.order)
+        return str(self.id)
 
 
 class Vendor(models.Model):
     """List of Vendors"""
     name = models.CharField(max_length=50)
     addr1 = models.CharField(max_length=95, blank=True, null=True)
-    addr2 = models.CharField(max_length=10, blank=True, null=True)
+    addr2 = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=35, blank=True, null=True)
     state = models.CharField(max_length=2, blank=True, null=True)
     zipcode = models.CharField(max_length=10, blank=True, null=True)
@@ -71,3 +71,6 @@ class Vendor(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    def get_absolute_url(self):
+        return reverse('invent:vendor', kwargs={'pk': self.id})

@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -93,10 +93,35 @@ class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 'Marked entries successfully deleted')
         return redirect(request.META['HTTP_REFERER'])
 
+class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = UsedPart
+    template_name = 'invent/delete_part.html'
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+    def get_queryset(self):
+        self.order = get_object_or_404(Order, id=self.kwargs['pk'])
+        return UsedPart.objects.filter(order=self.order)
+
+    def post(self, request, *args, **kwargs):
+        order_id = self.kwargs['pk']
+        UsedPart.objects.filter(order_id=order_id).update(marked_to_delete=False)
+        marked_parts = request.POST.getlist('marked_to_delete')
+        for part in marked_parts:
+            UsedPart.objects.filter(pk=part).update(marked_to_delete=True)
+        return redirect('mtn:order', pk=order_id)
 
 class VendorCreateView(LoginRequiredMixin, CreateView):
     model = Vendor
     form_class = VendorCreateForm
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+
+class VendorDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Vendor
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')

@@ -63,7 +63,7 @@ class Order(models.Model):
 
     def cost_of_repair(self):
         cost_of_repair = 0
-        used_parts = self.object.usedpart_set.all()
+        used_parts = self.object.usedpart_set.filter(marked_to_delete=False)
         for part in used_parts:
             cost_of_part = part.amount_used * part.part.price
             cost_of_repair += cost_of_part

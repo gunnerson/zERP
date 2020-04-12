@@ -5,9 +5,9 @@ from .views import (
     OrderListView,
     OrderDetailView,
     OrderCreateView,
-    OrderUpdateView
+    OrderUpdateView,
     )
-from invent.views import PartListView
+from invent.views import PartListView, OrderPartsListView
 
 app_name = "mtn"
 
@@ -27,5 +27,8 @@ urlpatterns = [
     path('mwo/order/<int:pk>/add_part/',
         PartListView.as_view(template_name='invent/use_part.html'),
         name='add_part'),
+
+    path('mwo/order/<int:pk>/delete_part/', OrderPartsListView.as_view(),
+        name='delete_part'),
 
 ]

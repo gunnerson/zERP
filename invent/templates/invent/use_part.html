@@ -37,14 +37,13 @@
   </form>
 
   <form method="POST" action=".">
-    {% csrf_token %}
+  {% csrf_token %}
 
     <div class="form-row">
       <div class="col-2">
         <label for="id_amount" class="requiredField"><b>Amount: </b></label>
         <input type="number" name="amount" value="0" min="1"
-          max=object.amount class="numberinput form-control"
-          required id="id_amount">
+          max=object.amount class="numberinput form-control" required>
       </div>
     </div>
     <br>
@@ -64,7 +63,7 @@
           <div class="form-check">
             <input class="form-check-input" type="radio" name="used_part"
               value={{ object.pk }} required>
-            <label class="form-check-label" for="exampleRadios1">
+            <label class="form-check-label">
               {{ object.partnum }} (x{{ object.amount }})
             </label>
           </div>
