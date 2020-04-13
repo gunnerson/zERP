@@ -62,6 +62,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
+        # If order type isn't "repair" disable "cause" field
         if (self.object.ordertype == "ST" or
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"

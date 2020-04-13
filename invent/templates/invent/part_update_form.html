@@ -5,11 +5,11 @@
 {% load crispy_forms_tags %}
 
   <div>
-    <a href="{% url 'invent:partlist' %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
+    <a href="{% url 'invent:part' part.id %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
   </div>
   <br>
 
-  <form action="{% url 'invent:new_part' %}" method='post'>
+  <form action="{% url 'invent:edit_part' part.id %}" method='post'>
   {% csrf_token %}
     <div class="container fluid">
       <div class="row">
@@ -43,6 +43,5 @@
     <br>
     <br>
   </form>
-
 
 {% endblock content %}

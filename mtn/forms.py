@@ -15,7 +15,7 @@ class OrderCreateForm(forms.ModelForm):
 
 
 class OrderUpdateForm(forms.ModelForm):
-    timerep = forms.FloatField(min_value=0.1, max_value=99.9, initial=0.1)
+    timerep = forms.FloatField(min_value=0, max_value=99.9, initial=0)
     repdate = forms.DateField(widget=DatePicker())
 
     class Meta:

@@ -34,7 +34,7 @@ class Part(models.Model):
     cat = models.ManyToManyField(Press)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)
-    price = models.FloatField()
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     vendr = models.ManyToManyField('Vendor')
 
     objects = PartManager()

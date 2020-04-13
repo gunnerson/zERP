@@ -9,9 +9,47 @@
   </div>
   <br>
 
+  <div class="container break-text">
+    <div class="row">
+      <div class="col-sm">
+        <b>Part Number:</b>
+        <p>{{ part.partnum }}
+      </div>
+      <div class="col">
+        <b>Category:</b>
+        <p>
+        {% for cat in part.cat.all %}
+          <span>{{ cat }},&nbsp</span>
+        {% endfor %}
+      </div>
+      <div class="col-sm">
+        <b>Amount in stock:</b>
+        <p>{{ part.amount }} {{ part.unit }}
+      </div>
+      <div class="col-sm">
+        <b>Price:</b>
+        <p>$ {{ part.price }}
+      </div>
+      <div class="col-sm">
+        <b>Vendors:</b>
+        <p>
+        {% for vendor in part.vendr.all %}
+          <span>{{ vendor }},&nbsp</span>
+        {% endfor %}
+      </div>
+      <br>
+    </div>
+    <div class="row">
+      <div class="col">
+        <b>Description:</b>
+        <p>{{ part.descr }}
+      </div>
+    </div>
+  </div>
+  <br>
 
   {% if request.user|has_group:"maintenance" %}
-    <a href="." role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
+    <a href="{% url 'invent:edit_part' part.id %}" role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
   {% endif %}
 
 {% endblock content %}

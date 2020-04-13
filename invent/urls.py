@@ -4,6 +4,7 @@ from invent.views import (
     PartListView,
     PartCreateView,
     PartDetailView,
+    PartUpdateView,
     VendorCreateView,
     VendorDetailView,
     UsedPartListView,
@@ -14,6 +15,8 @@ app_name = "invent"
 urlpatterns = [
     path('inventory/', PartListView.as_view(), name='partlist'),
     path('inventory/part/<int:pk>', PartDetailView.as_view(), name='part'),
+    path('inventory/part/<int:pk>/edit', PartUpdateView.as_view(),
+         name='edit_part'),
     path('inventory/new_part/', PartCreateView.as_view(), name='new_part'),
     path('inventory/new_vendor/', VendorCreateView.as_view(),
          name='new_vendor'),

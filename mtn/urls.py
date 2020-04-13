@@ -19,9 +19,9 @@ urlpatterns = [
 
     path('mwo/order/<int:pk>', OrderDetailView.as_view(), name='order'),
 
-    path('mwo/create_order/', OrderCreateView.as_view(), name='new_order'),
+    path('mwo/order/create/', OrderCreateView.as_view(), name='new_order'),
 
-    path('mwo/update_order/<int:pk>/', OrderUpdateView.as_view(),
+    path('mwo/order/<int:pk>/edit', OrderUpdateView.as_view(),
          name='edit_order'),
 
     path('mwo/order/<int:pk>/add_part/',

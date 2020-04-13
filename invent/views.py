@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
@@ -78,9 +78,16 @@ class PartCreateView(LoginRequiredMixin, CreateView):
         return has_group(self.request.user, 'maintenance')
 
 
-class PartDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class PartDetailView(LoginRequiredMixin, DetailView):
     """View part from the inventory"""
     model = Part
+
+
+class PartUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Edit part"""
+    model = Part
+    form_class = PartCreateForm
+    template_name='invent/part_update_form.html'
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
