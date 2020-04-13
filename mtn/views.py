@@ -8,10 +8,12 @@ from .forms import OrderCreateForm, OrderUpdateForm
 
 
 def has_group(user, group_name):
+    # Check if the user belongs to a certain group
     return user.groups.filter(name=group_name).exists()
 
 
 def is_valid_queryparam(param):
+    # Check that returned parameter is valid
     return param != '' and param is not None
 
 
@@ -20,10 +22,12 @@ def index(request):
 
 
 class OrderListView(LoginRequiredMixin, ListView):
+    """List of existing work orders"""
     model = Order
     paginate_by = 10
 
     def get_queryset(self):
+        # Filter open and closed orders separately
         qs = Order.objects.all().order_by('-date_added')
         check_closed = self.request.GET.get('check_closed')
         if is_valid_queryparam(check_closed):
@@ -34,6 +38,7 @@ class OrderListView(LoginRequiredMixin, ListView):
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
+    """View a work order"""
     model = Order
 
     def get_context_data(self, *args, **kwargs):
@@ -46,6 +51,7 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
 
 
 class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Create a work order"""
     model = Order
     form_class = OrderCreateForm
 
@@ -64,6 +70,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Edit a work order"""
     model = Order
     form_class = OrderUpdateForm
     template_name_suffix = '_update_form'

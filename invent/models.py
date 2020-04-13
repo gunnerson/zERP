@@ -28,7 +28,7 @@ class PartManager(models.Manager):
 
 
 class Part(models.Model):
-    """List of company equipment"""
+    """List of inventory"""
     partnum = models.CharField(max_length=20)
     descr = models.TextField(blank=True, null=True)
     cat = models.ManyToManyField(Press)
@@ -47,7 +47,7 @@ class Part(models.Model):
 
 
 class UsedPart(models.Model):
-    """Intermediary"""
+    """Intermediary table for m2m between Part and Order classes"""
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE)
     amount_used = models.PositiveIntegerField()

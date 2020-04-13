@@ -19,7 +19,6 @@ class PartCreateForm(forms.ModelForm):
 
 
 class VendorCreateForm(forms.ModelForm):
-
     class Meta:
         model = Vendor
         fields = ['name', 'addr1', 'addr2', 'city', 'state', 'zipcode',

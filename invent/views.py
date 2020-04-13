@@ -11,14 +11,22 @@ from mtn.models import Order
 
 
 class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    # paginate_by = 20
+    """List of all parts in the inventory and list of parts to add
+    to an existing work order"""
+    model = Part
     count = 0
+    # paginate_by = 20
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        # Get order id for "Back" button in template
+        if 'pk' in self.kwargs:
+            order_id = self.kwargs['pk']
+            context['order_id'] = order_id
+        # Keep search fields populated after GET request submitted
         by_vendor = self.request.GET.get('by_vendor', None)
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('query')
@@ -27,6 +35,7 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return context
 
     def get_queryset(self):
+        # Filter parts by part number and by vendor
         request = self.request
         query = request.GET.get('query', None)
         by_vendor = request.GET.get('by_vendor', None)
@@ -40,6 +49,8 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return Part.objects.all()
 
     def post(self, request, *args, **kwargs):
+        # Check if enough in stock, add to work order and subtrack
+        # from amount in stock
         order_id = self.kwargs['pk']
         order = Order.objects.get(id=order_id)
         used_part_id = self.request.POST.get('used_part', None)
@@ -59,6 +70,7 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 
 class PartCreateView(LoginRequiredMixin, CreateView):
+    """Add new part to inventory"""
     model = Part
     form_class = PartCreateForm
 
@@ -67,6 +79,7 @@ class PartCreateView(LoginRequiredMixin, CreateView):
 
 
 class PartDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """View part from the inventory"""
     model = Part
 
     def test_func(self):
@@ -74,6 +87,7 @@ class PartDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 
 class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    """Delete marked parts from work orders"""
     model = UsedPart
 
     def test_func(self):
@@ -96,13 +110,22 @@ class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 
 class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    """Mark used parts in a work order for deletion"""
     model = UsedPart
     template_name = 'invent/delete_part.html'
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
 
+    def get_context_data(self, *args, **kwargs):
+        # Get order id for "Back" button in template
+        order_id = self.kwargs['pk']
+        context = super().get_context_data(*args, **kwargs)
+        context['order_id'] = order_id
+        return context
+
     def get_queryset(self):
+        # Filter parts associated with requested
         self.order = get_object_or_404(Order, id=self.kwargs['pk'])
         return UsedPart.objects.filter(order=self.order)
 
@@ -117,6 +140,7 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 
 class VendorCreateView(LoginRequiredMixin, CreateView):
+    """Add new vendor"""
     model = Vendor
     form_class = VendorCreateForm
 
@@ -125,6 +149,7 @@ class VendorCreateView(LoginRequiredMixin, CreateView):
 
 
 class VendorDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """View vendor"""
     model = Vendor
 
     def test_func(self):
