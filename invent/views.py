@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from .models import Part, UsedPart, Vendor, is_valid_param
 from .forms import PartCreateForm, VendorCreateForm
-from mtn.views import has_group,
+from mtn.views import has_group
 from mtn.models import Order
 
 

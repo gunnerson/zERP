@@ -15,7 +15,7 @@ class OrderCreateForm(forms.ModelForm):
 
 
 class OrderUpdateForm(forms.ModelForm):
-    timerep = forms.FloatField(min_value=0.1, max_value=99.9, initial='0.1')
+    timerep = forms.FloatField(min_value=0.1, max_value=99.9, initial=0.1)
     repdate = forms.DateField(widget=DatePicker())
 
     class Meta:
@@ -31,6 +31,12 @@ class OrderUpdateForm(forms.ModelForm):
         widgets = {
             'descrrep': forms.Textarea(attrs={'cols': 80}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(OrderUpdateForm, self).__init__(*args, **kwargs)
+        if (self.instance.ordertype == "ST" or
+                self.instance.ordertype == "PM"):
+            self.fields['cause'].disabled = True
 
     # def __init__(self, *args, request=None, **kwargs):
     #     super(OrderUpdateForm, self).__init__(*args, **kwargs)
