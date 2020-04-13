@@ -30,23 +30,23 @@ class Order(models.Model):
         choices=ORDER_TYPE,
     )
     origin = models.ForeignKey(Employee,
-        on_delete=models.SET_NULL,
-        null=True,
-        limit_choices_to={'role': "SV"},
-        related_name='+',
-    )
-    local =  models.ForeignKey(Press,
-        models.SET_NULL,
-        null=True,
-    )
+                               on_delete=models.SET_NULL,
+                               null=True,
+                               limit_choices_to={'role': "SV"},
+                               related_name='+',
+                               )
+    local = models.ForeignKey(Press,
+                              models.SET_NULL,
+                              null=True,
+                              )
     descr = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
     repby = models.ForeignKey(Employee,
-        on_delete=models.SET_NULL,
-        null=True,
-        limit_choices_to={'role': "MT"},
-    )
-    cause =  models.CharField(
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              limit_choices_to={'role': "MT"},
+                              )
+    cause = models.CharField(
         null=True,
         max_length=2,
         choices=CAUSE_OF_REPAIR,
@@ -55,9 +55,9 @@ class Order(models.Model):
     timerep = models.FloatField(null=True)
     repdate = models.DateField(null=True,)
     owner = models.ForeignKey(User,
-        on_delete=models.SET_NULL,
-        null=True,
-    )
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              )
     closed = models.BooleanField(default=False)
     parts = models.ManyToManyField(Part, through='invent.UsedPart')
 

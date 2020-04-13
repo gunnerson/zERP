@@ -9,19 +9,19 @@ def is_valid_param(param):
     if param == 'query':
         return param != '' and param is not None
     else:
-        return (param is not None
-            and param != 'Choose vendor...'
-            and param != 'All vendors'
-        )
+        return (param is not None and
+                param != 'Choose vendor...' and
+                param != 'All vendors'
+                )
 
 
 class PartManager(models.Manager):
     def search(self, query=None, by_vendor=None):
         qs = self.get_queryset()
         if is_valid_param(query):
-            qs = qs.filter(Q(partnum__icontains=query)
-                | Q(descr__icontains=query)
-                ).distinct()
+            qs = qs.filter(Q(partnum__icontains=query) |
+                           Q(descr__icontains=query)
+                           ).distinct()
         if is_valid_param(by_vendor):
             qs = qs.filter(vendr__name=by_vendor)
         return qs
@@ -51,7 +51,7 @@ class UsedPart(models.Model):
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE)
     amount_used = models.PositiveIntegerField()
-    marked_to_delete =models.BooleanField(default=False)
+    marked_to_delete = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)

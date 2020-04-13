@@ -4,8 +4,7 @@
 
 {% load crispy_forms_tags %}
 
-  <p><a href="{% url 'mtn:order' order.id %}" role="button"
-    class="btn btn-primary btn-sm">MWO No {{ order }}</a></p>
+  <p><a href="{% url 'mtn:order' order.id %}" role="button" class="btn btn-primary btn-sm">MWO No {{ order }}</a></p>
 
   <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
@@ -43,8 +42,7 @@
       {{ form.closed|as_crispy_field }}
     </div>
 
-    <button name="submit" role="button" class="btn btn-primary btn-sm
-      btn-block">Save Changes</button>
+    <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Save Changes</button>
     <br>
     <br>
   </form>

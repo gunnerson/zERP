@@ -4,9 +4,9 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
-from .models import Part, UsedPart, Vendor, PartManager, is_valid_param
+from .models import Part, UsedPart, Vendor, is_valid_param
 from .forms import PartCreateForm, VendorCreateForm
-from mtn.views import has_group, is_valid_queryparam
+from mtn.views import has_group,
 from mtn.models import Order
 
 
@@ -47,13 +47,14 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         amount = self.request.POST.get('amount', None)
         if int(amount) <= used_part.amount:
             new_used_part = UsedPart(part=used_part, order=order,
-                amount_used=amount)
+                                     amount_used=amount)
             new_used_part.save()
             used_part.amount -= int(amount)
             used_part.save(update_fields=['amount'])
             return redirect('mtn:order', pk=order_id)
         else:
-            messages.add_message(request, messages.INFO, 'Not enough items in stock')
+            messages.add_message(request, messages.INFO,
+                                 'Not enough items in stock')
             return redirect(request.META['HTTP_REFERER'])
 
 
@@ -90,8 +91,9 @@ class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         if delete_confirm:
             UsedPart.objects.filter(marked_to_delete=True).delete()
             messages.add_message(request, messages.INFO,
-                'Marked entries successfully deleted')
+                                 'Marked entries successfully deleted')
         return redirect(request.META['HTTP_REFERER'])
+
 
 class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = UsedPart
@@ -106,11 +108,13 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs['pk']
-        UsedPart.objects.filter(order_id=order_id).update(marked_to_delete=False)
+        UsedPart.objects.filter(order_id=order_id).update(
+            marked_to_delete=False)
         marked_parts = request.POST.getlist('marked_to_delete')
         for part in marked_parts:
             UsedPart.objects.filter(pk=part).update(marked_to_delete=True)
         return redirect('mtn:order', pk=order_id)
+
 
 class VendorCreateView(LoginRequiredMixin, CreateView):
     model = Vendor

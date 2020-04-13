@@ -7,8 +7,7 @@
       <form method="POST" action=".">
       {% csrf_token %}
         <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input"
-            name="delete_confirm" value=True>
+          <input type="checkbox" class="form-check-input" name="delete_confirm" value=True>
           <label class="form-check-label" for="exampleCheck1">Deletion can't be reversed. Confirm to proceed.</label>
         </div>
         <button type="submit" class="btn btn-primary btn-sm">Delete marked</button>
@@ -20,16 +19,14 @@
       <form method="GET" action=".">
       {% csrf_token %}
         <input type="hidden" name="check_marked" value=False>
-        <button type="submit" class="btn btn-primary btn-sm btn-block">
-          Show all</button>
+        <button type="submit" class="btn btn-primary btn-sm btn-block">Show all</button>
       </form>
     </div>
      <div class="form-group col-md-3 align-self-left">
       <form method="GET" action=".">
       {% csrf_token %}
         <input type="hidden" name="check_marked" value=True>
-        <button type="submit" class="btn btn-primary btn-sm btn-block">
-          Show marked</button>
+        <button type="submit" class="btn btn-primary btn-sm btn-block">Show marked</button>
       </form>
     </div>
   </div>
