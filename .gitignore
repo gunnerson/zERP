@@ -1,3 +1,4 @@
+.gitignore
 ve/
 erp_ve/
 __pycache__/
