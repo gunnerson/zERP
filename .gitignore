@@ -8,4 +8,6 @@ __pycache__/
 node_modules/
 rahco.sublime**
 erp/settings.py
+erp/settings_work_backup.py
+erp/settings_home_backup.py
 
