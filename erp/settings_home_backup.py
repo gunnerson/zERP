@@ -21,13 +21,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'x$ruwio0cp5lm1bx2r@)_6v97gl=@2cjirn43-or3ibzb#@a3z'
 
-import os
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'x$ruwio0cp5lm1bx2r@)_6v97gl=@2cjirn43-or3ibzb#@a3z')
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY', 'x$ruwio0cp5lm1bx2r@)_6v97gl=@2cjirn43-or3ibzb#@a3z')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
+# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+
 DEBUG = True
-#DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = []
 
@@ -41,15 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third party apps
     'bootstrap4',
     'tempus_dominus',
     'django_tables2',
     'crispy_forms',
     'django_filters',
-    
-    #My apps
+
+    # My apps
     'mtn',
     'users',
     'staff',
@@ -86,7 +87,6 @@ TEMPLATES = [
 ]
 
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -94,7 +94,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-     }
+    }
 }
 
 
@@ -141,13 +141,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 
 
-
 # My settings
 LOGIN_URL = '/users/login/'
 
 # Settings for django-bootstrap
 BOOTSTRAP = {
-'include_jquery': True,
+    'include_jquery': True,
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
