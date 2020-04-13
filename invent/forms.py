@@ -2,8 +2,9 @@ from django import forms
 from .models import Part, Vendor
 
 
-class PartForm(forms.ModelForm):
+class PartCreateForm(forms.ModelForm):
 	amount = forms.IntegerField(min_value=0, initial=0)
+	price = forms.FloatField(min_value=0, initial=0)
 	unit = forms.CharField(initial='items')
 
 	class Meta:
@@ -11,22 +12,22 @@ class PartForm(forms.ModelForm):
 		fields = ['partnum', 'cat', 'amount', 'unit', 'vendr', 'price',
 			'descr'
 		]
-		labels = {'partnum': 'Part number', 'cat': 'Category', 'amount': 
-			'Amount', 'unit': 'Unit', 'vendr': 'Vendors', 'price': 'Price', 
-			'descr': 'Description', 
+		labels = {'partnum': 'Part number', 'cat': 'Category', 'amount':
+			'Amount', 'unit': 'Unit', 'vendr': 'Vendors', 'price': 'Price',
+			'descr': 'Description',
 		}
 
 
-class VendorForm(forms.ModelForm):
+class VendorCreateForm(forms.ModelForm):
 
 	class Meta:
 		model = Vendor
 		fields = ['name', 'addr1', 'addr2', 'city', 'state', 'zipcode',
 			'email', 'phone', 'vcomm',
 		]
-		labels = {'name': 'Name', 'addr1': 'Address', 'addr2': 
-			'Address (line 2)', 'city': 'City', 'state': 'State', 
-			'zipcode': 'Zip Code', 'email': 'E-Mail', 'phone': 'Phone number', 
+		labels = {'name': 'Name', 'addr1': 'Address', 'addr2':
+			'Address (line 2)', 'city': 'City', 'state': 'State',
+			'zipcode': 'Zip Code', 'email': 'E-Mail', 'phone': 'Phone number',
 			'vcomm': 'Commentary',
 		}
 		widgets = {
@@ -74,5 +75,5 @@ class VendorForm(forms.ModelForm):
 				'class': 'form-control',
 				'placeholder': 'Commentary',
 				}
-			),			
+			),
 		}

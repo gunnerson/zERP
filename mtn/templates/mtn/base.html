@@ -22,27 +22,39 @@
   </head>
 
   <body>
-	
+
     <nav class="navbar navbar-expand-md navbar-dark bg-primary sticky-top" >
       <a class="navbar-brand" href="{% url 'mtn:index' %}">RAHCO</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-  
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'mtn:order-list' %}">Work Orders</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
+            <a class="nav-link" href="{% url 'invent:partlist' %}">Inventory</a>
+          </li>
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'equip:equip' %}">Equipment</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'invent:partslist' %}">Inventory</a>
+            <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
           </li>
+          {% if user.is_superuser %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Admin
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin page</a>
+                <a class="dropdown-item" href="{% url 'invent:usedpartlist' %}">Used Parts</a>
+              </div>
+            </li>
+          {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right" style="color:white;">
           {% if user.is_authenticated %}
@@ -57,19 +69,19 @@
     </nav>
 
     <br>
-    
+
     <div class="container">
-  
+
       <div class="page-header">
         {% block header %}{% endblock header %}
       </div>
       <div>
         {% block content %}{% endblock content %}
       </div>
-  
-    </div> 
+
+    </div>
 
   </body>
 
 </html>
-  
+

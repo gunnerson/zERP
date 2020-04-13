@@ -59,16 +59,28 @@
       <br>
       <br>
       <b>Parts: </b>
-      {% for part in order.parts.all %}
-        <a href="">{{ part }},&nbsp</a>
+      {% for part in used_parts %}
+        {% if part.marked_to_delete %}
+          <a href="" style="color:#FF0000;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+        {% else %}
+          <a href="">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+        {% endif %}
       {% endfor %}
+      <p><b>Cost of Repair:</b> ${{ cost_of_repair }}
+      <br>
   </div>
 
-  {% if request.user|has_group:"maintenance" %} 
-    <a href="{% url 'mtn:add_part' order.id %}" role="button" class="btn btn-primary btn-sm">Add parts</a>
+  {% if request.user|has_group:"maintenance" %}
+    <div class="row">
+      <div class="col-2">
+        <a href="{% url 'mtn:add_part' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Add parts</a>
+      </div>
+      <div class="col-2">
+        <a href="{% url 'mtn:delete_part' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Delete parts</a>
+      </div>
     <br>
     <br>
     <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
   {% endif %}
-    
+
 {% endblock content %}

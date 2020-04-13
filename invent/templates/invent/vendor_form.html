@@ -2,17 +2,16 @@
 
 {% block content %}
 
-
   <form action="{% url 'invent:new_vendor' %}" method='post'>
     {% csrf_token %}
-    
+
     <div class="row">
       <div class="col">
-        {{ form.name }}    
+        {{ form.name }}
         <br>
         {{ form.addr1 }}
         <br>
-        {{ form.addr2 }}    
+        {{ form.addr2 }}
         <br>
         <div class="row">
           <div class="col">{{ form.city }} </div>
@@ -20,28 +19,18 @@
           <div class="col-3">{{ form.zipcode }} </div>
         </div>
         <br>
-        {{ form.phone }}    
+        {{ form.phone }}
         <br>
-        {{ form.email }}    
+        {{ form.email }}
         <br>
       </div>
       <div class="col">
-        {{ form.vcomm }}      
+        {{ form.vcomm }}
       </div>
     </div>
-    <p>
-      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-        Add Parts
-      </button>
-    </p>
-    <div class="collapse" id="collapseExample">
-      <div class="card card-body">
-        {{ form.parts }}
-      </div>
-    </div>    
     <br>
     <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Save vendor</button>
   </form>
 
-  
+
 {% endblock content %}

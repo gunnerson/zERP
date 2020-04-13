@@ -1,0 +1,69 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+  <div class="row justify-content-start">
+    <div class="col-sm-4">
+      <a href="{% url 'invent:new_part' %}" class="btn btn-primary btn-block" role="button">Add new part</a>
+    </div>
+    <div class="col-sm-4">
+      <a href="{% url 'invent:new_vendor' %}" class="btn btn-primary btn-block" role="button">Add new vendor</a>
+    </div>
+  </div>
+  <br>
+  <hr>
+  <br>
+
+  <form method="GET" action=".">
+    <div class="form-row justify-content-start">
+      <div class="form-group col-3 align-self-center">
+        <div class="input-group">
+          <input class="form-conrol py-2 border-right-0 border" type="search" placeholder="Search by part number" name="query" value="{{ query|default:"" }}">
+            <span class="input-group-append">
+              <div class="input-group-text bg-transparent">
+                <i class="fa fa-search"></i>
+              </div>
+            </span>
+        </div>
+      </div>
+      <div class="form-group col-3 align-self-center">
+        <select class="form-control" name="by_vendor">
+          <option selected>{{ by_vendor|default:"Choose vendor..." }}</option>
+          {% if by_vendor != "All vendors" %}
+            <option>All vendors</option>
+          {% endif %}
+          {% for vendor in vendors %}
+              <option value="{{ vendor }}">{{ vendor }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col align-self-center ml-4">
+       <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </form>
+
+  {% if count >= 0 and query != None %}
+    <div class='row my-3'>
+        <div class='col-12 py-0'>
+          {% if by_vendor == "Choose vendor..." %}
+            <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>All vendors</b></h3>
+          {% else %}
+            <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>{{ by_vendor|default:"All vendors" }}</b></h3>
+          {% endif %}
+        </div>
+    </div>
+  {% endif %}
+
+  <hr />
+  <div class="row">
+    <ul>
+      {% for object in object_list %}
+        <li>
+          <a href="{% url 'invent:part' object.id %}">{{ object.partnum }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+{% endblock content %}
