@@ -51,7 +51,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return (has_group(self.request.user, 'maintenance') or
-            has_group(self.request.user, 'supervisor'))
+                has_group(self.request.user, 'supervisor'))
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
