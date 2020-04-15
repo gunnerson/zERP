@@ -16,7 +16,7 @@ def is_valid_param(param):
 
 
 class PartManager(models.Manager):
-    def search(self, query=None, by_vendor=None):
+    def search(self, query=None, by_vendor=None, press=None):
         qs = self.get_queryset()
         if is_valid_param(query):
             qs = qs.filter(Q(partnum__icontains=query) |

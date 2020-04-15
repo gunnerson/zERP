@@ -61,9 +61,9 @@
       <b>Parts: </b>
       {% for part in used_parts %}
         {% if part.marked_to_delete %}
-          <a href="" style="color:#FF0000;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+          <a href="{% url 'invent:part' part.part.id %}" style="color:#FF0000;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
         {% else %}
-          <a href="">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+          <a href="{% url 'invent:part' part.part.id %}">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
         {% endif %}
       {% endfor %}
       <p><b>Cost of Repair:</b> ${{ cost_of_repair }}
