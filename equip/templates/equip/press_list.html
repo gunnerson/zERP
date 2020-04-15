@@ -1,0 +1,20 @@
+{% extends "mtn/base.html" %}
+
+{% block content %}
+
+  <div class="container">
+	  {% for object in object_list %}
+      <div class="row" style="height: 30px">
+        <div class="col-6">
+          <a href="{% url 'equip:press' object.id %}">{{ object.pname }}</a>
+        </div>
+      </div>
+	  {% empty %}
+		  <p>No equipment have been added yet.</p>
+    {% endfor %}
+  </div>
+
+{% endblock content %}
+
+
+

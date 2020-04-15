@@ -1,11 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Press
 
 
-def equip(request):
-    """Equipment list."""
-    presses = Press.objects.order_by('pname')
-    context = {'presses': presses}
+class PressListView(LoginRequiredMixin, ListView):
+    """List of equipment"""
+    model = Press
 
-    return render(request, 'equip/index.html', context)
+
+class PressDetailView(LoginRequiredMixin, DetailView):
+    """View part from the inventory"""
+    model = Press

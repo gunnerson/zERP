@@ -1,11 +1,13 @@
 from django.urls import path
 
-from .views import equip
+from equip.views import (
+    PressListView,
+    PressDetailView,
+)
 
 app_name = "equip"
 
 urlpatterns = [
-
-    path('equipment/', equip, name='equip'),
-
+    path('equipment/', PressListView.as_view(), name='presslist'),
+    path('equipment/press/<int:pk>', PressDetailView.as_view(), name='press'),
 ]

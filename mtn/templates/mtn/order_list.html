@@ -25,7 +25,7 @@
 	<div class="container ">
     {% for order in object_list %}
             <div class="row justify-content-center" style="height: 45px">
-              <div class="col-8">
+              <div class="col-8 ">
                 {% if order.ordertype == "ST" %}
                   <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-warning text-nowrap text-truncate">
                     No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
