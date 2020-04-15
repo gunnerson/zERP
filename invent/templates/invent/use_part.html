@@ -36,7 +36,7 @@
           <label class="form-check-label" for="exampleCheck1">Filter by press</label>
         </div>
       {% else %}
-        <div class="form-group form-check">
+        <div class="form-group form-check align-self-center ml-3">
           <input type="checkbox" class="form-check-input" name="press">
           <label class="form-check-label" for="exampleCheck1">Filter by press</label>
         </div>
@@ -49,7 +49,6 @@
 
   <form method="POST" action=".">
   {% csrf_token %}
-
     <div class="form-row">
       <div class="col-2">
         <label for="id_amount" class="requiredField"><b>Amount: </b></label>
@@ -64,7 +63,9 @@
           {% endfor %}
       </ul>
     {% endif %}
-    <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Add part</button>
+    <div class="col-4">
+      <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Add part</button>
+    </div>
     <br>
     <div class="row">
       <ul>

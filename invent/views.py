@@ -15,7 +15,7 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     to an existing work order"""
     model = Part
     count = 0
-    # paginate_by = 20
+    paginate_by = 20
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
@@ -48,10 +48,10 @@ class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         by_vendor = request.GET.get('by_vendor', None)
         press_checked = request.GET.get('press', None)
         if is_valid_param(query) or is_valid_param(by_vendor):
-            qs = Part.objects.search(query, by_vendor)
+            qs = Part.objects.search(query, by_vendor).order_by('-pk')
             self.count = len(qs)
         if press_checked:
-            qs = qs.filter(cat=press)
+            qs = qs.filter(cat=press).order_by('-pk')
         return qs
 
     def post(self, request, *args, **kwargs):
