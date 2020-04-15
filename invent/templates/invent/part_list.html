@@ -56,14 +56,18 @@
   {% endif %}
 
   <hr />
-  <div class="row">
-    <ul>
-      {% for object in object_list %}
-        <li>
-          <a href="{% url 'invent:part' object.id %}">{{ object.partnum }}</a>
-        </li>
-      {% endfor %}
-    </ul>
+
+  <div class="container" style="background-color:white;">
+    {% for object in object_list %}
+        <div class="row border">
+          <div class="col-2 border-right">
+            <a href="{% url 'invent:part' object.id %}">{{ object.partnum }}</a>
+          </div>
+          <div class="col text-nowrap text-truncate">
+            {{ object.descr }}
+          </div>
+        </div>
+    {% endfor %}
   </div>
 
   {% if page_obj.paginator.num_pages > 1 %}

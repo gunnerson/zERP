@@ -24,7 +24,7 @@ def index(request):
 class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
-    paginate_by = 10
+    paginate_by = 20
 
     def get_queryset(self):
         # Filter open and closed orders separately

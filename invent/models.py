@@ -29,13 +29,13 @@ class PartManager(models.Manager):
 
 class Part(models.Model):
     """List of inventory"""
-    partnum = models.CharField(max_length=20)
+    partnum = models.CharField(max_length=35)
     descr = models.TextField(blank=True, null=True)
     cat = models.ManyToManyField(Press)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    vendr = models.ManyToManyField('Vendor')
+    vendr = models.ManyToManyField('Vendor', blank=True)
 
     objects = PartManager()
 
