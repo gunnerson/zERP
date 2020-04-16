@@ -1,102 +1,101 @@
 {% extends "mtn/base.html" %}
 
+{% block left-menu%}
+
+  <ul>
+    <li>
+      <a href="{% url 'mtn:new_order' %}" class="side-menu-link" role="button">+ New Order</a>
+    </li>
+    <li>
+        <form method="GET" action=".">
+          <input type="hidden" name="check_closed" value="False">
+          <button type="submit" class="side-menu-link">Open Orders</button>
+        </form>
+    </li>
+    <li>
+        <form method="GET" action=".">
+          <input type="hidden" name="check_closed" value="True">
+          <button type="submit" class="side-menu-link">Closed Orders</button>
+        </form>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
 {% block content %}
 
-  <div>
-    <a href="{% url 'mtn:new_order' %}" class="btn btn-primary btn-lg btn-block" role="button">Create New Manitenance Work Order</a>
-  </div>
-  <br>
-
-  <div class="form-row justify-content-center">
-    <div class="form-group col-2 align-self-left">
-      <form method="GET" action=".">
-        <input type="hidden" name="check_closed" value="False">
-        <button type="submit" class="btn btn-primary btn-block">Open Orders</button>
-      </form>
-    </div>
-    <div class="form-group col-2 align-self-left">
-      <form method="GET" action=".">
-        <input type="hidden" name="check_closed" value="True">
-        <button type="submit" class="btn btn-primary btn-block">Closed Orders</button>
-      </form>
-    </div>
-  </div>
-
-	<div class="container ">
-    {% for order in object_list %}
-            <div class="row justify-content-center" style="height: 45px">
-              <div class="col-8 ">
-                {% if order.ordertype == "ST" %}
-                  <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-warning text-nowrap text-truncate">
-                    No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
-                  </a>
-                {% elif order.ordertype == "PM" %}
-                  <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-success text-nowrap text-truncate">
-                    No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
-                  </a>
-                {% else %}
-                  <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-danger text-nowrap text-truncate">
-                    No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
-                  </a>
-                {% endif %}
-              </div>
+  {% for order in object_list %}
+          <div class="row justify-content-center" style="height: 45px">
+            <div class="col-8 ">
+              {% if order.ordertype == "ST" %}
+                <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-warning text-nowrap text-truncate">
+                  No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
+                </a>
+              {% elif order.ordertype == "PM" %}
+                <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-success text-nowrap text-truncate">
+                  No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
+                </a>
+              {% else %}
+                <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-danger text-nowrap text-truncate">
+                  No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
+                </a>
+              {% endif %}
             </div>
-	  {% empty %}
-		  <p>No orders have been added yet.</p>
-    {% endfor %}
+          </div>
+  {% empty %}
+	  <p>No orders have been added yet.</p>
+  {% endfor %}
 
-    <br>
-    <div class="container">
-      <div class="row justify-content-center">
-        {% if page_obj.paginator.num_pages > 1 %}
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              {% if page_obj.has_previous %}
-                <li class="page-item">
-                  <a class="page-link" href="?page=1" aria-label="First">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span>{{ page_obj.previous_page_number }}</span>
-                  </a>
-                </li>
-              {% endif %}
-              <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }}"><span>{{ page_obj.number }}</span></a></li>
-             {% if page_obj.has_next %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span>{{ page_obj.next_page_number }}</span>
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              {% endif %}
-            </ul>
-          </nav>
-        {% endif %}
+  <br>
+  <div class="container">
+    <div class="row justify-content-center">
+      {% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                  <span>{{ page_obj.previous_page_number }}</span>
+                </a>
+              </li>
+            {% endif %}
+            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }}"><span>{{ page_obj.number }}</span></a></li>
+           {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                  <span>{{ page_obj.next_page_number }}</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+
+  <br>
+  <div class="container text-center">
+    <div class="row justify-content-center" style="height: 35px">
+      <div class="col-2">
+        <button class="btn btn-sm btn-block btn-danger"> REPAIR </button>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-sm btn-block btn-warning"> SETUP </button>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-sm btn-block btn-success"> PM </button>
       </div>
     </div>
-
-    <br>
-    <div class="container text-center">
-      <div class="row justify-content-center" style="height: 35px">
-        <div class="col-2">
-          <button class="btn btn-sm btn-block btn-danger"> REPAIR </button>
-        </div>
-        <div class="col-2">
-          <button class="btn btn-sm btn-block btn-warning"> SETUP </button>
-        </div>
-        <div class="col-2">
-          <button class="btn btn-sm btn-block btn-success"> PM </button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 {% endblock content %}

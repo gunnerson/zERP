@@ -1,13 +1,29 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
-
 {% load poll_extras %}
 
-  <div>
-    <a href="{% url 'mtn:order-list' %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
-  </div>
-  <br>
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'mtn:order-list' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+    {% if request.user|has_group:"maintenance" %}
+      <li>
+        <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="side-menu-link">Edit order</a>
+      </li>
+      <li>
+        <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link">Add parts</a>
+      </li>
+      <li>
+        <a href="{% url 'mtn:delete_part' order.id %}" role="button" class="side-menu-link">Delete parts</a>
+      </li>
+    {% endif %}
+  </ul>
+
+{% endblock left-menu %}
+
+{% block content %}
 
   <div class="container break-text">
     <div class="row">
@@ -117,16 +133,6 @@
           </div>
         </div>
         <br>
-        {% if request.user|has_group:"maintenance" %}
-          <div class="row">
-            <div class="col">
-              <a href="{% url 'mtn:add_part' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Add parts</a>
-            </div>
-            <div class="col">
-              <a href="{% url 'mtn:delete_part' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Delete parts</a>
-            </div>
-          </div>
-        {% endif %}
       </div>
       <div class="col-3">
         <div class="card">
@@ -138,10 +144,5 @@
       </div>
     </div>
   </div>
-
-  <br>
-  {% if request.user|has_group:"maintenance" %}
-    <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
-  {% endif %}
 
 {% endblock content %}

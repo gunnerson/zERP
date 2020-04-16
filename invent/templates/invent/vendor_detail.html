@@ -1,17 +1,21 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
-
 {% load poll_extras %}
 
-  <div>
-    <a href="." class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
-  </div>
-  <br>
+{% block left-menu %}
 
+  <ul>
+    <li>
+      <a href="{% url 'invent:partlist' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block content %}
 
   {% if request.user|has_group:"maintenance" %}
-    <a href="." role="button" class="btn btn-primary btn-sm btn-block">Edit</a>
+    <a href="." role="button" class="btn btn-rahco">Edit</a>
   {% endif %}
 
 {% endblock content %}

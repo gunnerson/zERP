@@ -22,7 +22,7 @@
 
   </head>
 
-  <body style="background-color:#fafbfe;">
+  <body style="background-color:#FAFAFA;">
 
     <nav class="navbar navbar-expand-md navbar-dark sticky-top" style="background-color: #336699;" >
       <a class="navbar-brand" href="{% url 'mtn:index' %}">
@@ -33,7 +33,6 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
         <ul class="navbar-nav mr-auto font-weight-bold text-uppercase">
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'mtn:order-list' %}">Work Orders</a>
@@ -48,7 +47,6 @@
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
           </li>
-
           {% if user.is_superuser %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -61,7 +59,6 @@
             </li>
           {% endif %}
         </ul>
-
         <ul class="nav navbar-nav navbar-right" style="color:white;">
           {% if user.is_authenticated %}
             <li><a>Hello, {{ user.username }}. &nbsp</a></li>
@@ -71,37 +68,18 @@
             <li><a href="{% url 'users:login' %}" style="color:white;">log in</a></li>
           {% endif %}
         </ul>
-
       </div>
-
     </nav>
 
     <br>
 
-    <div class="container-fluid">
+    <div class="container">
 
-      <div class="row">
-
-        <div class="col-2">
-
-          <div class="left-side-menu">
-            {% block left-menu %}{% endblock left-menu %}
-          </div>
-
-        </div>
-
-        <div class="col">
-
-          <div class="page-header">
-            {% block header %}{% endblock header %}
-          </div>
-
-          <div class="container-fluid mt-3">
-            {% block content %}{% endblock content %}
-          </div>
-
-        </div>
-
+      <div class="page-header">
+        {% block header %}{% endblock header %}
+      </div>
+      <div>
+        {% block content %}{% endblock content %}
       </div>
 
     </div>

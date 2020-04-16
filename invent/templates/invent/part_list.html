@@ -1,18 +1,18 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
+{% block left-menu %}
 
-  <div class="row justify-content-start">
-    <div class="col-sm-4">
-      <a href="{% url 'invent:new_part' %}" class="btn btn-primary btn-block" role="button">Add new part</a>
-    </div>
-    <div class="col-sm-4">
-      <a href="{% url 'invent:new_vendor' %}" class="btn btn-primary btn-block" role="button">Add new vendor</a>
-    </div>
-  </div>
-  <br>
-  <hr>
-  <br>
+  <ul>
+    <li>
+      <a href="{% url 'invent:new_part' %}" class="side-menu-link" role="button">+ New part</a>
+    </li>
+    <li>
+      <a href="{% url 'invent:new_vendor' %}" class="side-menu-link" role="button">+ New vendor</a>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block content %}
 
   <form method="GET" action=".">
     <div class="form-row justify-content-start">
@@ -38,7 +38,7 @@
         </select>
       </div>
       <div class="form-group col align-self-center ml-4">
-       <button type="submit" class="btn btn-primary">Search</button>
+       <button type="submit" class="btn btn-rahco">Search</button>
       </div>
     </div>
   </form>

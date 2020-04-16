@@ -1,11 +1,16 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
+{% block left-menu %}
 
-  <div>
-    <a href="{% url 'mtn:order' order_id %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
-  </div>
-  <br>
+  <ul>
+    <li>
+      <a href="{% url 'mtn:order' order_id %}" role="button" class="side-menu-link">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block content %}
 
   <form method="GET" action=".">
     <div class="form-row justify-content-start">
@@ -42,7 +47,7 @@
         </div>
       {% endif %}
       <div class="form-group col align-self-center ml-4">
-       <button type="submit" class="btn btn-primary">Search</button>
+       <button type="submit" class="btn btn-rahco">Search</button>
       </div>
     </div>
   </form>
@@ -54,6 +59,9 @@
         <label for="id_amount" class="requiredField"><b>Amount: </b></label>
         <input type="number" name="amount" value="0" min="1" max=object.amount class="numberinput form-control" required>
       </div>
+      <div class="col-2 align-self-end ml-3">
+        <button name="submit" role="button" class="btn btn-rahco btn-block">Add part</button>
+      </div>
     </div>
     <br>
     {% if messages %}
@@ -63,9 +71,6 @@
           {% endfor %}
       </ul>
     {% endif %}
-    <div class="col-4">
-      <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Add part</button>
-    </div>
     <br>
     <div class="row">
       <ul>

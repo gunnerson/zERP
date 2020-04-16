@@ -1,11 +1,16 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
+{% block left-menu %}
 
-  <div>
-    <a href="{% url 'mtn:order' order_id %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
-  </div>
-  <br>
+  <ul>
+    <li>
+      <a href="{% url 'mtn:order' order_id %}" role="button" class="side-menu-link">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block content %}
 
   <form method="POST" action=".">
   {% csrf_token %}
@@ -33,7 +38,7 @@
       </ul>
     </div>
     <br>
-    <button type="submit" class="btn btn-primary">Mark selected for deletion</button>
+    <button type="submit" class="btn btn-rahco">Mark selected for deletion</button>
   </form>
 
 {% endblock content %}

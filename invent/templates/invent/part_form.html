@@ -1,13 +1,18 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
-
 {% load crispy_forms_tags %}
 
-  <div>
-    <a href="{% url 'invent:partlist' %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
-  </div>
-  <br>
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'invent:partlist' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block content %}
 
   <form action="{% url 'invent:new_part' %}" method='post'>
   {% csrf_token %}
@@ -39,7 +44,7 @@
       </div>
     </div>
     <br>
-    <button name="submit" role="button" class="btn btn-primary btn-sm btn-block">Save Changes</button>
+    <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
     <br>
     <br>
   </form>
