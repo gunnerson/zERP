@@ -42,121 +42,119 @@
 
 {% block content %}
 
-  <div class="container break-text">
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header"><b>Originator:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.origin }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-header"><b>Location:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.local }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-header"><b>Type:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.get_ordertype_display }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-         <div class="card">
-          <div class="card-header"><b>Date:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.date_added|date:'M d, Y' }}</p>
-          </div>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><b>Originator:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.origin }}</p>
         </div>
       </div>
     </div>
-    <br>
-    <div class="row">
-      <div class="col">
-         <div class="card">
-          <div class="card-header"><b>Description:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.descr }}</p>
-          </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><b>Location:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.local }}</p>
         </div>
       </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col">
-         <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Repaired by:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.repby }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-         <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Repair date:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.repdate }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-         <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Cause of repair:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.get_cause_display }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-         <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Repair time:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.timerep }} hours</p>
-          </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header"><b>Type:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.get_ordertype_display }}</p>
         </div>
       </div>
     </div>
-    <br>
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Description of repair:</b></div>
-          <div class="card-body">
-            <p class="card-text">{{ order.descrrep }}</p>
-          </div>
+    <div class="col">
+       <div class="card">
+        <div class="card-header"><b>Date:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.date_added|date:'M d, Y' }}</p>
         </div>
-        <br>
       </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Parts: </b></div>
-          <div class="card-body">
-            <p class="card-text">
-              {% for part in used_parts %}
-                {% if part.marked_to_delete %}
-                  <a href="{% url 'invent:part' part.part.id %}" style="color:#FF0000;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
-                {% else %}
-                  <a href="{% url 'invent:part' part.part.id %}">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
-                {% endif %}
-              {% endfor %}
-            </p>
-          </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+       <div class="card">
+        <div class="card-header"><b>Description:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.descr }}</p>
         </div>
-        <br>
       </div>
-      <div class="col-3">
-        <div class="card">
-          <div class="card-header" style="background-color:#F1D236;"><b>Cost of Repair:</b></div>
-          <div class="card-body">
-            <p class="card-text">${{ cost_of_repair }}</p>
-          </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col">
+       <div class="card">
+        <div class="card-header repair"><b>Repaired by:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.repby }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+       <div class="card">
+        <div class="card-header repair"><b>Repair date:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.repdate }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+       <div class="card">
+        <div class="card-header repair"><b>Cause of repair:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.get_cause_display }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+       <div class="card">
+        <div class="card-header repair"><b>Repair time:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.timerep }} hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header repair"><b>Description of repair:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.descrrep }}</p>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-header repair"><b>Parts: </b></div>
+        <div class="card-body">
+          <p class="card-text">
+            {% for part in used_parts %}
+              {% if part.marked_to_delete %}
+                <a href="{% url 'invent:part' part.part.id %}" style="color:#FF0000;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+              {% else %}
+                <a href="{% url 'invent:part' part.part.id %}">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+              {% endif %}
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div class="col-3">
+      <div class="card">
+        <div class="card-header repair"><b>Cost of Repair:</b></div>
+        <div class="card-body">
+          <p class="card-text">${{ cost_of_repair }}</p>
         </div>
       </div>
     </div>
