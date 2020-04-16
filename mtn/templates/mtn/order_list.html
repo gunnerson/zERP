@@ -22,6 +22,26 @@
 
 {% endblock left-menu %}
 
+{% block page-title %}
+
+  <div class="col">
+    {% if check_closed == 'True' %}
+      <h4 class="page-title">Closed Work Orders</h4>
+    {% else %}
+      <h4 class="page-title">Open Work Orders</h4>
+    {% endif %}
+  </div>
+  <div class="col">
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item active"> Work Orders</li>
+      </ol>
+    </div>
+  </div>
+
+{% endblock page-title %}
+
 {% block content %}
 
   {% for order in object_list %}

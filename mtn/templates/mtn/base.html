@@ -92,12 +92,14 @@
 
         <div class="col">
 
-          <div class="page-header">
-            {% block header %}{% endblock header %}
+          <div class="row justify-content-between">
+            {% block page-title %}{% endblock page-title %}
           </div>
 
-          <div class="container-fluid mt-3">
-            {% block content %}{% endblock content %}
+          <div class="row">
+            <div class="container-fluid mt-3">
+              {% block content %}{% endblock content %}
+            </div>
           </div>
 
         </div>

@@ -10,6 +10,24 @@
 
 {% endblock left-menu %}
 
+{% block page-title %}
+
+  <div class="col">
+      <h4 class="page-title">New vendor</h4>
+  </div>
+  <div class="col">
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'invent:partlist' %}">Inventory</a></li>
+          <li class="breadcrumb-item"><a href="">Vendors</a></li>
+          <li class="breadcrumb-item active">New</li>
+      </ol>
+    </div>
+  </div>
+
+{% endblock page-title %}
+
 {% block content %}
 
   <form action="{% url 'invent:new_vendor' %}" method='post'>

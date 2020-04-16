@@ -1,5 +1,7 @@
 {% extends "mtn/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block left-menu %}
 
   <ul>
@@ -10,9 +12,25 @@
 
 {% endblock left-menu %}
 
-{% block content %}
+{% block page-title %}
 
-{% load crispy_forms_tags %}
+  <div class="col">
+      <h4 class="page-title">Edit MWO No. {{ order }}</h4>
+  </div>
+  <div class="col">
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'mtn:order' order.id %}">Order</a></li>
+          <li class="breadcrumb-item active">Edit</li>
+      </ol>
+    </div>
+  </div>
+
+{% endblock page-title %}
+
+{% block content %}
 
   <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}

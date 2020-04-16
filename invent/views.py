@@ -117,7 +117,13 @@ class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         delete_confirm = self.request.POST.get('delete_confirm')
+        used_parts = UsedPart.objects.filter(marked_to_delete=True)
         if delete_confirm:
+            # Return deleted to stock
+            for upart in used_parts:
+                part = upart.part
+                part.amount = upart.amount_used + part.amount
+                part.save(update_fields=['amount'])
             UsedPart.objects.filter(marked_to_delete=True).delete()
             messages.add_message(request, messages.INFO,
                                  'Marked entries successfully deleted')

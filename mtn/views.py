@@ -26,6 +26,12 @@ class OrderListView(LoginRequiredMixin, ListView):
     model = Order
     paginate_by = 20
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        check_closed = self.request.GET.get('check_closed')
+        context['check_closed'] = check_closed
+        return context
+
     def get_queryset(self):
         # Filter open and closed orders separately
         qs = Order.objects.all().order_by('-date_added')

@@ -21,6 +21,22 @@
 
 {% endblock left-menu %}
 
+{% block page-title %}
+
+  <div class="col">
+      <h4 class="page-title">Delete used parts</h4>
+  </div>
+  <div class="col">
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item active">Delete used parts</li>
+      </ol>
+    </div>
+  </div>
+
+{% endblock page-title %}
+
 {% block content %}
 
   <div class="form-row justify-content-start">

@@ -1,13 +1,35 @@
 {% extends "mtn/base.html" %}
 
-{% block content %}
-
 {% load crispy_forms_tags %}
 
-  <div>
-    <a href="{% url 'mtn:order-list' %}" class="btn btn-primary btn-sm" role="button">&nbspBack&nbsp</a>
+{% block left-menu%}
+
+  <ul>
+    <li>
+      <a href="{% url 'mtn:order-list' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="col">
+      <h4 class="page-title">New order</h4>
   </div>
-  <br>
+  <div class="col">
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
+          <li class="breadcrumb-item active">New</li>
+      </ol>
+    </div>
+  </div>
+
+{% endblock page-title %}
+
+{% block content %}
 
   <form action="{% url 'mtn:new_order' %}" method='post'>
     {% csrf_token %}
@@ -25,7 +47,7 @@
       </div>
       {{ form.descr|as_crispy_field }}
     </div>
-    <button name="submit" role="button" class="btn btn-primary btn-sm">Save order</button>
+    <button name="submit" role="button" class="btn btn-rahco">Save order</button>
   </form>
 </form>
 
