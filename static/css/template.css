@@ -56,6 +56,9 @@ a {
   cursor: pointer;
 }
 
+.supervisor {
+  background-color:#E8E8E8;
+}
 ul {
   list-style-type: none;
 }
