@@ -25,18 +25,14 @@
 
 {% block page-title %}
 
-  <div class="col">
-      <h4 class="page-title">MWO No. {{ order }}</h4>
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
+        <li class="breadcrumb-item active">Order</li>
+    </ol>
   </div>
-  <div class="col">
-    <div class="page-title-right">
-      <ol class="breadcrumb m-0">
-          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
-          <li class="breadcrumb-item active">Order</li>
-      </ol>
-    </div>
-  </div>
+  <h4 class="page-title">MWO No. {{ order }}</h4>
 
 {% endblock page-title %}
 

@@ -14,19 +14,15 @@
 
 {% block page-title %}
 
-  <div class="col">
-      <h4 class="page-title">Edit Part No. {{ part.partnum }}</h4>
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'invent:partlist' %}">Parts</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'invent:part' part.id %}">Part</a></li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ol>
   </div>
-  <div class="col">
-    <div class="page-title-right">
-      <ol class="breadcrumb m-0">
-          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'invent:partlist' %}">Parts</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'invent:part' part.id %}">Part</a></li>
-          <li class="breadcrumb-item active">Edit</li>
-      </ol>
-    </div>
-  </div>
+  <h4 class="page-title">Edit Part No. {{ part.partnum }}</h4>
 
 {% endblock page-title %}
 

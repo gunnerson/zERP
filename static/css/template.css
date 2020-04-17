@@ -1,5 +1,19 @@
-ul {
-  list-style-type: none;
+a {
+  color: #336699;
+}
+
+.breadcrumb {
+  background-color:inherit;
+}
+
+.breadcrumb-item {
+  color: #6c757d;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  padding-right: 0.3rem;
+  color: #6c757d;
+  content: ">";
 }
 
 .btn-rahco {
@@ -13,6 +27,10 @@ ul {
   background-color: #164979;
 }
 
+.content-page {
+  padding-top: 10px;
+}
+
 .left-side-menu {
   width: 200px;
   padding-top: 10px;
@@ -20,17 +38,8 @@ ul {
   background-image: linear-gradient(to bottom, white, #fafbfe);
 }
 
-.content-page {
-  padding-top: 0px;
-}
-
-.side-menu-link {
-  font-size: 1.3rem;
-  color: #6c757d;
-}
-
-.breadcrumb {
-  background-color:inherit;
+.nav-link {
+  font-size: 1.2rem;
 }
 
 .repair {
@@ -38,6 +47,29 @@ ul {
   color: white;
 }
 
-.nav-link {
-  font-size: 1.2rem;
+.side-menu-link {
+  font-size: 1.3rem;
+  color: #6c757d;
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  cursor: pointer;
 }
+
+ul {
+  list-style-type: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

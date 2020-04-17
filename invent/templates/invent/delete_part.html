@@ -12,19 +12,15 @@
 
 {% block page-title %}
 
-  <div class="col">
-      <h4 class="page-title">Delete parts from MWO No. {{ order_id }}</h4>
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order' order_id %}">Order</a></li>
+        <li class="breadcrumb-item active">Delete parts</li>
+    </ol>
   </div>
-  <div class="col">
-    <div class="page-title-right">
-      <ol class="breadcrumb m-0">
-          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'mtn:order' order_id %}">Order</a></li>
-          <li class="breadcrumb-item active">Delete parts</li>
-      </ol>
-    </div>
-  </div>
+  <h4 class="page-title">Delete parts from MWO No. {{ order_id }}</h4>
 
 {% endblock page-title %}
 

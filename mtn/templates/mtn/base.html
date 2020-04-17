@@ -29,6 +29,7 @@
 
   <body style="background-color:#fafbfe;">
 
+    <!-- Topbar Start -->
     <nav class="navbar navbar-expand-md navbar-dark sticky-top" style="background-color: #336699;" >
       <a class="navbar-brand" href="{% url 'mtn:index' %}">
         <img src="{% static 'rahco_rubber_logo-white.png' %}" width="200" height="50" class="d-inline-block align-top" alt="">
@@ -80,23 +81,32 @@
       </div>
 
     </nav>
+    <!-- end Topbar -->
 
-    <br>
-
+    <!-- Start Content-->
     <div class="container-fluid">
 
+      <!-- Begin page -->
       <div class="wrapper">
 
+        <!-- ========== Left Sidebar Start ========== -->
         <div class="left-side-menu left-side-menu-detached">
           {% block left-menu %}{% endblock left-menu %}
         </div>
+        <!-- Left Sidebar End -->
 
         <div class="content-page">
           <div class="content">
 
+            <!-- start page title -->
             <div class="row">
-              {% block page-title %}{% endblock page-title %}
+              <div class="col-12">
+                <div class="page-title-box">
+                  {% block page-title %}{% endblock page-title %}
+                </div>
+              </div>
             </div>
+            <!-- end page title -->
 
             <div class="row">
               <div class="container-fluid mt-3">
@@ -108,8 +118,10 @@
         </div>
 
       </div>
+      <!-- end page -->
 
     </div>
+    <!-- end content -->
 
   <br>
   </body>
