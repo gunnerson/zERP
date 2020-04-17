@@ -39,7 +39,7 @@
 {% block content %}
 
   <div class="row">
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
       <div class="card">
         <div class="card-header supervisor"><b>Originator:</b></div>
         <div class="card-body">
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
       <div class="card">
         <div class="card-header supervisor"><b>Location:</b></div>
         <div class="card-body">
@@ -55,7 +55,7 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
       <div class="card">
         <div class="card-header supervisor"><b>Type:</b></div>
         <div class="card-body">
@@ -63,18 +63,18 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
        <div class="card">
         <div class="card-header supervisor"><b>Date:</b></div>
         <div class="card-body">
-          <p class="card-text">{{ order.date_added|date:'M d, Y' }}</p>
+          <p class="card-text">{{ order.date_added|date:'M d, Y h:m A' }}</p>
         </div>
       </div>
     </div>
   </div>
   <br>
   <div class="row">
-    <div class="col">
+    <div class="col-12">
        <div class="card">
         <div class="card-header supervisor"><b>Description:</b></div>
         <div class="card-body">
@@ -85,7 +85,7 @@
   </div>
   <hr>
   <div class="row">
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
        <div class="card">
         <div class="card-header repair"><b>Repaired by:</b></div>
         <div class="card-body">
@@ -93,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
        <div class="card">
         <div class="card-header repair"><b>Repair date:</b></div>
         <div class="card-body">
@@ -101,7 +101,7 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
        <div class="card">
         <div class="card-header repair"><b>Cause of repair:</b></div>
         <div class="card-body">
@@ -109,7 +109,7 @@
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6 col-xl-3">
        <div class="card">
         <div class="card-header repair"><b>Repair time:</b></div>
         <div class="card-body">
@@ -120,7 +120,7 @@
   </div>
   <br>
   <div class="row">
-    <div class="col">
+    <div class="col-md-12 col-xl-6">
       <div class="card">
         <div class="card-header repair"><b>Description of repair:</b></div>
         <div class="card-body">
@@ -129,7 +129,7 @@
       </div>
       <br>
     </div>
-    <div class="col">
+    <div class="col-md-9 col-xl-4">
       <div class="card">
         <div class="card-header repair"><b>Parts: </b></div>
         <div class="card-body">
@@ -146,7 +146,7 @@
       </div>
       <br>
     </div>
-    <div class="col-3">
+    <div class="col-md-3 col-xl-2">
       <div class="card">
         <div class="card-header repair"><b>Cost of Repair:</b></div>
         <div class="card-body">
