@@ -40,101 +40,46 @@
 
 {% block content %}
 
-
-<div class="row">
-  <div class="col-md-6 col-xl-3">
-      <!-- project card -->
-      <div class="card d-block">
+  <div class="row">
+    {% for order in object_list %}
+      <div class="col-md-6 col-xl-3">
+        <!-- project card -->
+        <div class="card d-block">
           <div class="card-body">
-              <div class="dropdown card-widgets">
-                  <a href="#" class="dropdown-toggle arrow-none" data-toggle="dropdown" aria-expanded="false">
-                      <i class="dripicons-dots-3"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                      <!-- item-->
-                      <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-pencil mr-1"></i>Edit</a>
-                      <!-- item-->
-                      <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-delete mr-1"></i>Delete</a>
-                      <!-- item-->
-                      <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-email-outline mr-1"></i>Invite</a>
-                      <!-- item-->
-                      <a href="javascript:void(0);" class="dropdown-item"><i class="mdi mdi-exit-to-app mr-1"></i>Leave</a>
-                  </div>
-              </div>
-              <!-- project title-->
-              <h4 class="mt-0">
-                  <a href="apps-projects-details.html" class="text-title">App design and development</a>
-              </h4>
-              <div class="badge badge-success mb-3">Finished</div>
-
-              <p class="text-muted font-13 mb-3">With supporting text below as a natural lead-in to additional contenposuere erat a ante...<a href="javascript:void(0);" class="font-weight-bold text-muted">view more</a>
-              </p>
-
-              <!-- project detail-->
+            <!-- project title-->
+            <h4 class="mt-0">
+                <a href="{% url 'mtn:order' order.id %}" class="text-title">{{ order.local }}</a>
+            </h4>
+            {% if order.ordertype == "ST" %}
+              <div class="badge badge-warning mb-3">Setup</div>
+            {% elif order.ordertype == "PM" %}
+              <div class="badge badge-success mb-3">PM</div>
+            {% else %}
+              <div class="badge badge-danger mb-3">Repair</div>
+            {% endif %}
+            <a href="{% url 'mtn:order' order.id %}" class="text-muted font-13 mb-3"><p>{{ order.descr }}</p></a>
+            <!-- project detail-->
+            {% if order.closed %}
+            <p class="mb-1">
+              <span class="pr-2 text-nowrap mb-2 d-inline-block">
+                <b>Closed:</b> {{ order.repdate }}
+              </span>
+            </p>
+            {% else %}
               <p class="mb-1">
-                  <span class="pr-2 text-nowrap mb-2 d-inline-block">
-                      <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                      <b>21</b> Tasks
-                  </span>
-                  <span class="text-nowrap mb-2 d-inline-block">
-                      <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                      <b>741</b> Comments
-                  </span>
+                <span class="pr-2 text-nowrap mb-2 d-inline-block">
+                  <b>Opened:</b> {{ order.date_added }}
+                </span>
               </p>
-              <div>
-                  <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mat Helme" class="d-inline-block">
-                      <img src="assets/images/users/avatar-6.jpg" class="rounded-circle avatar-xs" alt="friend">
-                  </a>
-
-                  <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" data-original-title="Michael Zenaty" class="d-inline-block">
-                      <img src="assets/images/users/avatar-7.jpg" class="rounded-circle avatar-xs" alt="friend">
-                  </a>
-
-                  <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" data-original-title="James Anderson" class="d-inline-block">
-                      <img src="assets/images/users/avatar-8.jpg" class="rounded-circle avatar-xs" alt="friend">
-                  </a>
-                  <a href="javascript:void(0);" class="d-inline-block text-muted font-weight-bold ml-2">
-                      +7 more
-                  </a>
-              </div>
+            {% endif %}
           </div> <!-- end card-body-->
-          <ul class="list-group list-group-flush">
-              <li class="list-group-item p-3">
-                  <!-- project progress-->
-                  <p class="mb-2 font-weight-bold">Progress <span class="float-right">100%</span></p>
-                  <div class="progress progress-sm">
-                      <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-                      </div><!-- /.progress-bar -->
-                  </div><!-- /.progress -->
-              </li>
-          </ul>
-      </div> <!-- end card-->
-  </div> <!-- end col -->
-</div>
-<!-- end row-->
-
-
-  {% for order in object_list %}
-          <div class="row justify-content-center" style="height: 45px">
-            <div class="col-8 ">
-              {% if order.ordertype == "ST" %}
-                <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-warning text-nowrap text-truncate">
-                  No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
-                </a>
-              {% elif order.ordertype == "PM" %}
-                <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-success text-nowrap text-truncate">
-                  No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
-                </a>
-              {% else %}
-                <a href="{% url 'mtn:order' order.id %}" role="button" class="text-left btn btn-block btn-danger text-nowrap text-truncate">
-                  No <b>{{ order }}</b> -- {{ order.local }} -- {{ order.descr }}
-                </a>
-              {% endif %}
-            </div>
-          </div>
-  {% empty %}
-	  <p>No orders have been added yet.</p>
-  {% endfor %}
+        </div> <!-- end card-->
+      </div> <!-- end col -->
+    {% empty %}
+      <p>No orders have been added yet.</p>
+    {% endfor %}
+  </div>
+  <!-- end row-->
 
   <br>
   <div class="container">
@@ -170,21 +115,6 @@
           </ul>
         </nav>
       {% endif %}
-    </div>
-  </div>
-
-  <br>
-  <div class="container text-center">
-    <div class="row justify-content-center" style="height: 35px">
-      <div class="col-2">
-        <button class="btn btn-sm btn-block btn-danger"> REPAIR </button>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-sm btn-block btn-warning"> SETUP </button>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-sm btn-block btn-success"> PM </button>
-      </div>
     </div>
   </div>
 
