@@ -1,0 +1,147 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Nunito,sans-serif;
+    font-size: .9rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #6c757d;
+    text-align: left;
+    background-color: #fafbfe;
+}
+
+.container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
+    width: 100%;
+    padding-right: 12px;
+    padding-left: 12px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.wrapper {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+
+.left-side-menu {
+    width: 260px;
+    z-index: 10;
+    background: linear-gradient(135deg,#6379c3 0,#546ee5 60%);
+    bottom: 0;
+    position: fixed;
+    transition: all .2s ease-out;
+    top: 0;
+    padding-top: 70px;
+    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+}
+
+dl, ol, ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+a, button {
+    outline: 0!important;
+}
+
+a {
+    color: #536de6;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.content-page {
+    margin-left: 260px;
+    overflow: hidden;
+    padding: 70px 12px 65px;
+    min-height: 100vh;
+}
+
+.page-title-box .page-title-right {
+    float: right;
+    margin-top: 20px;
+}
+
+.page-title-box .breadcrumb {
+    padding-top: 8px;
+}
+
+.page-title-box .page-title {
+    font-size: 18px;
+    margin: 0;
+    line-height: 75px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: inherit;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+    margin-bottom: 24px;
+}
+
+.d-block {
+    display: block!important;
+}
+
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #eef2f7;
+    border-radius: .25rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.5rem;
+}
+
+.text-title {
+    color: #6c757d;
+}
+
+@media (max-width: 767.98px) {
+
+body {
+    overflow-x: hidden;
+}
+
+.left-side-menu {
+    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+    display: none;
+    z-index: 10!important;
+}
+
+.content-page {
+    margin-left: 0!important;
+    padding: 65px 10px 65px;
+}
+
+.page-title-box .page-title-right {
+    display: none;
+}
+
+.page-title-box .page-title {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 70px;
+}
+
+}
