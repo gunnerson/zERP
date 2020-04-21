@@ -1,5 +1,31 @@
 {% extends "mtn/base.html" %}
 
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'equip:presslist' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+    <li>
+      <a href="" class="side-menu-link" role="button">Orders</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item active">Item</li>
+    </ol>
+  </div>
+  <h4 class="page-title">{{ press }}</h4>
+
+{% endblock page-title %}
+
 {% block content %}
 
 

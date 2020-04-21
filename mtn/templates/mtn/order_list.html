@@ -68,7 +68,7 @@
             {% else %}
               <p class="mb-1">
                 <span class="pr-2 mb-2 d-inline-block">
-                  <b>Opened:</b> {{ order.date_added }}
+                  <b>Opened:</b> {{ order.date_added|date:"M j, f a" }}
                 </span>
               </p>
             {% endif %}

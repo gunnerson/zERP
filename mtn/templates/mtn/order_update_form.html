@@ -60,7 +60,9 @@
         </div>
       </div>
       {{ form.descrrep|as_crispy_field }}
-      {{ form.closed|as_crispy_field }}
+      {% if order.closed == False %}
+        {{ form.closed|as_crispy_field }}
+      {% endif %}
     <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
     <br>
     <br>
