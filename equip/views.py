@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, get_object_or_404
+from datetime import date, timedelta
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -25,3 +26,19 @@ class PressListView(LoginRequiredMixin, ListView):
 class PressDetailView(LoginRequiredMixin, DetailView):
     """View part from the inventory"""
     model = Press
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        today = date.today()
+        delta = timedelta(days=30)
+        start_date = today - delta
+        dts = []
+        i = 0
+        while i < 12:
+            dt = Press.downtime(self, start_date, today)
+            start_date -= delta
+            today -= delta
+            dts.append(dt)
+            i += 1
+        context['dts'] = dts
+        return context
