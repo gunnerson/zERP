@@ -2,38 +2,62 @@
 
 {% block left-menu%}
 
-  <ul>
-    <li>
-      <a href="{% url 'mtn:new_order' %}" class="side-menu-link" role="button">+ New Order</a>
-    </li>
-    <li>
-        <form method="GET" action=".">
-          <input type="hidden" name="check_closed" value="False">
-          <button type="submit" class="side-menu-link">Open Orders</button>
-        </form>
-    </li>
-    <li>
-        <form method="GET" action=".">
-          <input type="hidden" name="check_closed" value="True">
-          <button type="submit" class="side-menu-link">Closed Orders</button>
-        </form>
-    </li>
-  </ul>
+  {% if press_excl == False %}
+    <ul>
+      <li>
+        <a href="{% url 'mtn:new_order' %}" class="side-menu-link" role="button">+ New Order</a>
+      </li>
+      <li>
+          <form method="GET" action=".">
+            <input type="hidden" name="check_closed" value="False">
+            <button type="submit" class="side-menu-link">Open Orders</button>
+          </form>
+      </li>
+      <li>
+          <form method="GET" action=".">
+            <input type="hidden" name="check_closed" value="True">
+            <button type="submit" class="side-menu-link">Closed Orders</button>
+          </form>
+      </li>
+    </ul>
+  {% else %}
+    <ul>
+      <li>
+        <a href="{% url 'equip:press' press_id %}" class="side-menu-link" role="button">Back</a>
+      </li>
+    </ul>
+  {% endif %}
 
 {% endblock left-menu %}
 
 {% block page-title %}
 
+  {% if press_excl == False %}
+
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item active"> Work Orders</li>
+      </ol>
+    </div>
+    {% if check_closed == 'True' %}
+      <h4 class="page-title">Closed Work Orders</h4>
+    {% else %}
+      <h4 class="page-title">Open Work Orders</h4>
+    {% endif %}
+
+  {% else %}
+
   <div class="page-title-right">
     <ol class="breadcrumb m-0">
         <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
-        <li class="breadcrumb-item active"> Work Orders</li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
+        <li class="breadcrumb-item active">Orders</li>
     </ol>
   </div>
-  {% if check_closed == 'True' %}
-    <h4 class="page-title">Closed Work Orders</h4>
-  {% else %}
-    <h4 class="page-title">Open Work Orders</h4>
+  <h4 class="page-title">Work Orders</h4>
+
   {% endif %}
 
 {% endblock page-title %}
@@ -53,7 +77,7 @@
             {% if order.ordertype == "ST" %}
               <div class="badge badge-warning mb-3">Setup</div>
             {% elif order.ordertype == "PM" %}
-              <div class="badge badge-success mb-3">PM</div>
+              <div class="badge badge-info mb-3">PM</div>
             {% else %}
               <div class="badge badge-danger mb-3">Repair</div>
             {% endif %}
@@ -76,7 +100,7 @@
         </div> <!-- end card-->
       </div> <!-- end col -->
     {% empty %}
-      <p>No orders have been added yet.</p>
+      <p>No open orders.</p>
     {% endfor %}
   </div>
   <!-- end row-->

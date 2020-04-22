@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
+from equip.models import Press
 from .forms import OrderCreateForm, OrderUpdateForm
 
 
@@ -29,18 +30,27 @@ class OrderListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        press_excl = False
+        if 'pk' in self.kwargs:
+            press_id = self.kwargs['pk']
+            press_excl = True
+            context['press_id'] = press_id
         check_closed = self.request.GET.get('check_closed')
         context['check_closed'] = check_closed
+        context['press_excl'] = press_excl
         return context
 
     def get_queryset(self):
-        # Filter open and closed orders separately
         qs = Order.objects.all().order_by('-date_added')
-        check_closed = self.request.GET.get('check_closed')
-        if is_valid_queryparam(check_closed):
-            qs = qs.filter(closed=check_closed)
+        if 'pk' in self.kwargs:
+            press = Press.objects.get(id=self.kwargs['pk'])
+            qs = qs.filter(local=press)
         else:
-            qs = qs.filter(closed=False)
+            check_closed = self.request.GET.get('check_closed')
+            if is_valid_queryparam(check_closed):
+                qs = qs.filter(closed=check_closed)
+            else:
+                qs = qs.filter(closed=False)
         return qs
 
 
@@ -73,6 +83,10 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         if (self.object.ordertype == "ST" or
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"
+        # Change press status
+        press = self.object.local
+        press.status = self.object.ordertype
+        press.save(update_fields=['status'])
         self.object.save()
         return redirect(self.get_success_url())
 
@@ -96,6 +110,10 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.repdate = date.today()
             if self.object.cause == '' or self.object.cause is None:
                 self.object.cause = 'UN'
+            # Update press status
+            press = self.object.local
+            press.status = 'OK'
+            press.save(update_fields=['status'])
         self.object.save()
         return redirect(self.get_success_url())
 

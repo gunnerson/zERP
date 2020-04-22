@@ -18,15 +18,41 @@
 
 {% block content %}
 
-  <div class="container">
-	  {% for object in object_list %}
-      <div class="row" style="height: 30px">
-        <div class="col-6">
-          <a href="{% url 'equip:press' object.id %}">{{ object.pname }}</a>
-        </div>
-      </div>
-	  {% empty %}
-		  <p>No equipment have been added yet.</p>
+  <div class="row">
+    {% for object in object_list %}
+<div class="col-md-4 col-xl-2">
+        <!-- project card -->
+        <div class="card d-block">
+          <div class="card-body">
+            <!-- project title-->
+            <h4 class="mt-0">
+                <a href="{% url 'equip:press' object.id %}" class="text-title">{{ object.pname }}</a>
+            </h4>
+            {% if object.status == "ST" %}
+              <div class="badge badge-warning mb-3">Setup Due</div>
+            {% elif object.status == "PM" %}
+              <div class="badge badge-info mb-3">PM Due</div>
+            {% elif object.status == "RE" %}
+              <div class="badge badge-danger mb-3">Out of Order</div>
+            {% else %}
+              <div class="badge badge-success mb-3">OK</div>
+            {% endif %}
+            <!-- project detail-->
+            {% if object.status == "ST" or object.status == "PM" or object.status == "RE" %}
+              <p class="mb-1">
+                <span class="pr-2 mb-2 d-inline-block">
+                  <b>Open orders:</b>
+                    {% for order in orders %}
+                      {% if order in object.order_set.all %}
+                            <a role="button" href="{% url 'mtn:order' order.id %}" class="btn btn-rahco btn-sm mb-1">{{ order }}</a>
+                      {% endif %}
+                    {% endfor %}
+                </span>
+              </p>
+            {% endif %}
+          </div> <!-- end card-body-->
+        </div> <!-- end card-->
+      </div> <!-- end col -->
     {% endfor %}
   </div>
 
