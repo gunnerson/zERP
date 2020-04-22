@@ -1,5 +1,23 @@
 {% extends "mtn/base.html" %}
 
+<script>
+  {% block jquery %}
+    var endpoint ='/api/data/'
+
+    $.ajax({
+      method: "GET",
+      url: endpoint,
+      success: function(data){
+        console.log(data)
+      },
+      error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+      }
+    })
+  {% endblock %}
+</script>
+
 {% block left-menu %}
 
   <ul>
@@ -27,8 +45,6 @@
 {% endblock page-title %}
 
 {% block content %}
-
-
 
 {% endblock content %}
 

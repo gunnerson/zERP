@@ -111,10 +111,15 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if self.object.cause == '' or self.object.cause is None:
                 self.object.cause = 'UN'
             # Update press status
-            press = self.object.local
-            press.status = 'OK'
-            press.save(update_fields=['status'])
         self.object.save()
+        press = self.object.local
+        orders = Order.objects.filter(closed=False, local=press)
+        if orders.exists():
+            order = orders.latest('date_added')
+            press.status = order.ordertype
+        else:
+            press.status = 'OK'
+        press.save(update_fields=['status'])
         return redirect(self.get_success_url())
 
     # def get_form_kwargs(self):

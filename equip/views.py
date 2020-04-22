@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.http import JsonResponse
 from datetime import date, timedelta
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -42,3 +42,10 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             i += 1
         context['dts'] = dts
         return context
+
+
+def get_data(request, *args, **kwargs):
+    data = {
+        "key": 100,
+    }
+    return JsonResponse(data)
