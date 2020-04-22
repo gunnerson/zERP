@@ -61,7 +61,10 @@
       </div>
       {{ form.descrrep|as_crispy_field }}
       {% if order.closed == False %}
-        {{ form.closed|as_crispy_field }}
+        <div class="form-group form-check align-self-center">
+          <input type="checkbox" class="form-check-input" name="check_closed" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Closed</label>
+        </div>
       {% endif %}
     <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
     <br>

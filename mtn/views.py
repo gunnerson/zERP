@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from datetime import date
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -84,6 +85,19 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
+
+    def form_valid(self, form):
+        """If order closed fill empty repair date and cause"""
+        check_closed = self.request.POST.get('check_closed', None)
+        self.object = form.save(commit=False)
+        if check_closed is not None:
+            self.object.closed = True
+            if self.object.repdate == '' or self.object.repdate is None:
+                self.object.repdate = date.today()
+            if self.object.cause == '' or self.object.cause is None:
+                self.object.cause = 'UN'
+        self.object.save()
+        return redirect(self.get_success_url())
 
     # def get_form_kwargs(self):
     #     kwargs = super().get_form_kwargs()
