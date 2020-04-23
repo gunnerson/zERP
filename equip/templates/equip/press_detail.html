@@ -24,10 +24,7 @@
     function setChart(){
       var ctx = document.getElementById('DowntimeChart').getContext('2d');
       var chart = new Chart(ctx, {
-          // The type of chart we want to create
           type: 'bar',
-
-          // The data for our dataset
           data: {
               labels: labels,
               datasets: [{
@@ -38,8 +35,6 @@
                   data: defaultData
               }]
           },
-
-          // Configuration options go here
           options: {}
       });
     }
@@ -86,14 +81,14 @@
               <p class="text-muted mb-0 mt-3">Current year</p>
               <h2 class="font-weight-normal mb-3">
                 <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1" style = "font-weight: 1700;"></small>
-                <span>5 hours</span>
+                <span>{{ dts_total }} hours</span>
               </h2>
             </div>
             <div class="col-md-6">
               <p class="text-muted mb-0 mt-3">Previous Year</p>
               <h2 class="font-weight-normal mb-3">
                 <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                <span>50 hours</span>
+                <span>{{ dts_last }} hours</span>
               </h2>
             </div>
           </div>

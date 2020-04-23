@@ -31,6 +31,31 @@ class PressDetailView(LoginRequiredMixin, DetailView):
     """View part from the inventory"""
     model = Press
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        # Calculate downtime per year
+        today = timezone.now()
+        month = today.month
+        year = today.year
+        dts_total = 0
+        dts_last = 0
+        i = month
+        while i > 0:
+            dt = Press.downtime(self, month, year)
+            dts_total += dt
+            month -= 1
+            i -= 1
+        month = 12
+        year -= 1
+        while i < 12:
+            dt = Press.downtime(self, month, year)
+            dts_last += dt
+            month -= 1
+            i += 1
+        context['dts_total'] = dts_total
+        context['dts_last'] = dts_last
+        return context
+
 
 class DowntimeChartData(RetrieveAPIView):
     """Get data for downtime chart"""
@@ -44,7 +69,7 @@ class DowntimeChartData(RetrieveAPIView):
         month = today.month
         year = today.year
         dts = []
-        labels =[]
+        labels = []
         i = 0
         while i < 12:
             dt = Press.downtime(self, month, year)
