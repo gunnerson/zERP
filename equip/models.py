@@ -27,7 +27,11 @@ class Press(models.Model):
 
     def downtime(self, start_date, end_date):
         dt = 0
-        orders = self.object.order_set.filter(date_added__range=(start_date, end_date))
+        order = self.get_object()
+        orders = order.order_set.filter(
+            closed=True, date_added__range=(
+                start_date, end_date)
+        )
         for order in orders:
             dt += order.timerep
         return dt

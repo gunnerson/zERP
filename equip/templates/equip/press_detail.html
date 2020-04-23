@@ -2,19 +2,49 @@
 
 <script>
   {% block jquery %}
-    var endpoint ='/api/data/'
+
+    var endpoint = "{% url 'equip:chart-data' press.id %}"
+    var defaultData =[]
+    var labels = [];
 
     $.ajax({
       method: "GET",
       url: endpoint,
       success: function(data){
+        labels = data.labels
+        defaultData = data.default
         console.log(data)
+        setChart()
       },
       error: function(error_data){
         console.log("error")
         console.log(error_data)
       }
     })
+
+    function setChart(){
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: 'bar',
+
+          // The data for our dataset
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: 'Downtime, h',
+                  backgroundColor: 'rgb(255, 99, 132, 0.2)',
+                  borderColor: 'rgb(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  data: defaultData
+              }]
+          },
+
+          // Configuration options go here
+          options: {}
+      });
+    }
+
   {% endblock %}
 </script>
 
@@ -45,6 +75,12 @@
 {% endblock page-title %}
 
 {% block content %}
+
+<div class="row">
+  <div class="col-6">
+    <canvas id="myChart"></canvas>
+  </div>
+</div>
 
 {% endblock content %}
 

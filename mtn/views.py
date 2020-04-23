@@ -88,7 +88,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         press.status = self.object.ordertype
         press.save(update_fields=['status'])
         self.object.save()
-        return redirect(self.get_success_url())
+        return redirect('mtn:order-list')
 
 
 class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
