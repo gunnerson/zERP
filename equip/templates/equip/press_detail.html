@@ -13,7 +13,6 @@
       success: function(data){
         labels = data.labels
         defaultData = data.default
-        console.log(data)
         setChart()
       },
       error: function(error_data){
@@ -23,7 +22,7 @@
     })
 
     function setChart(){
-      var ctx = document.getElementById('myChart').getContext('2d');
+      var ctx = document.getElementById('DowntimeChart').getContext('2d');
       var chart = new Chart(ctx, {
           // The type of chart we want to create
           type: 'bar',
@@ -77,9 +76,32 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-6">
-    <canvas id="myChart"></canvas>
-  </div>
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="header-title mb-3">Downtime</h4>
+        <div class="chart-content-bg">
+          <div class="row text-center">
+            <div class="col-md-6">
+              <p class="text-muted mb-0 mt-3">Current year</p>
+              <h2 class="font-weight-normal mb-3">
+                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1" style = "font-weight: 1700;"></small>
+                <span>5 hours</span>
+              </h2>
+            </div>
+            <div class="col-md-6">
+              <p class="text-muted mb-0 mt-3">Previous Year</p>
+              <h2 class="font-weight-normal mb-3">
+                <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
+                <span>50 hours</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+        <canvas id="DowntimeChart"></canvas>
+      </div> <!-- end card-body-->
+    </div> <!-- end card-->
+  </div> <!-- end col-->
 </div>
 
 {% endblock content %}

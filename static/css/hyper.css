@@ -115,6 +115,45 @@ a {
     color: #6c757d;
 }
 
+.card .header-title {
+    margin-bottom: .5rem;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    font-size: .9rem;
+    margin-top: 0;
+}
+
+.mb-3, .my-3 {
+    margin-bottom: 1.5rem!important;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin: 10px 0;
+    font-weight: 700;
+}
+
+.font-weight-normal {
+    font-weight: 400!important;
+}
+
+.chart-content-bg {
+    background-color: #f9f9fd;
+}
+
+.mdi-checkbox-blank-circle::before {
+    content: "\2022";
+}
+
+.mdi-set, .mdi:before {
+    display: inline-block;
+    font: normal normal normal 24px/1 "Material Design Icons";
+    font-size: inherit;
+    text-rendering: auto;
+    line-height: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 @media (max-width: 767.98px) {
 
 body {

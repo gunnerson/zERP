@@ -3,7 +3,7 @@ from django.urls import path
 from equip.views import (
     PressListView,
     PressDetailView,
-    ChartData,
+    DowntimeChartData,
 )
 
 from mtn.views import (
@@ -18,5 +18,5 @@ urlpatterns = [
     path('equipment/press/<int:pk>/orders', OrderListView.as_view(),
          name='press-orders'),
     path('api/data/equipment/press/<int:pk>',
-         ChartData.as_view(), name='chart-data'),
+         DowntimeChartData.as_view(), name='chart-data'),
 ]

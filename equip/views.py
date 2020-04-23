@@ -32,31 +32,29 @@ class PressDetailView(LoginRequiredMixin, DetailView):
     model = Press
 
 
-class ChartData(RetrieveAPIView):
-
-    authentication_classes = []
-    permission_classes = []
-
+class DowntimeChartData(RetrieveAPIView):
+    """Get data for downtime chart"""
+    # authentication_classes = []
+    # permission_classes = []
     lookup_field = 'pk'
     queryset = Press.objects.all()
 
     def get(self, request, *args, **kwargs):
-        delta = timedelta(days=30.4375)
         today = timezone.now()
-        day = today.day
-        today = today - timedelta(days=day) + delta - timedelta(days=1)
-        start_date = today - delta
+        month = today.month
+        year = today.year
         dts = []
         labels =[]
         i = 0
         while i < 12:
-            dt = Press.downtime(self, start_date, today)
-            start_date -= delta
-            month = today.month
-            today -= delta
+            dt = Press.downtime(self, month, year)
+            dts.append(dt)
             month_name = calendar.month_abbr[month]
             labels.append(month_name)
-            dts.append(dt)
+            month -= 1
+            if month == 0:
+                month = 12
+                year -= 1
             i += 1
         data = {
             "labels": labels,

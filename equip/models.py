@@ -25,12 +25,14 @@ class Press(models.Model):
     def __str__(self):
         return str(self.pname)
 
-    def downtime(self, start_date, end_date):
+    def downtime(self, month, year):
+        """Calculate downtime on a monthly basis"""
         dt = 0
-        order = self.get_object()
-        orders = order.order_set.filter(
-            closed=True, date_added__range=(
-                start_date, end_date)
+        press = self.get_object()
+        orders = press.order_set.filter(
+            closed=True,
+            date_added__year__exact=year,
+            date_added__month__exact=month,
         )
         for order in orders:
             dt += order.timerep
