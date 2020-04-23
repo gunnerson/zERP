@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.timezone import now
 
 from staff.models import Employee
 from equip.models import Press
@@ -40,7 +41,7 @@ class Order(models.Model):
                               null=True,
                               )
     descr = models.TextField()
-    date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateTimeField(default=now)
     repby = models.ForeignKey(Employee,
                               on_delete=models.SET_NULL,
                               null=True,
