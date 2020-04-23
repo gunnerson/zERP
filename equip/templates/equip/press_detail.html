@@ -80,7 +80,7 @@
             <div class="col-md-6">
               <p class="text-muted mb-0 mt-3">Current year</p>
               <h2 class="font-weight-normal mb-3">
-                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1" style = "font-weight: 1700;"></small>
+                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
                 <span>{{ dts_total }} hours</span>
               </h2>
             </div>
@@ -94,9 +94,21 @@
           </div>
         </div>
         <canvas id="DowntimeChart"></canvas>
-      </div> <!-- end card-body-->
-    </div> <!-- end card-->
-  </div> <!-- end col-->
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-2">
+    <div class="card">
+      <div class="card-body">
+        <div class="header-title mb-3"><b>Last PM:</b></div>
+        <div class="chart-content-bg text-center">
+          <h4 class="font-weight-normal mb-0">
+            <span>{{ last_pm }}</span>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

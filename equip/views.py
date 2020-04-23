@@ -52,8 +52,13 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             dts_last += dt
             month -= 1
             i += 1
+
+        # Last PM date
+        last_pm = Press.last_pm(self)
+
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
+        context['last_pm'] = last_pm
         return context
 
 

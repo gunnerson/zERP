@@ -6,7 +6,7 @@
 
   <ul>
     <li>
-      <a href="{% url 'mtn:order-list' %}" class="side-menu-link" role="button">Back</a>
+      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
     </li>
     {% if request.user|has_group:"maintenance" %}
       <li>

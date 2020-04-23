@@ -37,3 +37,15 @@ class Press(models.Model):
         for order in orders:
             dt += order.timerep
         return dt
+
+    def last_pm(self):
+        """Last PM date"""
+        last_pm_date = 'Never'
+        orders = self.object.order_set.filter(
+            closed=True,
+            ordertype='PM'
+        )
+        if orders.exists():
+            last_pm_order = orders.last()
+            last_pm_date = last_pm_order.repdate
+        return last_pm_date
