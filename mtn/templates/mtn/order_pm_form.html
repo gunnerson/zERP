@@ -28,12 +28,12 @@
 
 {% block content %}
 
-  <form action="{% url 'mtn:new_order' %}" method='post'>
+  <form action="{% url 'equip:add_pm' press_id %}" method='post'>
     {% csrf_token %}
 
       <div class="row">
         <div class="col">
-          {{ form.origin|as_crispy_field }}
+          {{ form.owner|as_crispy_field }}
         </div>
         <div class="col">
           {{ form.local|as_crispy_field }}
@@ -71,7 +71,7 @@
           <label class="form-check-label" for="exampleCheck1">Closed</label>
         </div>
       {% endif %}
-    <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
+    <button name="submit" role="button" class="btn btn-rahco">Create</button>
     <br>
     <br>
   </form>

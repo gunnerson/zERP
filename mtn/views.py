@@ -113,10 +113,20 @@ class PMCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['press_id'] = press_id
         return context
 
+    def get_initial(self):
+        initial = super(PMCreateView, self).get_initial()
+        initial = initial.copy()
+        initial['local'] = Press.objects.get(id=self.kwargs['pk'])
+        initial['owner'] = self.request.user
+        initial['ordertype'] = 'PM'
+        initial['cause'] = 'NW'
+        initial['descr'] = 'Preventive maintenance'
+        return initial
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.owner = self.request.user
-        self.object.local = Press.objects.get(id=self.kwargs['pk'])
+        # self.object.owner = self.request.user
+        # self.object.local = Press.objects.get(id=self.kwargs['pk'])
         self.object.save()
         return redirect('mtn:order-list')
 

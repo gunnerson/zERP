@@ -13,21 +13,35 @@ class OrderCreateForm(forms.ModelForm):
                   'ordertype': 'Type', 'descr': 'Description', }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
+    def __init__(self, *args, **kwargs):
+        super(OrderCreateForm, self).__init__(*args, **kwargs)
+        limited_choices = [('RE', 'Repair'), ('ST', 'Setup'), ]
+        self.fields['ordertype'].choices = limited_choices
+
 
 class PMCreateForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['origin', 'local', 'ordertype', 'descr', 'repdate',
+        fields = ['owner', 'local', 'ordertype', 'descr', 'repdate',
                   'repby', 'cause', 'descrrep', 'timerep', 'closed', ]
-        labels = {'origin': 'Originator', 'local': 'Location',
+        labels = {'owner': 'Originator', 'local': 'Location',
                   'ordertype': 'Type', 'descr': 'Description',
-                  'repby': 'Repaired by', 'repdate': 'Repaired on',
+                  'repby': 'Repaired by', 'repdate': 'Repair date',
                   'cause': 'Cause of repair', 'descrrep':
                   'Description of repair', 'timerep': 'Time of repair',
                   'closed': 'Closed', }
         widgets = {
             'descrrep': forms.Textarea(attrs={'cols': 80}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(PMCreateForm, self).__init__(*args, **kwargs)
+        self.fields['local'].disabled = True
+        self.fields['owner'].disabled = True
+        self.fields['ordertype'].disabled = True
+        self.fields['cause'].disabled = True
+        self.fields['descr'].disabled = True
+        self.fields['repby'].required = False
 
 
 class OrderUpdateForm(forms.ModelForm):
@@ -40,7 +54,7 @@ class OrderUpdateForm(forms.ModelForm):
                   'repby', 'cause', 'descrrep', 'timerep', 'closed', ]
         labels = {'origin': 'Originator', 'local': 'Location',
                   'ordertype': 'Type', 'descr': 'Description',
-                  'repby': 'Repaired by', 'repdate': 'Repaired on',
+                  'repby': 'Repaired by', 'repdate': 'Repair date',
                   'cause': 'Cause of repair', 'descrrep':
                   'Description of repair', 'timerep': 'Time of repair',
                   'closed': 'Closed', }
@@ -53,6 +67,11 @@ class OrderUpdateForm(forms.ModelForm):
         if (self.instance.ordertype == "ST" or
                 self.instance.ordertype == "PM"):
             self.fields['cause'].disabled = True
+        if self.instance.ordertype == "PM":
+            self.fields['local'].disabled = True
+            self.fields['origin'].disabled = True
+            self.fields['ordertype'].disabled = True
+            self.fields['descr'].disabled = True
 
     # def __init__(self, *args, request=None, **kwargs):
     #     super(OrderUpdateForm, self).__init__(*args, **kwargs)

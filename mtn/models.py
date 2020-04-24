@@ -12,10 +12,16 @@ class Order(models.Model):
     """Maintenance work orders"""
     REPAIR = 'RE'
     SETUP = 'ST'
+    PM = 'PM'
     NORMAL = 'NW'
     DAMAGE = 'DM'
     UNKNOWN = 'UN'
     ORDER_TYPE = [
+        (REPAIR, 'Repair'),
+        (SETUP, 'Setup'),
+        (PM, 'PM'),
+    ]
+    ORDER_TYPE_L = [
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
     ]
