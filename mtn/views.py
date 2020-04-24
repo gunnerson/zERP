@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from datetime import date
+from datetime import date, timedelta
+from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -62,6 +63,10 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(*args, **kwargs)
         used_parts = self.object.usedpart_set.all()
         cost_of_repair = round(Order.cost_of_repair(self), 2)
+        timereph = self.object.timerep
+        if timereph is not None:
+            timereph = timereph.total_seconds() / 3600
+        context['timereph'] = timereph
         context['used_parts'] = used_parts
         context['cost_of_repair'] = cost_of_repair
         return context
@@ -103,6 +108,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         """If order closed fill empty repair date and cause"""
         check_closed = self.request.POST.get('check_closed', None)
+        timereph = self.request.POST.get('timereph', None)
         self.object = form.save(commit=False)
         if check_closed is not None:
             self.object.closed = True
@@ -110,8 +116,12 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.repdate = date.today()
             if self.object.cause == '' or self.object.cause is None:
                 self.object.cause = 'UN'
-            # Update press status
+            if timereph == '' or timereph is None:
+                self.object.timerep = timezone.now() - self.object.date_added
+        if timereph != '' and timereph is not None:
+            self.object.timerep = timedelta(hours=float(timereph))
         self.object.save()
+        # Update press status
         press = self.object.local
         orders = Order.objects.filter(closed=False, local=press)
         if orders.exists():
@@ -121,6 +131,14 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             press.status = 'OK'
         press.save(update_fields=['status'])
         return redirect(self.get_success_url())
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        timereph = self.object.timerep
+        if timereph is not None:
+            timereph = timereph.total_seconds() / 3600
+        context['timereph'] = timereph
+        return context
 
     # def get_form_kwargs(self):
     #     kwargs = super().get_form_kwargs()

@@ -78,6 +78,7 @@ class DowntimeChartData(RetrieveAPIView):
         i = 0
         while i < 12:
             dt = Press.downtime(self, month, year)
+            dt = round(dt,1)
             dts.append(dt)
             month_name = calendar.month_abbr[month]
             labels.append(month_name)

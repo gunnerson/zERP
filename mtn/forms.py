@@ -15,10 +15,8 @@ class OrderCreateForm(forms.ModelForm):
 
 
 class OrderUpdateForm(forms.ModelForm):
-    timerep = forms.FloatField(min_value=0, max_value=99.9, initial=0,
-                               label="Time of repair, h")
     repdate = forms.DateField(widget=DatePicker(), required=False,
-                              label="Date of repair, h")
+                              label="Date of repair")
 
     class Meta:
         model = Order
@@ -43,4 +41,3 @@ class OrderUpdateForm(forms.ModelForm):
     # def __init__(self, *args, request=None, **kwargs):
     #     super(OrderUpdateForm, self).__init__(*args, **kwargs)
     #     self.fields["parts"].widget = CheckboxSelectMultiple()
-    #     self.fields["parts"].queryset = self.filter_list(request)

@@ -35,7 +35,7 @@ class Press(models.Model):
             date_added__month__exact=month,
         )
         for order in orders:
-            dt += order.timerep
+            dt += (order.timerep.total_seconds() / 3600)
         return dt
 
     def last_pm(self):

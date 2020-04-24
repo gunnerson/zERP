@@ -12,14 +12,11 @@ class Order(models.Model):
     """Maintenance work orders"""
     REPAIR = 'RE'
     SETUP = 'ST'
-    PM = 'PM'
     NORMAL = 'NW'
     DAMAGE = 'DM'
     UNKNOWN = 'UN'
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
-        (SETUP, 'Setup'),
-        (PM, 'PM'),
     ]
     CAUSE_OF_REPAIR = [
         (NORMAL, 'Normal Wear'),
@@ -54,7 +51,7 @@ class Order(models.Model):
         choices=CAUSE_OF_REPAIR,
     )
     descrrep = models.TextField(null=True)
-    timerep = models.FloatField(null=True)
+    timerep = models.DurationField(null=True, blank=True)
     repdate = models.DateField(null=True, blank=True)
     owner = models.ForeignKey(User,
                               on_delete=models.SET_NULL,
