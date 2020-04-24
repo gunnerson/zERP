@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Order
 from equip.models import Press
 from .forms import OrderCreateForm, OrderUpdateForm, PMCreateForm
+from staff.models import Employee
 
 
 def has_group(user, group_name):
@@ -125,8 +126,7 @@ class PMCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        # self.object.owner = self.request.user
-        # self.object.local = Press.objects.get(id=self.kwargs['pk'])
+        self.object.origin = Employee.objects.get(id=3)
         self.object.save()
         return redirect('mtn:order-list')
 

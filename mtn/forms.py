@@ -42,6 +42,7 @@ class PMCreateForm(forms.ModelForm):
         self.fields['cause'].disabled = True
         self.fields['descr'].disabled = True
         self.fields['repby'].required = False
+        self.fields['descrrep'].required = False
 
 
 class OrderUpdateForm(forms.ModelForm):
