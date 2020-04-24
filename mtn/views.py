@@ -131,6 +131,19 @@ class PMCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return redirect('mtn:order-list')
 
 
+def new_pm(request, pk):
+    order = Order(
+        owner=request.user,
+        origin=Employee.objects.get(id=3),
+        local=Press.objects.get(id=pk),
+        ordertype='PM',
+        cause='NW',
+        descr='Preventive maintenance',
+    )
+    order.save()
+    return redirect('mtn:order-list')
+
+
 class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Edit a work order"""
     model = Order
