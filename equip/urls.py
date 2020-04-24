@@ -8,8 +8,7 @@ from equip.views import (
 
 from mtn.views import (
     OrderListView,
-    PMCreateView,
-    new_pm,
+    add_pm,
 )
 
 app_name = "equip"
@@ -17,7 +16,7 @@ app_name = "equip"
 urlpatterns = [
     path('equipment/', PressListView.as_view(), name='presslist'),
     path('equipment/press/<int:pk>/', PressDetailView.as_view(), name='press'),
-    path('equipment/press/<int:pk>/add_pm/', new_pm,
+    path('equipment/press/<int:pk>/add_pm/', add_pm,
          name='add_pm'),
     path('equipment/press/<int:pk>/orders/', OrderListView.as_view(),
          name='press-orders'),

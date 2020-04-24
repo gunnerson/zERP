@@ -19,32 +19,6 @@ class OrderCreateForm(forms.ModelForm):
         self.fields['ordertype'].choices = limited_choices
 
 
-class PMCreateForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = ['owner', 'local', 'ordertype', 'descr', 'repdate',
-                  'repby', 'cause', 'descrrep', 'timerep', 'closed', ]
-        labels = {'owner': 'Originator', 'local': 'Location',
-                  'ordertype': 'Type', 'descr': 'Description',
-                  'repby': 'Repaired by', 'repdate': 'Repair date',
-                  'cause': 'Cause of repair', 'descrrep':
-                  'Description of repair', 'timerep': 'Time of repair',
-                  'closed': 'Closed', }
-        widgets = {
-            'descrrep': forms.Textarea(attrs={'cols': 80}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(PMCreateForm, self).__init__(*args, **kwargs)
-        self.fields['local'].disabled = True
-        self.fields['owner'].disabled = True
-        self.fields['ordertype'].disabled = True
-        self.fields['cause'].disabled = True
-        self.fields['descr'].disabled = True
-        self.fields['repby'].required = False
-        self.fields['descrrep'].required = False
-
-
 class OrderUpdateForm(forms.ModelForm):
     repdate = forms.DateField(widget=DatePicker(), required=False,
                               label="Date of repair")

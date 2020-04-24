@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
+from django.http import Http404
 from datetime import date, timedelta
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import Order
 from equip.models import Press
-from .forms import OrderCreateForm, OrderUpdateForm, PMCreateForm
+from .forms import OrderCreateForm, OrderUpdateForm
 from staff.models import Employee
 
 
@@ -97,50 +99,20 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return redirect('mtn:order-list')
 
 
-class PMCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Create a PM work order"""
-    model = Order
-    form_class = PMCreateForm
-    template_name = 'mtn/order_pm_form.html'
-
-    def test_func(self):
-        return (has_group(self.request.user, 'maintenance') or
-                has_group(self.request.user, 'supervisor'))
-
-    def get_context_data(self, *args, **kwargs):
-        # Get press id for "Back" button in template
-        press_id = self.kwargs['pk']
-        context = super().get_context_data(*args, **kwargs)
-        context['press_id'] = press_id
-        return context
-
-    def get_initial(self):
-        initial = super(PMCreateView, self).get_initial()
-        initial = initial.copy()
-        initial['local'] = Press.objects.get(id=self.kwargs['pk'])
-        initial['owner'] = self.request.user
-        initial['ordertype'] = 'PM'
-        initial['cause'] = 'NW'
-        initial['descr'] = 'Preventive maintenance'
-        return initial
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.origin = Employee.objects.get(id=3)
-        self.object.save()
-        return redirect('mtn:order-list')
-
-
-def new_pm(request, pk):
-    order = Order(
-        owner=request.user,
-        origin=Employee.objects.get(id=3),
-        local=Press.objects.get(id=pk),
-        ordertype='PM',
-        cause='NW',
-        descr='Preventive maintenance',
-    )
-    order.save()
+@login_required
+def add_pm(request, pk):
+    if has_group(request.user, 'maintenance'):
+        order = Order(
+            owner=request.user,
+            origin=Employee.objects.get(id=3),
+            local=Press.objects.get(id=pk),
+            ordertype='PM',
+            cause='NW',
+            descr='Preventive maintenance',
+        )
+        order.save()
+    else:
+        raise Http404
     return redirect('mtn:order-list')
 
 
