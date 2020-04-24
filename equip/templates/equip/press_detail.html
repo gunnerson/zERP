@@ -1,5 +1,7 @@
 {% extends "mtn/base.html" %}
 
+{% load poll_extras %}
+
 <script>
   {% block jquery %}
 
@@ -51,6 +53,11 @@
     <li>
       <a href="{% url 'equip:press-orders' press.id %}" class="side-menu-link" role="button">Orders</a>
     </li>
+    {% if request.user|has_group:"maintenance" %}
+      <li>
+        <a href="{% url 'equip:add_pm' press.id %}" class="side-menu-link" role="button">Add PM</a>
+      </li>
+    {% endif %}
   </ul>
 
 {% endblock left-menu %}

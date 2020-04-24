@@ -14,6 +14,22 @@ class OrderCreateForm(forms.ModelForm):
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
 
+class PMCreateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['origin', 'local', 'ordertype', 'descr', 'repdate',
+                  'repby', 'cause', 'descrrep', 'timerep', 'closed', ]
+        labels = {'origin': 'Originator', 'local': 'Location',
+                  'ordertype': 'Type', 'descr': 'Description',
+                  'repby': 'Repaired by', 'repdate': 'Repaired on',
+                  'cause': 'Cause of repair', 'descrrep':
+                  'Description of repair', 'timerep': 'Time of repair',
+                  'closed': 'Closed', }
+        widgets = {
+            'descrrep': forms.Textarea(attrs={'cols': 80}),
+        }
+
+
 class OrderUpdateForm(forms.ModelForm):
     repdate = forms.DateField(widget=DatePicker(), required=False,
                               label="Date of repair")

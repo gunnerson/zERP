@@ -17,6 +17,7 @@ class Order(models.Model):
     UNKNOWN = 'UN'
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
+        (SETUP, 'Setup'),
     ]
     CAUSE_OF_REPAIR = [
         (NORMAL, 'Normal Wear'),

@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Order
 from equip.models import Press
-from .forms import OrderCreateForm, OrderUpdateForm
+from .forms import OrderCreateForm, OrderUpdateForm, PMCreateForm
 
 
 def has_group(user, group_name):
@@ -92,6 +92,31 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         press = self.object.local
         press.status = self.object.ordertype
         press.save(update_fields=['status'])
+        self.object.save()
+        return redirect('mtn:order-list')
+
+
+class PMCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Create a PM work order"""
+    model = Order
+    form_class = PMCreateForm
+    template_name = 'mtn/order_pm_form.html'
+
+    def test_func(self):
+        return (has_group(self.request.user, 'maintenance') or
+                has_group(self.request.user, 'supervisor'))
+
+    def get_context_data(self, *args, **kwargs):
+        # Get press id for "Back" button in template
+        press_id = self.kwargs['pk']
+        context = super().get_context_data(*args, **kwargs)
+        context['press_id'] = press_id
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.local = Press.objects.get(id=self.kwargs['pk'])
         self.object.save()
         return redirect('mtn:order-list')
 

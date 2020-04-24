@@ -1,6 +1,5 @@
 import calendar
 from django.utils import timezone
-from datetime import timedelta
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.generics import RetrieveAPIView
@@ -78,7 +77,7 @@ class DowntimeChartData(RetrieveAPIView):
         i = 0
         while i < 12:
             dt = Press.downtime(self, month, year)
-            dt = round(dt,1)
+            dt = round(dt, 1)
             dts.append(dt)
             month_name = calendar.month_abbr[month]
             labels.append(month_name)

@@ -6,7 +6,7 @@
 
   <ul>
     <li>
-      <a href="{% url 'mtn:order' order.id %}" role="button" class="side-menu-link">Back</a>
+      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
     </li>
   </ul>
 
@@ -18,7 +18,7 @@
     <ol class="breadcrumb m-0">
         <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
         <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'equip:press' press.id %}">Item</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
         <li class="breadcrumb-item active">Add PM</li>
     </ol>
   </div>
@@ -28,7 +28,7 @@
 
 {% block content %}
 
-  <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
+  <form action="{% url 'mtn:new_order' %}" method='post'>
     {% csrf_token %}
 
       <div class="row">
