@@ -55,7 +55,7 @@
     </li>
     {% if request.user|has_group:"maintenance" %}
       <li>
-        <a href="{% url 'equip:add_pm' press.id %}" class="side-menu-link" role="button">Add PM</a>
+        <a href="{% url 'equip:add_pm' press.id %}" class="side-menu-link" role="button" onclick="return confirm('Are you sure?');">Add PM</a>
       </li>
     {% endif %}
   </ul>

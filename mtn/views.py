@@ -30,7 +30,7 @@ def index(request):
 class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
-    paginate_by = 20
+    paginate_by = 2
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -40,6 +40,8 @@ class OrderListView(LoginRequiredMixin, ListView):
             press_excl = True
             context['press_id'] = press_id
         check_closed = self.request.GET.get('check_closed')
+        if check_closed is None:
+            check_closed = False
         context['check_closed'] = check_closed
         context['press_excl'] = press_excl
         return context
