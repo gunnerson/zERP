@@ -1,4 +1,6 @@
 ve/
+static/
+static_root/
 __pycache__/
 **/*.pyc
 **/__pycache__
