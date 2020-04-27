@@ -91,11 +91,6 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         if (self.object.ordertype == "ST" or
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"
-        # Change press status
-        press = self.object.local
-        press.status = self.object.ordertype
-        press.save(update_fields=['status'])
-        self.object.save()
         return redirect('mtn:order-list')
 
 
@@ -141,15 +136,6 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if timereph != '' and timereph is not None:
             self.object.timerep = timedelta(hours=float(timereph))
         self.object.save()
-        # Update press status
-        press = self.object.local
-        orders = Order.objects.filter(closed=False, local=press)
-        if orders.exists():
-            order = orders.latest('date_added')
-            press.status = order.ordertype
-        else:
-            press.status = 'OK'
-        press.save(update_fields=['status'])
         return redirect(self.get_success_url())
 
     def get_context_data(self, *args, **kwargs):

@@ -7,7 +7,6 @@ from rest_framework.response import Response
 # from rest_framework import authentication, permissions
 
 from .models import Press
-from mtn.models import Order
 
 
 class PressListView(LoginRequiredMixin, ListView):
@@ -15,8 +14,8 @@ class PressListView(LoginRequiredMixin, ListView):
     model = Press
 
     def get_queryset(self):
-        # Sort by status
-        qs = Press.objects.all().order_by('-status')
+        # Sort by name
+        qs = Press.objects.all().order_by('pname')
         return qs
 
 

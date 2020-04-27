@@ -21,10 +21,6 @@ class Order(models.Model):
         (SETUP, 'Setup'),
         (PM, 'PM'),
     ]
-    ORDER_TYPE_L = [
-        (REPAIR, 'Repair'),
-        (SETUP, 'Setup'),
-    ]
     CAUSE_OF_REPAIR = [
         (NORMAL, 'Normal Wear'),
         (DAMAGE, 'Damage'),
