@@ -138,7 +138,7 @@
           <p class="card-text">
             {% for part in used_parts %}
               {% if part.marked_to_delete %}
-                <a href="{% url 'invent:part' part.part.id %}" style="color:#FF0000;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+                <a href="{% url 'invent:part' part.part.id %}" style="color:#FF0000; text-decoration:line-through;">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
               {% else %}
                 <a href="{% url 'invent:part' part.part.id %}">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
               {% endif %}

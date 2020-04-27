@@ -45,7 +45,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        qs = Order.objects.all().order_by('-date_added')
+        qs = Order.objects.all().order_by('-id')
         if 'pk' in self.kwargs:
             press = Press.objects.get(id=self.kwargs['pk'])
             qs = qs.filter(local=press)

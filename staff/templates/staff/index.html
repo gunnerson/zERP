@@ -9,18 +9,17 @@
             <div class="row" style="height: 35px">
               <div class="col-6">
                 <p>
-                  {{ employee.first_name }} {{ employee.last_name }} 
-                  ({{ employee.get_role_display }})
+                  {{ employee }} ({{ employee.get_role_display }})
                 </p>
               </div>
             </div>
-          </div>  
+          </div>
         </li>
 	  {% empty %}
 		  <li>No equipment have been added yet.</li>
     {% endfor %}
 	</ul>
-  
+
 {% endblock content %}
 
 

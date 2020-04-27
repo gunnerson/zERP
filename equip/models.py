@@ -2,22 +2,7 @@ from django.db import models
 
 
 class Press(models.Model):
-    REPAIR = 'RE'
-    SETUP = 'ST'
-    PM = 'PM'
-    OK = 'OK'
-    PRESS_STATUS = [
-        (REPAIR, 'Out of Order'),
-        (SETUP, 'Setup Due'),
-        (PM, 'PM Due'),
-        (OK, 'OK'),
-    ]
     pname = models.CharField(max_length=12)
-    status = models.CharField(
-        max_length=2,
-        choices=PRESS_STATUS,
-        default='OK'
-    )
 
     class Meta:
         verbose_name_plural = 'presses'
@@ -31,16 +16,16 @@ class Press(models.Model):
         press = self.get_object()
         orders = press.order_set.filter(
             closed=True,
+            ordertype='RE',
             date_added__year__exact=year,
             date_added__month__exact=month,
         )
         for order in orders:
-            dt += (order.timerep.total_seconds() / 3600)
+            dt += order.timerep.total_seconds() / 3600
         return dt
 
     def last_pm(self):
         """Last PM date"""
-        last_pm_date = 'Never'
         orders = self.object.order_set.filter(
             closed=True,
             ordertype='PM'
@@ -48,4 +33,6 @@ class Press(models.Model):
         if orders.exists():
             last_pm_order = orders.last()
             last_pm_date = last_pm_order.repdate
+        else:
+            last_pm_date = 'Never'
         return last_pm_date
