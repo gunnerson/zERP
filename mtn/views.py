@@ -30,7 +30,7 @@ def index(request):
 class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
-    paginate_by = 2
+    paginate_by = 20
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
