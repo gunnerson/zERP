@@ -141,7 +141,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 LOGIN_URL = '/users/login/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-Heroku
+# Heroku
 if os.getcwd() == '/app':
     import dj_database_url
     DATABASES = {
