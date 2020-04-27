@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 
 # DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -62,7 +62,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'erp.urls'
@@ -137,26 +136,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 # My settings
 LOGIN_URL = '/users/login/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-# Heroku
-if os.getcwd() == '/app':
-    # import dj_database_url
-    # DATABASES = {
-    #     'default': dj_database_url.config(default='postgres://localhost')
-    # }
-    # Honor the 'X-Forwarded-Proto' header for request.is_secure().
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    # Allow all host headers.
-    ALLOWED_HOSTS = ['*']
-    # Static asset configuration
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = 'staticfiles'
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
