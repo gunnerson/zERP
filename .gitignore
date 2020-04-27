@@ -1,13 +1,8 @@
-.gitignore
 ve/
-erp_ve/
 __pycache__/
 **/*.pyc
 **/__pycache__
 *.sqlite3
 node_modules/
 rahco.sublime**
-erp/settings.py
-erp/settings_work_backup.py
-erp/settings_home_backup.py
 
