@@ -48,8 +48,8 @@ class Part(models.Model):
 
 class UsedPart(models.Model):
     """Intermediary table for m2m between Part and Order classes"""
-    part = models.ForeignKey(Part, on_delete=models.CASCADE)
-    order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE)
+    part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE, null=True)
     amount_used = models.PositiveIntegerField()
     marked_to_delete = models.BooleanField(default=False)
 

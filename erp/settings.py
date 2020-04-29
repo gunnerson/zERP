@@ -25,9 +25,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 
 # DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-DEBUG = True
+DEBUG = False
+# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '192.168.138.195']
 
 
 # Application definition
@@ -86,13 +87,22 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'rahcodb',
+        'USER': 'db_user',
+        'PASSWORD': os.environ.get('db_pass'),
+        'HOST': 'localhost',
+        'PORT': '', }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -140,3 +150,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 # My settings
 LOGIN_URL = '/users/login/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Deployment
+
+CSRF_COOKIE_SECURE = True

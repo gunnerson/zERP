@@ -93,6 +93,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         if (self.object.ordertype == "ST" or
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"
+        self.object.save()
         return redirect('mtn:order-list')
 
 

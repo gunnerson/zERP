@@ -12,7 +12,7 @@ class Employee(models.Model):
         (MAINTENANCE, 'Maintenance'),
     ]
     first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20, null=True)
+    last_name = models.CharField(max_length=20, null=True, blank=True)
     role = models.CharField(
         max_length=2,
         choices=ROLES,

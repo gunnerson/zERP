@@ -33,7 +33,10 @@ class Order(models.Model):
     origin = models.ForeignKey(Employee,
                                on_delete=models.SET_NULL,
                                null=True,
-                               limit_choices_to={'role': "SV"},
+                               limit_choices_to={
+                                   'role': "SV",
+                                   'role': "MT"
+                               },
                                related_name='+',
                                )
     local = models.ForeignKey(Press,
