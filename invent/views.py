@@ -10,15 +10,12 @@ from mtn.views import has_group
 from mtn.models import Order
 
 
-class PartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class PartListView(LoginRequiredMixin, ListView):
     """List of all parts in the inventory and list of parts to add
     to an existing work order"""
     model = Part
     count = 0
     paginate_by = 20
-
-    def test_func(self):
-        return has_group(self.request.user, 'maintenance')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

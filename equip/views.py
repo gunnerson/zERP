@@ -12,11 +12,7 @@ from .models import Press
 class PressListView(LoginRequiredMixin, ListView):
     """List of equipment"""
     model = Press
-
-    def get_queryset(self):
-        # Sort by name
-        qs = Press.objects.all().order_by('pname')
-        return qs
+    paginate_by = 20
 
 
 class PressDetailView(LoginRequiredMixin, DetailView):

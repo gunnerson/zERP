@@ -2,10 +2,25 @@ from django.db import models
 
 
 class Press(models.Model):
-    pname = models.CharField(max_length=12)
+    pname = models.CharField(max_length=40)
+    PRODUCTION = 'PR'
+    GENERAL = 'GN'
+    BUILDING = 'BD'
+    LIFTING = 'LF'
+    GROUPS = [
+        (PRODUCTION, 'Production'),
+        (GENERAL, 'General'),
+        (BUILDING, 'Building'),
+        (LIFTING, 'Lifting equipment'),
+    ]
+    group = models.CharField(
+        max_length=2,
+        choices=GROUPS,
+    )
 
     class Meta:
         verbose_name_plural = 'presses'
+        ordering = ['pname']
 
     def __str__(self):
         return str(self.pname)
