@@ -28,10 +28,10 @@
 
   <form method="GET" action=".">
     <div class="form-row">
-      <div class="form-group col-md-3 align-self-center">
-        <input class="form-conrol py-2 border" style="border-radius:5px; width:300px;" type="search" placeholder=" Search by part number" name="query" value="{{ query|default:'' }}">
+      <div class="form-group col align-self-center">
+        <input class="form-conrol py-2 border" style="border-radius:5px; width:300px; " type="search" placeholder=" Search by part number" name="query" value="{{ query|default:'' }}">
       </div>
-      <div class="form-group col-md-3 align-self-center">
+      <div class="form-group col align-self-center">
         <select class="form-control" name="by_vendor">
           <option selected>{{ by_vendor|default:"Choose vendor..." }}</option>
           {% if by_vendor != "All vendors" %}
