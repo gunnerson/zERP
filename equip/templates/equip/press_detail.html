@@ -90,12 +90,20 @@
                 <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
                 <span>{{ dts_total|floatformat }} hours</span>
               </h2>
+              <h2 class="font-weight-normal mb-3">
+                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
+                <span>$ {{ cost_this_year }}</span>
+              </h2>
             </div>
             <div class="col-md-6">
               <p class="text-muted mb-0 mt-3">Previous Year</p>
               <h2 class="font-weight-normal mb-3">
                 <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
                 <span>{{ dts_last|floatformat }} hours</span>
+              </h2>
+              <h2 class="font-weight-normal mb-3">
+                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
+                <span>$ {{ cost_last_year }}</span>
               </h2>
             </div>
           </div>

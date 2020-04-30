@@ -31,13 +31,16 @@ class Part(models.Model):
     """List of inventory"""
     partnum = models.CharField(max_length=35)
     descr = models.TextField(blank=True, null=True)
-    cat = models.ManyToManyField(Press)
+    cat = models.ManyToManyField(Press, blank=True)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     vendr = models.ManyToManyField('Vendor', blank=True)
 
     objects = PartManager()
+
+    class Meta:
+        ordering = ['partnum']
 
     def __str__(self):
         return str(self.partnum)
@@ -66,8 +69,12 @@ class Vendor(models.Model):
     state = models.CharField(max_length=2, blank=True, null=True)
     zipcode = models.CharField(max_length=10, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    webpage = models.URLField(blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     vcomm = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return str(self.name)

@@ -1,5 +1,6 @@
 import calendar
 from django.utils import timezone
+from datetime import timedelta
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.generics import RetrieveAPIView
@@ -7,12 +8,13 @@ from rest_framework.response import Response
 # from rest_framework import authentication, permissions
 
 from .models import Press
+from mtn.models import Order
 
 
 class PressListView(LoginRequiredMixin, ListView):
     """List of equipment"""
     model = Press
-    paginate_by = 20
+    # paginate_by = 20
 
 
 class PressDetailView(LoginRequiredMixin, DetailView):
@@ -40,13 +42,31 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             dts_last += dt
             month -= 1
             i += 1
-
         # Last PM date
         last_pm = Press.last_pm(self)
-
+        # Calculate repair costs
+        cost_this_year = 0
+        cost_last_year = 0
+        start_date = today - timedelta(days=365)
+        end_date = today
+        orders = Order.objects.filter(local=self.object.id)
+        this_year = orders.filter(
+            date_added__range=(start_date, end_date)
+        )
+        start_date -= timedelta(days=365)
+        end_date -= timedelta(days=365)
+        last_year = orders.filter(
+            date_added__range=(start_date, end_date)
+        )
+        for order in this_year:
+            cost_this_year += round(Order.cost_of_repair(order), 2)
+        for order in last_year:
+            cost_last_year += round(Order.cost_of_repair(order), 2)
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
         context['last_pm'] = last_pm
+        context['cost_this_year'] = cost_this_year
+        context['cost_last_year'] = cost_last_year
         return context
 
 
@@ -58,6 +78,7 @@ class DowntimeChartData(RetrieveAPIView):
     queryset = Press.objects.all()
 
     def get(self, request, *args, **kwargs):
+        # Calculate downtime
         today = timezone.now()
         month = today.month
         year = today.year

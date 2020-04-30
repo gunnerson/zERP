@@ -20,24 +20,24 @@
 
 {% block content %}
 
-<div class="container justify-content-start">
+<div class="container justify-content-start ml-1">
     {% for object in object_list %}
         <div class="row border justify-content-start" style="width:500px; background-color:white;">
-          <div class="col-8 border-right text-nowrap text-truncate align-self-center my-2">
+          <div class="col-6 border-right text-nowrap text-truncate align-self-center my-2">
             <a href="{% url 'equip:press' object.id %}">{{ object.pname }}</a>
           </div>
            <div class="col-3 border-right text-nowrap text-truncate align-self-center">
             <span>{{ object.get_group_display }}</span>
           </div>
-          <div class="col-1 align-self-center px-2">
+          <div class="col-3 align-self-center">
             {% if object.id|press_status == "RE" %}
-              <div class="badge badge-danger">Out of Order</div>
+              <div class="badge badge-danger py-2 mx-1">Out of Order</div>
             {% elif object.id|press_status == "ST" %}
-              <div class="badge badge-warning">Setup Due</div>
+              <div class="badge badge-warning py-2 mx-1">Setup Due</div>
             {% elif object.id|press_status == "PM" %}
-              <div class="badge badge-info">PM Due</div>
+              <div class="badge badge-info py-2 mx-1">PM Due</div>
             {% else %}
-              <div class="badge badge-success py-2 ">OK</div>
+              <div class="badge badge-success py-2 mx-1">OK</div>
             {% endif %}
           </div>
         </div>

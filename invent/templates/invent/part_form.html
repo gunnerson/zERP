@@ -29,31 +29,34 @@
 
   <form action="{% url 'invent:new_part' %}" method='post'>
   {% csrf_token %}
-    <div class="container fluid">
-      <div class="row">
-        <div class="col-sm">
-          {{ form.partnum|as_crispy_field }}
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-sm">
+            {{ form.partnum|as_crispy_field }}
+          </div>
+          <div class="col-sm">
+            {{ form.amount|as_crispy_field }}
+          </div>
+          <div class="col-sm">
+            {{ form.price|as_crispy_field }}
+          </div>
+          <div class="col-sm">
+            {{ form.unit|as_crispy_field }}
+          </div>
+          <br>
         </div>
-        <div class="col-sm">
-          {{ form.amount|as_crispy_field }}
+        <div class="row">
+          <div class="col">
+            {{ form.descr|as_crispy_field }}
+          </div>
         </div>
-        <div class="col-sm">
-          {{ form.price|as_crispy_field }}
-        </div>
-        <div class="col-sm">
-          {{ form.unit|as_crispy_field }}
-        </div>
-        <div class="col-sm">
-          {{ form.vendr|as_crispy_field }}
-        </div>
-        <div class="col">
-          {{ form.cat|as_crispy_field }}
-        </div>
-        <br>
       </div>
-      <div class="row">
-        <div class="col">
-          {{ form.descr|as_crispy_field }}
+      <div class="col-2">
+        {{ form.vendr|as_crispy_field }}
+      </div>
+      <div class="col-4">
+        {{ form.cat|as_crispy_field }}
       </div>
     </div>
     <br>

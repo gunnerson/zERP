@@ -3,6 +3,11 @@ from django import forms
 from tempus_dominus.widgets import DatePicker
 
 from .models import Order
+from equip.models import Press
+
+
+def has_group(user, group_name):
+    return user.groups.filter(name=group_name).exists()
 
 
 class OrderCreateForm(forms.ModelForm):
@@ -13,9 +18,14 @@ class OrderCreateForm(forms.ModelForm):
                   'ordertype': 'Type', 'descr': 'Description', }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, request=None, **kwargs):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         limited_choices = [('RE', 'Repair'), ('ST', 'Setup'), ]
+        if has_group(request.user, 'maintenance'):
+            equip_qs = Press.objects.all()
+        else:
+            equip_qs = Press.objects.filter(group='PR')
+        self.fields['local'].queryset = equip_qs
         self.fields['ordertype'].choices = limited_choices
 
 
@@ -47,7 +57,3 @@ class OrderUpdateForm(forms.ModelForm):
             self.fields['origin'].disabled = True
             self.fields['ordertype'].disabled = True
             self.fields['descr'].disabled = True
-
-    # def __init__(self, *args, request=None, **kwargs):
-    #     super(OrderUpdateForm, self).__init__(*args, **kwargs)
-    #     self.fields["parts"].widget = CheckboxSelectMultiple()

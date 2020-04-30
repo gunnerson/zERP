@@ -16,18 +16,33 @@ class PartCreateForm(forms.ModelForm):
                   'Amount', 'unit': 'Unit', 'vendr': 'Vendors',
                   'price': 'Price', 'descr': 'Description',
                   }
+        widgets = {
+            'cat': forms.SelectMultiple(attrs={
+                'size': '20',
+            }
+            ),
+            'vendr': forms.Select(attrs={
+                'size': '20',
+            }
+            ),
+            'descr': forms.Textarea(attrs={
+                'rows': '12',
+            }
+            ),
+        }
 
 
 class VendorCreateForm(forms.ModelForm):
     class Meta:
         model = Vendor
         fields = ['name', 'addr1', 'addr2', 'city', 'state', 'zipcode',
-                  'email', 'phone', 'vcomm',
+                  'email', 'phone', 'vcomm', 'webpage',
                   ]
         labels = {'name': 'Name', 'addr1': 'Address', 'addr2':
                   'Address (line 2)', 'city': 'City', 'state': 'State',
                   'zipcode': 'Zip Code', 'email': 'E-Mail',
                   'phone': 'Phone number', 'vcomm': 'Commentary',
+                  'webpage': 'Web address',
                   }
         widgets = {
             'name': forms.TextInput(attrs={
@@ -73,6 +88,11 @@ class VendorCreateForm(forms.ModelForm):
             'vcomm': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Commentary',
+            }
+            ),
+            'webpage': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Web address',
             }
             ),
         }

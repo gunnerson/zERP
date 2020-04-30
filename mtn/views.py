@@ -67,7 +67,7 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         used_parts = self.object.usedpart_set.all()
-        cost_of_repair = round(Order.cost_of_repair(self), 2)
+        cost_of_repair = round(Order.cost_of_repair(self.object), 2)
         timereph = self.object.timerep
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
@@ -95,6 +95,11 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             self.object.cause = "NW"
         self.object.save()
         return redirect('mtn:order-list')
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super(OrderCreateView, self).get_form_kwargs()
+        kwargs.update(request=self.request)
+        return kwargs
 
 
 @login_required
@@ -148,8 +153,3 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             timereph = timereph.total_seconds() / 3600
         context['timereph'] = timereph
         return context
-
-    # def get_form_kwargs(self):
-    #     kwargs = super().get_form_kwargs()
-    #     kwargs.update(request=self.request)
-    #     return kwargs

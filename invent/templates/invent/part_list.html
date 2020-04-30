@@ -29,7 +29,7 @@
   <form method="GET" action=".">
     <div class="form-row">
       <div class="form-group col align-self-center">
-        <input class="form-conrol py-2 border" style="border-radius:5px; width:300px; " type="search" placeholder=" Search by part number" name="query" value="{{ query|default:'' }}">
+        <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder=" Find part" name="query" value="{{ query|default:'' }}">
       </div>
       <div class="form-group col align-self-center">
         <select class="form-control" name="by_vendor">
@@ -62,7 +62,7 @@
 
   <hr />
 
-  <div class="container" style="background-color:white;">
+  <div class="container justify-content-start ml-1" style="background-color:white;">
     {% for object in object_list %}
         <div class="row border">
           <div class="col-2 border-right text-nowrap text-truncate">
