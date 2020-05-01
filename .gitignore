@@ -1,8 +1,7 @@
 ve/
 envvar
-media/
-static/
-static_root/
+static/admin
+static/rest_framework
 __pycache__/
 **/*.pyc
 **/__pycache__

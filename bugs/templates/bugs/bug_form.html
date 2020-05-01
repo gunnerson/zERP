@@ -1,0 +1,43 @@
+{% extends "mtn/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block left-menu%}
+
+  <ul>
+    <li>
+      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item active">Report Bug</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Report a bug</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form action="{% url 'bugs:report-bug' %}" method='post'>
+    {% csrf_token %}
+      <div class="col-3">{{ form.origin|as_crispy_field }}</div>
+      {{ form.descr|as_crispy_field }}
+    <input type="hidden" name="previous_page" id="previous_page" value="">
+    <button name="submit" role="button" class="btn btn-rahco">Save order</button>
+  </form>
+</form>
+
+<script>
+    prev = document.getElementById("previous_page");
+    prev.value = document.referrer;
+</script>
+
+{% endblock content %}

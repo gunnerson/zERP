@@ -6,4 +6,3 @@ from mtn.models import Order
 #     readonly_fields = ('date_added',)
 
 admin.site.register(Order)
-

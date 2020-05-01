@@ -48,6 +48,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{% url 'admin:index' %}">Admin page</a>
+                <a class="dropdown-item" href="http://192.168.138.195/admin/bugs/bug/">Bugs</a>
                 <a class="dropdown-item" href="{% url 'invent:usedpartlist' %}">Clean Used Parts</a>
               </div>
             </li>
@@ -63,7 +64,7 @@
             <li><a href="{% url 'users:login' %}" style="color:white;">log in</a></li>
           {% endif %}
           <li>
-            <a class="navbar-nav ml-5" href="">
+            <a class="navbar-nav ml-5" href="{% url 'bugs:report-bug' %}">
               <img src="{% static 'bug.png' %}" width="30" height="30" class="d-inline-block align-center" alt="">
             </a>
           </li>

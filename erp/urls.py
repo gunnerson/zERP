@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('staff.urls'), name='staff'),
     path('', include('equip.urls'), name='equip'),
     path('', include('invent.urls'), name='invent'),
+    path('', include('bugs.urls'), name='bugs'),
 ]
 
 if settings.DEBUG:
