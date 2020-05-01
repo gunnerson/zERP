@@ -105,15 +105,35 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 @login_required
 def add_pm(request, pk):
     if has_group(request.user, 'maintenance'):
-        order = Order(
-            owner=request.user,
-            origin=Employee.objects.get(id=3),
-            local=Press.objects.get(id=pk),
-            ordertype='PM',
-            cause='NW',
-            descr='Preventive maintenance',
+        press = Press.objects.get(id=pk)
+        orders = press.order_set.filter(
+            closed=True,
+            ordertype='PM'
         )
-        order.save()
+        if orders.exists():
+            last_pm = orders.last()
+            new_pm = last_pm
+            new_pm.pk = None
+            new_pm.owner = request.user
+            new_pm.date_added = timezone.now()
+            new_pm.repdate = None
+            new_pm.closed = False
+            new_pm.save()
+            for part in last_pm.parts.all():
+                new_part = part
+                new_part.id = None
+                new_part.order_id = new_pm.id
+                new_part.save()
+        else:
+            new_pm = Order(
+                owner=request.user,
+                origin=Employee.objects.get(id=3),
+                local=press,
+                ordertype='PM',
+                cause='NW',
+                descr='List PM procedures here',
+            )
+            new_pm.save()
     else:
         raise Http404
     return redirect('mtn:order-list')

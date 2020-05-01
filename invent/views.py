@@ -74,7 +74,7 @@ class PartListView(LoginRequiredMixin, ListView):
             return redirect(request.META['HTTP_REFERER'])
 
 
-class PartCreateView(LoginRequiredMixin, CreateView):
+class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Add new part to inventory"""
     model = Part
     form_class = PartCreateForm
@@ -157,7 +157,7 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('mtn:order', pk=order_id)
 
 
-class VendorCreateView(LoginRequiredMixin, CreateView):
+class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Add new vendor"""
     model = Vendor
     form_class = VendorCreateForm
