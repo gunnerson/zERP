@@ -73,6 +73,12 @@
       <b>Web address:&nbsp;</b>
       <a href="{{ vendor.webpage }}"><p>{{ vendor.webpage|default_if_none:"&nbsp;" }}</a>
     </div>
+    <div class="row">
+      <b>Parts:&nbsp;</b>
+      {% for part in vendor.part_set.all %}
+        <a href="{% url 'invent:part' part.id %}">{{ part.partnum}},&nbsp;</a>
+      {% endfor %}
+    </div>
   </div>
   <div class="col">
     <b>Additional info:&nbsp;</b>
