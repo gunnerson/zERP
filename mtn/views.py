@@ -9,8 +9,9 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Order
 from equip.models import Press
-from .forms import OrderCreateForm, OrderUpdateForm
+from invent.models import UsedPart
 from staff.models import Employee
+from .forms import OrderCreateForm, OrderUpdateForm
 
 
 def has_group(user, group_name):
@@ -112,16 +113,18 @@ def add_pm(request, pk):
         )
         if orders.exists():
             last_pm = orders.last()
+            used_parts = UsedPart.objects.filter(order_id=last_pm.pk)
             new_pm = last_pm
             new_pm.pk = None
             new_pm.owner = request.user
             new_pm.date_added = timezone.now()
             new_pm.repdate = None
+            new_pm.repby = None
             new_pm.closed = False
             new_pm.save()
-            for part in last_pm.parts.all():
+            for part in used_parts:
                 new_part = part
-                new_part.id = None
+                new_part.pk = None
                 new_part.order_id = new_pm.id
                 new_part.save()
         else:
