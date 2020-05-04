@@ -15,7 +15,7 @@ class PartListView(LoginRequiredMixin, ListView):
     to an existing work order"""
     model = Part
     count = 0
-    paginate_by = 20
+    paginate_by = 50
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -160,6 +160,7 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class VendorListView(LoginRequiredMixin, ListView):
     """List Vendors"""
     model = Vendor
+    paginate_by = 50
 
 
 class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
