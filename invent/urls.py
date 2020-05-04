@@ -5,8 +5,10 @@ from invent.views import (
     PartCreateView,
     PartDetailView,
     PartUpdateView,
+    VendorListView,
     VendorCreateView,
     VendorDetailView,
+    VendorUpdateView,
     UsedPartListView,
 )
 
@@ -18,10 +20,13 @@ urlpatterns = [
     path('inventory/part/<int:pk>/edit', PartUpdateView.as_view(),
          name='edit_part'),
     path('inventory/new_part/', PartCreateView.as_view(), name='new_part'),
+    path('inventory/vendors/', VendorListView.as_view(), name='vendor-list'),
     path('inventory/new_vendor/', VendorCreateView.as_view(),
          name='new_vendor'),
     path('inventory/vendor/<int:pk>', VendorDetailView.as_view(),
          name='vendor'),
+    path('inventory/vendor/<int:pk>/edit', VendorUpdateView.as_view(),
+         name='edit_vendor'),
     path('inventory/used_parts/', UsedPartListView.as_view(),
          name='usedpartlist'),
 

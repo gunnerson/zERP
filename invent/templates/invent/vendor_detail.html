@@ -6,8 +6,13 @@
 
   <ul>
     <li>
-      <a href="{% url 'invent:partlist' %}" class="side-menu-link" role="button">Back</a>
+      <a href="{% url 'invent:vendor-list' %}" class="side-menu-link" role="button">Back</a>
     </li>
+    {% if request.user|has_group:"maintenance" %}
+      <li>
+        <a href="{% url 'invent:edit_vendor' vendor.id %}" role="button" class="side-menu-link">Edit</a>
+      </li>
+    {% endif %}
   </ul>
 
 {% endblock left-menu %}
@@ -18,7 +23,7 @@
   <ol class="breadcrumb m-0">
       <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
       <li class="breadcrumb-item"><a href="{% url 'invent:partlist' %}">Inventory</a></li>
-      <li class="breadcrumb-item"><a href="">Vendors</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'invent:vendor-list' %}">Vendors</a></li>
       <li class="breadcrumb-item active">Vendor</li>
   </ol>
 </div>
@@ -28,8 +33,52 @@
 
 {% block content %}
 
-  {% if request.user|has_group:"maintenance" %}
-    <a href="." role="button" class="btn btn-rahco">Edit</a>
-  {% endif %}
+<div class="row">
+  <div class="col">
+    <div class="row">
+      <b>Name:&nbsp;</b>
+      <p>{{ vendor.name }}
+    </div>
+    <div class="row">
+      <b>Address (line 1):&nbsp;</b>
+      <p>{{ vendor.addr1|default_if_none:"&nbsp;" }}
+    </div>
+    <div class="row">
+      <b>Address (line 1):&nbsp;</b>
+      <p>{{ vendor.addr2|default_if_none:"&nbsp;" }}
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <b>City:&nbsp;</b>
+        {{ vendor.city|default_if_none:"&nbsp;" }}
+      </div>
+      <div class="col-2">
+        <b>State:&nbsp;</b>
+       {{ vendor.state|default_if_none:"&nbsp;" }}
+      </div>
+      <div class="col-3">
+        <b>Zip:&nbsp;</b>
+       {{ vendor.zipcode|default_if_none:"&nbsp;" }}
+      </div>
+    </div>
+    <div class="row mt-3">
+      <b>Phone:&nbsp;</b>
+      <p>{{ vendor.phone|default_if_none:"&nbsp;" }}
+    </div>
+    <div class="row">
+      <b>E-mail:&nbsp;</b>
+      <p>{{ vendor.email|default_if_none:"&nbsp;" }}
+    </div>
+    <div class="row">
+      <b>Web address:&nbsp;</b>
+      <a href="{{ vendor.webpage }}"><p>{{ vendor.webpage|default_if_none:"&nbsp;" }}</a>
+    </div>
+  </div>
+  <div class="col">
+    <b>Additional info:&nbsp;</b>
+    <p>{{ vendor.vcomm|default_if_none:"&nbsp;" }}</p>
+  </div>
+</div>
+
 
 {% endblock content %}

@@ -1,0 +1,73 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'invent:partlist' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+    <li>
+      <a href="{% url 'invent:new_vendor' %}" class="side-menu-link" role="button">+ New vendor</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'invent:partlist' %}">Inventory</a></li>
+        <li class="breadcrumb-item active">Vendors</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Vendors</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <div class="container justify-content-start ml-1" style="background-color:white;">
+    {% for object in object_list %}
+        <div class="row border">
+          <div class="col-4 text-nowrap text-truncate">
+            <a href="{% url 'invent:vendor' object.id %}">{{ object.name }}</a>
+          </div>
+        </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav aria-label="Page navigation example" style="background-color: #fafbfe;">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+              <span>{{ page_obj.previous_page_number }}</span>
+            </a>
+          </li>
+        {% endif %}
+        <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }}"><span>{{ page_obj.number }}</span></a></li>
+       {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              <span>{{ page_obj.next_page_number }}</span>
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+{% endblock content %}

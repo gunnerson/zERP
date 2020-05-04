@@ -157,6 +157,11 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('mtn:order', pk=order_id)
 
 
+class VendorListView(LoginRequiredMixin, ListView):
+    """List Vendors"""
+    model = Vendor
+
+
 class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Add new vendor"""
     model = Vendor
@@ -169,6 +174,15 @@ class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 class VendorDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     """View vendor"""
     model = Vendor
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+class VendorUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Add new vendor"""
+    model = Vendor
+    form_class = VendorCreateForm
+    template_name = 'invent/vendor_update_form.html'
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')

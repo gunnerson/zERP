@@ -1,0 +1,63 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'invent:vendor' vendor.id %}" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'invent:partlist' %}">Inventory</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'invent:vendor-list' %}">Vendors</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'invent:vendor' vendor.id %}">Vendor</a></li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Edit Vendor</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form action="{% url 'invent:edit_vendor' vendor.id %}" method='post'>
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="col">
+        {{ form.name }}
+        <br>
+        {{ form.addr1 }}
+        <br>
+        {{ form.addr2 }}
+        <br>
+        <div class="row">
+          <div class="col">{{ form.city }} </div>
+          <div class="col-2">{{ form.state }} </div>
+          <div class="col-3">{{ form.zipcode }} </div>
+        </div>
+        <br>
+        {{ form.phone }}
+        <br>
+        {{ form.email }}
+        <br>
+        {{ form.webpage }}
+        <br>
+      </div>
+      <div class="col">
+        {{ form.vcomm }}
+      </div>
+    </div>
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Save changes</button>
+  </form>
+
+
+{% endblock content %}
