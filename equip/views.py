@@ -1,14 +1,18 @@
 import calendar
+from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 # from rest_framework import authentication, permissions
 
 from .models import Press
 from mtn.models import Order
+from mtn.views import has_group
+from .forms import PressUpdateForm
 
 
 class PressListView(LoginRequiredMixin, ListView):
@@ -68,6 +72,16 @@ class PressDetailView(LoginRequiredMixin, DetailView):
         context['cost_this_year'] = cost_this_year
         context['cost_last_year'] = cost_last_year
         return context
+
+
+class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Add notes"""
+    model = Press
+    form_class = PressUpdateForm
+    template_name = 'equip/press_update_form.html'
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
 
 
 class DowntimeChartData(RetrieveAPIView):

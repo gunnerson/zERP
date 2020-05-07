@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Press(models.Model):
@@ -17,6 +18,8 @@ class Press(models.Model):
         max_length=2,
         choices=GROUPS,
     )
+    contacts = models.TextField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'presses'
@@ -24,6 +27,9 @@ class Press(models.Model):
 
     def __str__(self):
         return str(self.pname)
+
+    def get_absolute_url(self):
+        return reverse('equip:press', kwargs={'pk': self.id})
 
     def downtime(self, month, year):
         """Calculate downtime on a monthly basis"""

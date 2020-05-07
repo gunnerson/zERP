@@ -57,6 +57,9 @@
       <li>
         <a href="{% url 'equip:add_pm' press.id %}" class="side-menu-link" role="button" onclick="return confirm('Are you sure?');">Add PM</a>
       </li>
+      <li>
+        <a href="{% url 'equip:notes' press.id %}" class="side-menu-link" role="button">Notes</a>
+      </li>
     {% endif %}
   </ul>
 
@@ -112,14 +115,40 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-2">
-    <div class="card">
-      <div class="card-body">
-        <div class="header-title mb-3"><b>Last PM:</b></div>
-        <div class="chart-content-bg text-center">
-          <h4 class="font-weight-normal mb-0">
-            <span>{{ last_pm }}</span>
-          </h2>
+  <div class="col-lg-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="header-title mb-3"><b>Last PM:</b></div>
+          <div class="chart-content-bg text-center">
+            <h4 class="font-weight-normal mb-0">
+              <span>{{ last_pm }}</span>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="header-title mb-3"><b>Notes:</b></div>
+          <div class="chart-content-bg text-start">
+            <h4 class="font-weight-normal mb-0">
+              <span>{{ press.notes }}</span>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="header-title mb-3"><b>Contacts:</b></div>
+          <div class="chart-content-bg text-start">
+            <h4 class="font-weight-normal mb-0">
+              <span>{{ press.contacts }}</span>
+            </h2>
+          </div>
         </div>
       </div>
     </div>

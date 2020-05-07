@@ -3,6 +3,7 @@ from django.urls import path
 from equip.views import (
     PressListView,
     PressDetailView,
+    PressUpdateView,
     DowntimeChartData,
 )
 
@@ -20,6 +21,8 @@ urlpatterns = [
          name='add_pm'),
     path('equipment/press/<int:pk>/orders/', OrderListView.as_view(),
          name='press-orders'),
+    path('equipment/press/<int:pk>/notes/', PressUpdateView.as_view(),
+         name='notes'),
     path('api/data/equipment/press/<int:pk>/',
          DowntimeChartData.as_view(), name='chart-data'),
 ]

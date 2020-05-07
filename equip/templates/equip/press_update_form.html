@@ -1,0 +1,37 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+ <ul>
+  <li>
+    <a href="{% url 'equip:press' press.id %}" class="side-menu-link" role="button">Back</a>
+  </li>
+</ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press.id %}">Item</a></li>
+        <li class="breadcrumb-item active">Notes</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Notes</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form action="{% url 'equip:notes' press.id %}" method='post'>
+    {% csrf_token %}
+
+    {{ form.as_p }}
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Save changes</button>
+  </form>
+
+{% endblock content %}
