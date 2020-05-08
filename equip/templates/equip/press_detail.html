@@ -60,6 +60,9 @@
       <li>
         <a href="{% url 'equip:notes' press.id %}" class="side-menu-link" role="button">Manage</a>
       </li>
+      <li>
+        <a href="{% url 'equip:upload' press.id %}" class="side-menu-link" role="button">Upload</a>
+      </li>
     {% endif %}
   </ul>
 
@@ -166,8 +169,10 @@
           <div class="header-title mb-3"><b>Uploads:</b></div>
           <div class="chart-content-bg text-start">
             <h4 class="font-weight-normal mb-0">
-              {% if press.uploads %}
-                  <a href='{{ MEDIA_URL }}{{ press.uploads.url }}'>{{ press.uploads.path }}</a>
+              {% if uploads %}
+                {% for upload in uploads %}
+                  <p><a href='{{ MEDIA_URL }}{{ upload.file.url }}'>{{ upload.descr }}</a></p>
+                {% endfor %}
               {% else %}
                 <span>No uploads</span>
               {% endif %}

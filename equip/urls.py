@@ -5,6 +5,7 @@ from equip.views import (
     PressDetailView,
     PressUpdateView,
     DowntimeChartData,
+    UploadCreateView,
 )
 
 from mtn.views import (
@@ -21,9 +22,10 @@ urlpatterns = [
          name='add_pm'),
     path('equipment/press/<int:pk>/orders/', OrderListView.as_view(),
          name='press-orders'),
-    path('equipment/press/<int:pk>/notes/', PressUpdateView.as_view(
-        template_name='equip/press_update_form.html'),
-        name='notes'),
+    path('equipment/press/<int:pk>/notes/', PressUpdateView.as_view(),
+         name='notes'),
+    path('equipment/press/<int:pk>/upload/', UploadCreateView.as_view(),
+         name='upload'),
     path('api/data/equipment/press/<int:pk>/',
          DowntimeChartData.as_view(), name='chart-data'),
 ]

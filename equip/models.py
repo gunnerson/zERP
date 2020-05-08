@@ -20,7 +20,6 @@ class Press(models.Model):
     )
     contacts = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
-    uploads = models.FileField(upload_to='equip/', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'presses'
@@ -58,3 +57,13 @@ class Press(models.Model):
         else:
             last_pm_date = 'Never'
         return last_pm_date
+
+
+class Upload(models.Model):
+    """Uploaded files with press documentaiton"""
+    press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
+    descr = models.CharField(max_length=200)
+    file = models.FileField()
+
+    def __str__(self):
+        return str(self.descr)

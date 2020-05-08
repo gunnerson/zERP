@@ -1,17 +1,19 @@
 import calendar
+from django.shortcuts import redirect
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
+from pathlib import Path
 # from rest_framework import authentication, permissions
 
-from .models import Press
+from .models import Press, Upload
 from mtn.models import Order
 from mtn.views import has_group
-from .forms import PressUpdateForm
+from .forms import PressUpdateForm, UploadCreateForm
 
 
 class PressListView(LoginRequiredMixin, ListView):
@@ -26,6 +28,8 @@ class PressDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        # Get list of uploads
+        uploads = Upload.objects.filter(press=self.object.id)
         # Calculate downtime per year
         today = timezone.now()
         month = today.month
@@ -65,6 +69,7 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             cost_this_year += round(Order.cost_of_repair(order), 2)
         for order in last_year:
             cost_last_year += round(Order.cost_of_repair(order), 2)
+        context['uploads'] = uploads
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
         context['last_pm'] = last_pm
@@ -78,6 +83,33 @@ class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Press
     form_class = PressUpdateForm
     template_name = 'equip/press_update_form.html'
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+
+class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Upload a file"""
+    model = Upload
+    form_class = UploadCreateForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press_id = self.kwargs['pk']
+        context['press_id'] = press_id
+        return context
+
+    def form_valid(self, form):
+        press_id = self.kwargs['pk']
+        press = Press.objects.get(id=press_id)
+        self.object = form.save(commit=False)
+        file_name = self.object.descr.replace(' ', '_').lower().strip()
+        file_ext = Path(self.object.file.name).suffixes
+        file_path = 'equip/{0}/{1}{2}'.format(press.id, file_name, file_ext)
+        self.object.press = press
+        self.object.file.name = file_path
+        self.object.save()
+        return redirect('equip:press', pk=press_id)
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
