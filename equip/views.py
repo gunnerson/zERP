@@ -1,5 +1,4 @@
 import calendar
-from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView

@@ -20,6 +20,7 @@ class Press(models.Model):
     )
     contacts = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
+    uploads = models.FileField(upload_to='equip/', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'presses'

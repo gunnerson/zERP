@@ -5,8 +5,10 @@ from .models import Press
 class PressUpdateForm(forms.ModelForm):
     class Meta:
         model = Press
-        fields = ['notes', 'contacts', ]
-        labels = {'notes': 'Notes', 'contacts': 'Contacts'}
+        fields = ['notes', 'contacts', 'uploads']
+        labels = {'notes': 'Notes', 'contacts': 'Contacts',
+                  'uploads': 'Add files',
+                  }
         widgets = {
             'contacts': forms.Textarea(attrs={
                 'class': 'form-control',
