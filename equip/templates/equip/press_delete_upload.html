@@ -26,9 +26,9 @@
 
 {% block content %}
 
-<form method="POST" action="{% url 'equip:delete-upload' press.id %}">
-  {% csrf_token %}
-  <div style="display:none;">{{ form.as_p }}</div>
+  <form method="POST" action="{% url 'equip:delete-upload' press.id %}">
+    {% csrf_token %}
+    <div style="display:none;">{{ form.as_p }}</div>
     <div class="row">
       <ul>
         {% for object in uploads %}

@@ -28,8 +28,14 @@
 
   <form enctype="multipart/form-data" action="{% url 'equip:upload' press_id %}" method='post'>
     {% csrf_token %}
-
     {{ form.as_p }}
+    {% if messages %}
+      <ul class="messages" style="color:red;">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
+          {% endfor %}
+      </ul>
+    {% endif %}
     <br>
     <button name="submit" role="button" class="btn btn-rahco">Upload</button>
   </form>

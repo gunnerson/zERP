@@ -86,106 +86,109 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-lg-8">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="header-title mb-3">Downtime</h4>
-        <div class="chart-content-bg">
-          <div class="row text-center">
-            <div class="col-md-6">
-              <p class="text-muted mb-0 mt-3">Current year</p>
-              <h2 class="font-weight-normal mb-3">
-                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
-                <span>{{ dts_total|floatformat }} hours</span>
-              </h2>
-              <h2 class="font-weight-normal mb-3">
-                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
-                <span>$ {{ cost_this_year }}</span>
-              </h2>
-            </div>
-            <div class="col-md-6">
-              <p class="text-muted mb-0 mt-3">Previous Year</p>
-              <h2 class="font-weight-normal mb-3">
-                <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                <span>{{ dts_last|floatformat }} hours</span>
-              </h2>
-              <h2 class="font-weight-normal mb-3">
-                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
-                <span>$ {{ cost_last_year }}</span>
+  <div class="row">
+
+    <div class="col-lg-4">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="header-title mb-3"><b>Last PM:</b></div>
+            <div class="chart-content-bg text-center">
+              <h4 class="font-weight-normal mb-0">
+                <span>{{ last_pm }}</span>
               </h2>
             </div>
           </div>
         </div>
-        <canvas id="DowntimeChart"></canvas>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="header-title mb-3"><b>Notes:</b></div>
+            <div class="chart-content-bg text-start">
+              <h4 class="font-weight-normal mb-0">
+                {% if press.notes %}
+                  <span>{{ press.notes }}</span>
+                {% else %}
+                  <span>No notes</span>
+                {% endif %}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="header-title mb-3"><b>Contacts:</b></div>
+            <div class="chart-content-bg text-start">
+              <h4 class="font-weight-normal mb-0">
+                {% if press.contacts %}
+                  <span>{{ press.contacts }}</span>
+                {% else %}
+                  <span>No contacts</span>
+                {% endif %}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+       <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="header-title mb-3"><b>Uploads:</b></div>
+            <div class="chart-content-bg text-start">
+              <h4 class="font-weight-normal mb-0">
+                {% if uploads %}
+                  {% for upload in uploads %}
+                    <p><a href='{{ MEDIA_URL }}{{ upload.file.url }}'>{{ upload.descr }}</a></p>
+                  {% endfor %}
+                {% else %}
+                  <span>No uploads</span>
+                {% endif %}
+              </h2>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="header-title mb-3">Downtime</h4>
+          <div class="chart-content-bg">
+            <div class="row text-center">
+              <div class="col-md-6">
+                <p class="text-muted mb-0 mt-3">Current year</p>
+                <h2 class="font-weight-normal mb-3">
+                  <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
+                  <span>{{ dts_total|floatformat }} hours</span>
+                </h2>
+                <h2 class="font-weight-normal mb-3">
+                  <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
+                  <span>$ {{ cost_this_year }}</span>
+                </h2>
+              </div>
+              <div class="col-md-6">
+                <p class="text-muted mb-0 mt-3">Previous Year</p>
+                <h2 class="font-weight-normal mb-3">
+                  <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
+                  <span>{{ dts_last|floatformat }} hours</span>
+                </h2>
+                <h2 class="font-weight-normal mb-3">
+                  <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
+                  <span>$ {{ cost_last_year }}</span>
+                </h2>
+              </div>
+            </div>
+          </div>
+          <canvas id="DowntimeChart"></canvas>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div class="col-lg-4">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div class="header-title mb-3"><b>Last PM:</b></div>
-          <div class="chart-content-bg text-center">
-            <h4 class="font-weight-normal mb-0">
-              <span>{{ last_pm }}</span>
-            </h2>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div class="header-title mb-3"><b>Notes:</b></div>
-          <div class="chart-content-bg text-start">
-            <h4 class="font-weight-normal mb-0">
-              {% if press.notes %}
-                <span>{{ press.notes }}</span>
-              {% else %}
-                <span>No notes</span>
-              {% endif %}
-            </h2>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div class="header-title mb-3"><b>Contacts:</b></div>
-          <div class="chart-content-bg text-start">
-            <h4 class="font-weight-normal mb-0">
-              {% if press.contacts %}
-                <span>{{ press.contacts }}</span>
-              {% else %}
-                <span>No contacts</span>
-              {% endif %}
-            </h2>
-          </div>
-        </div>
-      </div>
-    </div>
-     <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <div class="header-title mb-3"><b>Uploads:</b></div>
-          <div class="chart-content-bg text-start">
-            <h4 class="font-weight-normal mb-0">
-              {% if uploads %}
-                {% for upload in uploads %}
-                  <p><a href='{{ MEDIA_URL }}{{ upload.file.url }}'>{{ upload.descr }}</a></p>
-                {% endfor %}
-              {% else %}
-                <span>No uploads</span>
-              {% endif %}
-            </h2>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 {% endblock content %}
 

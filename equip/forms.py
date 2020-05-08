@@ -31,7 +31,7 @@ class UploadCreateForm(forms.ModelForm):
         widgets = {
             'descr': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Describe file',
+                'placeholder': 'Give a unique file description',
             }
             ),
         }

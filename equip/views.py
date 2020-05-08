@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from pathlib import Path
+from django.contrib import messages
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload
@@ -120,14 +121,25 @@ class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         press_id = self.kwargs['pk']
         press = Press.objects.get(id=press_id)
+        uploads = press.upload_set.all()
+        taken_names = []
+        for upload in uploads:
+            taken_names.append(upload.descr)
         self.object = form.save(commit=False)
-        file_name = self.object.descr.replace(' ', '_').lower().strip()
-        file_ext = Path(self.object.file.name).suffixes
-        file_path = 'equip/{0}/{1}{2}'.format(press.id, file_name, file_ext)
-        self.object.press = press
-        self.object.file.name = file_path
-        self.object.save()
-        return redirect('equip:press', pk=press_id)
+        name = self.object.descr
+        if name in taken_names:
+            messages.add_message(self.request, messages.INFO,
+                                 'File with this description already exists.')
+            return redirect(self.request.META['HTTP_REFERER'])
+        else:
+            file_name = self.object.descr.replace(' ', '_').lower().strip()
+            file_ext = Path(self.object.file.name).suffixes
+            file_path = 'equip/{0}/{1}{2}'.format(press.id,
+                                                  file_name, file_ext)
+            self.object.press = press
+            self.object.file.name = file_path
+            self.object.save()
+            return redirect('equip:press', pk=press_id)
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
