@@ -63,6 +63,9 @@
       <li>
         <a href="{% url 'equip:upload' press.id %}" class="side-menu-link" role="button">Upload</a>
       </li>
+      <li>
+        <a href="{% url 'equip:delete-upload' press.id %}" class="side-menu-link" role="button">Delete upload</a>
+      </li>
     {% endif %}
   </ul>
 

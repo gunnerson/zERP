@@ -1,0 +1,50 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+ <ul>
+  <li>
+    <a href="{% url 'equip:press' press.id %}" class="side-menu-link" role="button">Back</a>
+  </li>
+</ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press.id %}">Item</a></li>
+        <li class="breadcrumb-item active">Uploads</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Delete uploaded files</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'equip:delete-upload' press.id %}">
+  {% csrf_token %}
+  <div style="display:none;">{{ form.as_p }}</div>
+    <div class="row">
+      <ul>
+        {% for object in uploads %}
+          <li>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="{{ object.id }}" name="marked_upload" value="{{ object.id }}">
+              <label class="custom-control-label" for="{{ object.id }}">{{ object.descr }}</label>
+            </div>
+          </li>
+        {% empty %}
+          <b>No uploads for this equipment.
+        {% endfor %}
+      </ul>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-rahco">Delete selected</button>
+  </form>
+
+{% endblock content %}

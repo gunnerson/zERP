@@ -1,5 +1,6 @@
 import calendar
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
@@ -82,7 +83,24 @@ class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Add notes"""
     model = Press
     form_class = PressUpdateForm
-    template_name = 'equip/press_update_form.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press = self.get_object()
+        uploads = Upload.objects.filter(press=press)
+        context['uploads'] = uploads
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        uploads = Upload.objects.filter(press=self.object)
+        marked_uploads = request.POST.getlist('marked_upload', None)
+        if marked_uploads is not None:
+            for upload_id in marked_uploads:
+                upload = uploads.get(id=upload_id)
+                upload.file.delete(save=True)
+                upload.delete()
+        return super(PressUpdateView, self).post(request, *args, **kwargs)
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')

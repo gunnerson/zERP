@@ -179,6 +179,7 @@ class VendorDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
 
+
 class VendorUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Add new vendor"""
     model = Vendor
