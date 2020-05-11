@@ -1,6 +1,5 @@
 import calendar
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
@@ -10,6 +9,7 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from pathlib import Path
 from django.contrib import messages
+from django.db.models import Q
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload
@@ -22,6 +22,65 @@ class PressListView(LoginRequiredMixin, ListView):
     """List of equipment"""
     model = Press
     # paginate_by = 20
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        all_checked = self.request.GET.get('all', None)
+        if all_checked:
+            production_checked = True
+            building_checked = True
+            lifting_checked = True
+            general_checked = True
+        else:
+            production_checked = self.request.GET.get('production', None)
+            building_checked = self.request.GET.get('building', None)
+            lifting_checked = self.request.GET.get('lifting', None)
+            general_checked = self.request.GET.get('general', None)
+        if ((all_checked is None) and (production_checked is None)
+            and (building_checked is None) and (lifting_checked is None)
+                and (general_checked is None)):
+            production_checked = True
+            building_checked = False
+            lifting_checked = False
+            general_checked = False
+        context['production_checked'] = production_checked
+        context['building_checked'] = building_checked
+        context['lifting_checked'] = lifting_checked
+        context['general_checked'] = general_checked
+        return context
+
+    def get_queryset(self):
+        request = self.request
+        check_all = request.GET.get('all', None)
+        check_production = request.GET.get('production', None)
+        check_building = request.GET.get('building', None)
+        check_lifting = request.GET.get('lifting', None)
+        check_general = request.GET.get('general', None)
+        if ((check_all is None) and (check_production is None)
+            and (check_building is None) and (check_lifting is None)
+                and (check_general is None)):
+            check_all = False
+            check_production = True
+            check_building = False
+            check_lifting = False
+            check_general = False
+        if check_production:
+            check_production = 'PR'
+        if check_building:
+            check_building = 'BD'
+        if check_lifting:
+            check_lifting = 'LF'
+        if check_general:
+            check_general = 'GN'
+        if check_all:
+            qs = Press.objects.all()
+        else:
+            qs = Press.objects.filter(Q(group=check_production) |
+                                      Q(group=check_building) |
+                                      Q(group=check_lifting) |
+                                      Q(group=check_general)
+                                      ).distinct()
+        return qs
 
 
 class PressDetailView(LoginRequiredMixin, DetailView):

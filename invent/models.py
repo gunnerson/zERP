@@ -19,8 +19,8 @@ class PartManager(models.Manager):
     def search(self, query=None, by_vendor=None, press=None):
         qs = self.get_queryset()
         if is_valid_param(query):
-            qs = qs.filter(Q(partnum__icontains=query) |
-                           Q(descr__icontains=query)
+            qs = qs.filter(Q(partnum__icontains=query)
+                           | Q(descr__icontains=query)
                            ).distinct()
         if is_valid_param(by_vendor):
             qs = qs.filter(vendr__name=by_vendor)
