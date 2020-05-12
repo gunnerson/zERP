@@ -2,7 +2,7 @@ from django import forms
 
 from tempus_dominus.widgets import DatePicker
 
-from .models import Order
+from .models import Order, Image
 from equip.models import Press
 
 
@@ -57,3 +57,11 @@ class OrderUpdateForm(forms.ModelForm):
             self.fields['origin'].disabled = True
             self.fields['ordertype'].disabled = True
             self.fields['descr'].disabled = True
+
+
+class ImageCreateForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = ['image']
+        labels = {'image': '',
+                  }

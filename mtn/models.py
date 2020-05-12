@@ -77,3 +77,12 @@ class Order(models.Model):
 
     def get_absolute_url(self):
         return reverse('mtn:order', kwargs={'pk': self.id})
+
+
+class Image(models.Model):
+    """Uploaded images related to a work order"""
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    image = models.ImageField()
+
+    def __str__(self):
+        return str(self.image.url)

@@ -6,12 +6,13 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from pathlib import Path
 
-from .models import Order
+from .models import Order, Image
 from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
-from .forms import OrderCreateForm, OrderUpdateForm
+from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm
 
 
 def has_group(user, group_name):
@@ -72,9 +73,11 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         timereph = self.object.timerep
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
+        images = Image.objects.filter(order=self.object.id)
         context['timereph'] = timereph
         context['used_parts'] = used_parts
         context['cost_of_repair'] = cost_of_repair
+        context['images'] = images
         return context
 
 
@@ -175,4 +178,32 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
         context['timereph'] = timereph
+        context['images'] = images
         return context
+
+
+class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Upload an image"""
+    model = Image
+    form_class = ImageCreateForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['order_id'] = self.kwargs['pk']
+        return context
+
+    def form_valid(self, form):
+        order_id = self.kwargs['pk']
+        order = Order.objects.get(id=order_id)
+        date = timezone.now()
+        date = date.strftime("%Y-%m-%d")
+        self.object = form.save(commit=False)
+        file_ext = Path(self.object.image.name).suffixes
+        self.object.order = order
+        self.object.image.name = 'mtn/{0}/{1}{2}'.format(
+            order.id, date, file_ext)
+        self.object.save()
+        return redirect('mtn:order', pk=order_id)
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')

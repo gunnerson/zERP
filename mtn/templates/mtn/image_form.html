@@ -1,0 +1,36 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+ <ul>
+  <li>
+    <a href="{% url 'mtn:order' order_id %}" class="side-menu-link" role="button">Back</a>
+  </li>
+</ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order' order_id %}">Order</a></li>
+        <li class="breadcrumb-item active">Image</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Upload an image</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form enctype="multipart/form-data" action="{% url 'mtn:image' order_id %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Upload</button>
+  </form>
+
+{% endblock content %}

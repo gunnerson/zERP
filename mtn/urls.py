@@ -6,6 +6,7 @@ from .views import (
     OrderDetailView,
     OrderCreateView,
     OrderUpdateView,
+    ImageCreateView,
 )
 from invent.views import PartListView, OrderPartsListView
 
@@ -30,5 +31,8 @@ urlpatterns = [
 
     path('mwo/order/<int:pk>/delete_part/', OrderPartsListView.as_view(),
          name='delete_part'),
+
+    path('mwo/order/<int:pk>/add_image/',
+         ImageCreateView.as_view(), name='image'),
 
 ]
