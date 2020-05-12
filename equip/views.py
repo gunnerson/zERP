@@ -25,6 +25,7 @@ class PressListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        # Remember checkboxes
         all_checked = self.request.GET.get('all', None)
         if all_checked:
             production_checked = True
@@ -50,6 +51,7 @@ class PressListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
+        # Filter list by group
         request = self.request
         check_all = request.GET.get('all', None)
         check_production = request.GET.get('production', None)
@@ -153,6 +155,7 @@ class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        # Delete uploads
         uploads = Upload.objects.filter(press=self.object)
         marked_uploads = request.POST.getlist('marked_upload', None)
         if marked_uploads is not None:
@@ -178,6 +181,7 @@ class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        # Check that upload description is unique and save
         press_id = self.kwargs['pk']
         press = Press.objects.get(id=press_id)
         uploads = press.upload_set.all()

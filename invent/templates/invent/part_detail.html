@@ -41,7 +41,7 @@
         <b>Category:</b>
         <p>
         {% for cat in part.cat.all %}
-          <span>{{ cat }},&nbsp</span>
+          <a href="{% url 'equip:press' cat.id %}">{{ cat }},&nbsp</a>
         {% endfor %}
       </div>
       <div class="col-sm">
@@ -56,7 +56,7 @@
         <b>Vendors:</b>
         <p>
         {% for vendor in part.vendr.all %}
-          <span>{{ vendor }},&nbsp</span>
+          <a href="{% url 'invent:vendor' vendor.id %}">{{ vendor }},&nbsp</span>
         {% endfor %}
       </div>
       <br>

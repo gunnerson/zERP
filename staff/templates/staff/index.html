@@ -4,19 +4,13 @@
 
 	<ul>
 	  {% for employee in employees %}
-	      <li>
-          <div class="container">
-            <div class="row" style="height: 35px">
-              <div class="col-6">
-                <p>
-                  {{ employee }} ({{ employee.get_role_display }})
-                </p>
-              </div>
-            </div>
-          </div>
-        </li>
+      <li>
+        <div class="row" style="height: 35px">
+          <p>{{ employee }} ({{ employee.get_role_display }})</p>
+        </div>
+      </li>
 	  {% empty %}
-		  <li>No equipment have been added yet.</li>
+		  <li>No employees have been added yet.</li>
     {% endfor %}
 	</ul>
 
