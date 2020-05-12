@@ -1,32 +1,31 @@
 {% extends "mtn/base.html" %}
 
+<script>
+  {% block jquery %}
+
+    $("#checkbox-container :checkbox").change(function() {
+      document.getElementById('selectform').submit();
+    });
+
+  {% endblock %}
+</script>
+
 {% block left-menu%}
 
-  {% if press_excl == False %}
-    <ul>
+  <ul>
+    {% if press_excl == False %}
       <li>
         <a href="{% url 'mtn:new_order' %}" class="side-menu-link" role="button">+ New Order</a>
       </li>
-      <li>
-          <form method="GET" action=".">
-            <input type="hidden" name="check_closed" value="False">
-            <button type="submit" class="side-menu-link">Open Orders</button>
-          </form>
-      </li>
-      <li>
-          <form method="GET" action=".">
-            <input type="hidden" name="check_closed" value="True">
-            <button type="submit" class="side-menu-link">Closed Orders</button>
-          </form>
-      </li>
-    </ul>
-  {% else %}
-    <ul>
+    {% else %}
       <li>
         <a href="{% url 'equip:press' press_id %}" class="side-menu-link" role="button">Back</a>
       </li>
-    </ul>
-  {% endif %}
+    {% endif %}
+    <li>
+        <a class="side-menu-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Search</a>
+    </li>
+  </ul>
 
 {% endblock left-menu %}
 
@@ -40,23 +39,19 @@
           <li class="breadcrumb-item active"> Work Orders</li>
       </ol>
     </div>
-    {% if check_closed == 'True' %}
-      <h4 class="page-title">Closed Work Orders</h4>
-    {% else %}
-      <h4 class="page-title">Open Work Orders</h4>
-    {% endif %}
+    <h4 class="page-title">Work Orders</h4>
 
   {% else %}
 
-  <div class="page-title-right">
-    <ol class="breadcrumb m-0">
-        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
-        <li class="breadcrumb-item active">Orders</li>
-    </ol>
-  </div>
-  <h4 class="page-title">Work Orders</h4>
+    <div class="page-title-right">
+      <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
+          <li class="breadcrumb-item active">Orders</li>
+      </ol>
+    </div>
+    <h4 class="page-title">Work Orders for {{ press }}</h4>
 
   {% endif %}
 
@@ -64,6 +59,41 @@
 
 {% block content %}
 
+  <form method="GET" action="" id="selectform">
+
+    <div class="{{ search_exp }}" id="collapseExample">
+      <div class="form-row">
+        <div class="form-group col-3 align-self-center">
+          <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder=" Find work order" name="query" value="{{ query }}">
+        </div>
+        <div class="form-group col align-self-center ml-4">
+         <button type="submit" class="btn btn-rahco">Search</button>
+        </div>
+      </div>
+      {% if count >= 0 and query != None %}
+        <div class='row my-3'>
+            <div class='col-12 py-0'>
+                <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"" }}</b></h4>
+            </div>
+        </div>
+      {% endif %}
+      <hr />
+    </div>
+
+    <div class="container mx-0" id="checkbox-container">
+      <div class="form-check">
+        {% if closed_checked %}
+          <input type="checkbox" class="form-check-input" name="closed" id="closed" checked>
+        {% else %}
+          <input type="checkbox" class="form-check-input" name="closed" id="closed" >
+        {% endif %}
+        <label class="form-check-label" for="closed">Show closed</label>
+      </div>
+    </div>
+
+  </form>
+
+  <br>
   <div class="row">
     {% for order in object_list %}
       <div class="col-md-6 col-xl-3">
@@ -100,7 +130,7 @@
         </div> <!-- end card-->
       </div> <!-- end col -->
     {% empty %}
-      <p>No open orders.</p>
+      <p>No orders found.</p>
     {% endfor %}
   </div>
   <!-- end row-->
@@ -113,25 +143,25 @@
           <ul class="pagination">
             {% if page_obj.has_previous %}
               <li class="page-item">
-                <a class="page-link" href="?page=1;check_closed={{ check_closed }}" aria-label="First">
+                <a class="page-link" href="?page=1;closed={{ closed_checked }};" aria-label="First">
                   <span aria-hidden="true">&laquo;</span>
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }};check_closed={{ check_closed }}" aria-label="Previous">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }};closed={{ closed_checked }};" aria-label="Previous">
                   <span>{{ page_obj.previous_page_number }}</span>
                 </a>
               </li>
             {% endif %}
-            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }};check_closed={{ check_closed }}"><span>{{ page_obj.number }}</span></a></li>
+            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }};closed={{ closed_checked }};"><span>{{ page_obj.number }}</span></a></li>
            {% if page_obj.has_next %}
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }};check_closed={{ check_closed }}" aria-label="Next">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }};closed={{ closed_checked }};" aria-label="Next">
                   <span>{{ page_obj.next_page_number }}</span>
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }};check_closed={{ check_closed }}" aria-label="Last">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }};closed={{ closed_checked }};" aria-label="Last">
                   <span aria-hidden="true">&raquo;</span>
                 </a>
               </li>

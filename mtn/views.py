@@ -7,6 +7,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
+from django.db.models import Q
 
 from .models import Order, Image
 from equip.models import Press
@@ -32,33 +33,45 @@ def index(request):
 class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
+    count = 0
     paginate_by = 20
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         press_excl = False
+        search_exp = "collapse"
         if 'pk' in self.kwargs:
             press_id = self.kwargs['pk']
+            press = Press.objects.get(id=self.kwargs['pk'])
             press_excl = True
             context['press_id'] = press_id
-        check_closed = self.request.GET.get('check_closed')
-        if check_closed is None:
-            check_closed = False
-        context['check_closed'] = check_closed
+            context['press'] = press
+        closed_checked = self.request.GET.get('closed')
+        query = self.request.GET.get('query', None)
+        if query != '' and query is not None:
+            search_exp = "collapse show"
+            context['query'] = query
+            context['count'] = self.count or 0
+        context['search_exp'] = search_exp
+        context['closed_checked'] = closed_checked
         context['press_excl'] = press_excl
         return context
 
     def get_queryset(self):
-        qs = Order.objects.all().order_by('-id')
+        qs = Order.objects.all()
         if 'pk' in self.kwargs:
             press = Press.objects.get(id=self.kwargs['pk'])
             qs = qs.filter(local=press)
-        else:
-            check_closed = self.request.GET.get('check_closed')
-            if is_valid_queryparam(check_closed):
-                qs = qs.filter(closed=check_closed)
-            else:
-                qs = qs.filter(closed=False)
+        closed = self.request.GET.get('closed', False)
+        if closed is False:
+            qs = qs.exclude(closed=True)
+        # Search orders
+        query = self.request.GET.get('query', None)
+        if query != '' and query is not None:
+            qs = qs.filter(Q(descr__icontains=query) |
+                           Q(descrrep__icontains=query)
+                           ).distinct()
+            self.count = len(qs)
         return qs
 
 
@@ -178,7 +191,6 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
         context['timereph'] = timereph
-        context['images'] = images
         return context
 
 

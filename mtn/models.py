@@ -9,6 +9,16 @@ from equip.models import Press
 from invent.models import Part
 
 
+# class OrderManager(models.Manager):
+#     def search(self, query=None):
+#         qs = self.get_queryset()
+#         if query != '' and query is not None:
+#             qs = qs.filter(Q(descr__icontains=query) |
+#                            Q(descrrep__icontains=query)
+#                            ).distinct()
+#         return qs
+
+
 class Order(models.Model):
     """Maintenance work orders"""
     REPAIR = 'RE'
@@ -74,6 +84,9 @@ class Order(models.Model):
 
     def __str__(self):
         return str(f'{self.id:05}')
+
+    class Meta:
+        ordering = ['-id']
 
     def get_absolute_url(self):
         return reverse('mtn:order', kwargs={'pk': self.id})
