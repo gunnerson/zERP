@@ -7,7 +7,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
-from django.db.models import Q
+# from django.db.models import Q
+from django.contrib.postgres.search import SearchRank, SearchVector, SearchQuery
 
 from .models import Order, Image
 from equip.models import Press
@@ -48,7 +49,7 @@ class OrderListView(LoginRequiredMixin, ListView):
             context['press'] = press
         closed_checked = self.request.GET.get('closed')
         query = self.request.GET.get('query', None)
-        if query != '' and query is not None:
+        if is_valid_queryparam(query):
             search_exp = "collapse show"
             context['query'] = query
             context['count'] = self.count or 0
@@ -67,10 +68,16 @@ class OrderListView(LoginRequiredMixin, ListView):
             qs = qs.exclude(closed=True)
         # Search orders
         query = self.request.GET.get('query', None)
-        if query != '' and query is not None:
-            qs = qs.filter(Q(descr__icontains=query) |
-                           Q(descrrep__icontains=query)
-                           ).distinct()
+        if is_valid_queryparam(query):
+            query = SearchQuery(query)
+            vector = SearchVector('textsearchable_index_col')
+            qs = qs.annotate(rank=SearchRank(vector, query)).filter(
+                textsearchable_index_col=query).order_by('-rank')
+            # query_terms = query.split()
+            # tsquery = " & ".join(query_terms)
+            # tsquery += ":*"
+            # qs = qs.extra(where=["textsearchable_index_col @@ (to_tsquery(%s)) = true"],
+            #               params=[tsquery])
             self.count = len(qs)
         return qs
 

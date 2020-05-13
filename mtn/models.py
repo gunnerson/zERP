@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import now
 from django.db.models import Q
+from django.contrib.postgres.search import SearchVectorField
 
 from staff.models import Employee
 from equip.models import Press
@@ -73,6 +74,7 @@ class Order(models.Model):
                               )
     closed = models.BooleanField(default=False)
     parts = models.ManyToManyField(Part, through='invent.UsedPart')
+    textsearchable_index_col = SearchVectorField(null=True)
 
     def cost_of_repair(self):
         cost_of_repair = 0
@@ -99,3 +101,10 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.image.url)
+
+
+# Create indexes:
+# ALTER TABLE mtn_order
+#     ADD COLUMN textsearchable_index_col tsvector
+#                GENERATED ALWAYS AS (to_tsvector('english', coalesce(descr, '') || ' ' || coalesce(descrrep, ''))) STORED;
+# CREATE INDEX textsearch_idx ON mtn_order USING GIN (textsearchable_index_col);

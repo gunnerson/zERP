@@ -73,7 +73,7 @@
       {% if count >= 0 and query != None %}
         <div class='row my-3'>
             <div class='col-12 py-0'>
-                <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"" }}</b></h4>
+                <h4 class='my-0 py-0'>{{ count }} results for <b>"{{ query|default:"" }}"</b></h4>
             </div>
         </div>
       {% endif %}

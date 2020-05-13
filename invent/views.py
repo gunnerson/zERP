@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
-from .models import Part, UsedPart, Vendor, is_valid_param
+from .models import Part, UsedPart, Vendor, is_valid_vendor, is_valid_queryparam
 from .forms import PartCreateForm, VendorCreateForm
 from mtn.views import has_group
 from mtn.models import Order
@@ -23,13 +23,18 @@ class PartListView(LoginRequiredMixin, ListView):
         if 'pk' in self.kwargs:
             order_id = self.kwargs['pk']
             context['order_id'] = order_id
+        request = self.request
+        search_on = False
         # Keep search fields populated after GET request submitted
-        by_vendor = self.request.GET.get('by_vendor', None)
-        press_checked = self.request.GET.get('press', None)
+        query = request.GET.get('query', None)
+        by_vendor = request.GET.get('by_vendor', None)
+        if is_valid_queryparam(query) or is_valid_vendor(by_vendor):
+            search_on = True
+        context['search_on'] = search_on
         context['count'] = self.count or 0
-        context['query'] = self.request.GET.get('query')
+        context['query'] = query
         context['by_vendor'] = by_vendor
-        context['press_checked'] = press_checked
+        context['press_checked'] = request.GET.get('press', None)
         context['vendors'] = Vendor.objects.exclude(name__exact=by_vendor)
         return context
 
@@ -39,16 +44,16 @@ class PartListView(LoginRequiredMixin, ListView):
             order_id = self.kwargs['pk']
             order = Order.objects.get(id=order_id)
             press = order.local
-        qs = Part.objects.all().order_by('-pk')
+        qs = Part.objects.all()
         request = self.request
         query = request.GET.get('query', None)
         by_vendor = request.GET.get('by_vendor', None)
         press_checked = request.GET.get('press', None)
-        if is_valid_param(query) or is_valid_param(by_vendor):
-            qs = Part.objects.search(query, by_vendor).order_by('-pk')
+        if is_valid_queryparam(query) or is_valid_vendor(by_vendor):
+            qs = Part.objects.search(query, by_vendor)
             self.count = len(qs)
         if press_checked:
-            qs = qs.filter(cat=press).order_by('-pk')
+            qs = qs.filter(cat=press)
         return qs
 
     def post(self, request, *args, **kwargs):

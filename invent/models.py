@@ -1,28 +1,31 @@
 from django.db import models
 from django.urls import reverse
-from django.db.models import Q
+# from django.db.models import Q
+from django.contrib.postgres.search import SearchVectorField, SearchQuery, SearchRank, SearchVector
 
 from equip.models import Press
 
 
-def is_valid_param(param):
-    if param == 'query':
-        return param != '' and param is not None
-    else:
-        return (param is not None and
-                param != 'Choose vendor...' and
-                param != 'All vendors'
-                )
+def is_valid_vendor(param):
+    return (param is not None and
+            param != 'Choose vendor...' and
+            param != 'All vendors'
+            )
+
+
+def is_valid_queryparam(param):
+    return param != '' and param is not None
 
 
 class PartManager(models.Manager):
-    def search(self, query=None, by_vendor=None, press=None):
+    def search(self, query, by_vendor):
         qs = self.get_queryset()
-        if is_valid_param(query):
-            qs = qs.filter(Q(partnum__icontains=query)
-                           | Q(descr__icontains=query)
-                           ).distinct()
-        if is_valid_param(by_vendor):
+        if is_valid_queryparam(query):
+            query = SearchQuery(query)
+            vector = SearchVector('textsearchable_index_col')
+            qs = qs.annotate(rank=SearchRank(vector, query)).filter(
+                textsearchable_index_col=query).order_by('-rank')
+        if is_valid_vendor(by_vendor):
             qs = qs.filter(vendr__name=by_vendor)
         return qs
 
@@ -36,6 +39,7 @@ class Part(models.Model):
     unit = models.CharField(max_length=5)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     vendr = models.ManyToManyField('Vendor', blank=True)
+    textsearchable_index_col = SearchVectorField(null=True)
 
     objects = PartManager()
 
@@ -81,3 +85,9 @@ class Vendor(models.Model):
 
     def get_absolute_url(self):
         return reverse('invent:vendor', kwargs={'pk': self.id})
+
+# Create indexes:
+# ALTER TABLE invent_part
+#     ADD COLUMN textsearchable_index_col tsvector
+#                GENERATED ALWAYS AS (to_tsvector('english', coalesce(partnum, '') || ' ' || coalesce(descr, ''))) STORED;
+# CREATE INDEX partsearch_idx ON invent_part USING GIN (textsearchable_index_col);
