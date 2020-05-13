@@ -1,30 +1,16 @@
 from django.db import models
 from django.urls import reverse
-# from django.db.models import Q
-from django.contrib.postgres.search import SearchVectorField, SearchQuery, SearchRank, SearchVector
+from django.contrib.postgres.search import SearchVectorField
 
 from equip.models import Press
-
-
-def is_valid_vendor(param):
-    return (param is not None and
-            param != 'Choose vendor...' and
-            param != 'All vendors'
-            )
-
-
-def is_valid_queryparam(param):
-    return param != '' and param is not None
+from mtn.cm import dbsearch, is_valid_queryparam, is_valid_vendor
 
 
 class PartManager(models.Manager):
     def search(self, query, by_vendor):
         qs = self.get_queryset()
         if is_valid_queryparam(query):
-            query = SearchQuery(query)
-            vector = SearchVector('textsearchable_index_col')
-            qs = qs.annotate(rank=SearchRank(vector, query)).filter(
-                textsearchable_index_col=query).order_by('-rank')
+            qs = dbsearch(qs, query, 'B')
         if is_valid_vendor(by_vendor):
             qs = qs.filter(vendr__name=by_vendor)
         return qs

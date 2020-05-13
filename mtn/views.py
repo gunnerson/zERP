@@ -7,24 +7,13 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
-# from django.db.models import Q
-from django.contrib.postgres.search import SearchRank, SearchVector, SearchQuery
 
 from .models import Order, Image
 from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
 from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm
-
-
-def has_group(user, group_name):
-    # Check if the user belongs to a certain group
-    return user.groups.filter(name=group_name).exists()
-
-
-def is_valid_queryparam(param):
-    # Check that returned parameter is valid
-    return param != '' and param is not None
+from .cm import dbsearch, has_group, is_valid_queryparam
 
 
 def index(request):
@@ -69,15 +58,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         # Search orders
         query = self.request.GET.get('query', None)
         if is_valid_queryparam(query):
-            query = SearchQuery(query)
-            vector = SearchVector('textsearchable_index_col')
-            qs = qs.annotate(rank=SearchRank(vector, query)).filter(
-                textsearchable_index_col=query).order_by('-rank')
-            # query_terms = query.split()
-            # tsquery = " & ".join(query_terms)
-            # tsquery += ":*"
-            # qs = qs.extra(where=["textsearchable_index_col @@ (to_tsquery(%s)) = true"],
-            #               params=[tsquery])
+            qs = dbsearch(qs, query, 'B')
             self.count = len(qs)
         return qs
 

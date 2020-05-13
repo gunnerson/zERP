@@ -4,10 +4,7 @@ from tempus_dominus.widgets import DatePicker
 
 from .models import Order, Image
 from equip.models import Press
-
-
-def has_group(user, group_name):
-    return user.groups.filter(name=group_name).exists()
+from mtn.cm import has_group
 
 
 class OrderCreateForm(forms.ModelForm):

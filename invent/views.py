@@ -4,9 +4,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
-from .models import Part, UsedPart, Vendor, is_valid_vendor, is_valid_queryparam
+from .models import Part, UsedPart, Vendor
 from .forms import PartCreateForm, VendorCreateForm
-from mtn.views import has_group
+from mtn.cm import has_group, is_valid_vendor, is_valid_queryparam
 from mtn.models import Order
 
 

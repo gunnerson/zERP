@@ -4,20 +4,9 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.db.models import Q
 from django.contrib.postgres.search import SearchVectorField
-
 from staff.models import Employee
 from equip.models import Press
 from invent.models import Part
-
-
-# class OrderManager(models.Manager):
-#     def search(self, query=None):
-#         qs = self.get_queryset()
-#         if query != '' and query is not None:
-#             qs = qs.filter(Q(descr__icontains=query) |
-#                            Q(descrrep__icontains=query)
-#                            ).distinct()
-#         return qs
 
 
 class Order(models.Model):

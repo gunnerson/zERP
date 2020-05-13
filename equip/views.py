@@ -14,7 +14,7 @@ from django.db.models import Q
 
 from .models import Press, Upload
 from mtn.models import Order
-from mtn.views import has_group
+from mtn.cm import has_group
 from .forms import PressUpdateForm, UploadCreateForm
 
 
