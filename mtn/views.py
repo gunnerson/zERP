@@ -24,7 +24,7 @@ class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
     count = 0
-    paginate_by = 20
+    paginate_by = 3
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -36,7 +36,7 @@ class OrderListView(LoginRequiredMixin, ListView):
             press_excl = True
             context['press_id'] = press_id
             context['press'] = press
-        closed_checked = self.request.GET.get('closed')
+        closed_checked = self.request.GET.get('closed', '')
         query = self.request.GET.get('query', None)
         if is_valid_queryparam(query):
             search_exp = "collapse show"

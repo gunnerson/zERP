@@ -1,5 +1,15 @@
 {% extends "mtn/base.html" %}
 
+<script>
+  {% block jquery %}
+
+    $("#checkbox-container :checkbox").change(function() {
+      document.getElementById('selectform').submit();
+    });
+
+  {% endblock %}
+</script>
+
 {% block left-menu %}
 
   <ul>
@@ -26,7 +36,7 @@
 
 {% block content %}
 
-  <form method="GET" action=".">
+  <form method="GET" action="." id="selectform">
     <div class="form-row justify-content-start">
       <div class="form-group col align-self-center">
         <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder="Search by part number" name="query" value="{{ query|default:"" }}">
@@ -42,17 +52,14 @@
           {% endfor %}
         </select>
       </div>
-      {% if press_checked %}
-        <div class="form-group form-check align-self-center ml-3">
-          <input type="checkbox" class="form-check-input" name="press" checked>
-          <label class="form-check-label" for="exampleCheck1">Filter by press</label>
-        </div>
-      {% else %}
-        <div class="form-group form-check align-self-center ml-3">
-          <input type="checkbox" class="form-check-input" name="press">
-          <label class="form-check-label" for="exampleCheck1">Filter by press</label>
-        </div>
-      {% endif %}
+      <div class="form-group form-check align-self-center ml-3" id="checkbox-container">
+        {% if press_checked %}
+            <input type="checkbox" class="form-check-input" name="press" checked>
+        {% else %}
+            <input type="checkbox" class="form-check-input" name="press">
+        {% endif %}
+        <label class="form-check-label" for="exampleCheck1">Filter by press</label>
+      </div>
       <div class="form-group col align-self-center ml-4">
        <button type="submit" class="btn btn-rahco">Search</button>
       </div>
