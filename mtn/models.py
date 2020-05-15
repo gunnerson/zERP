@@ -88,10 +88,3 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.image.url)
-
-
-# Create indexes:
-# ALTER TABLE mtn_order
-#     ADD COLUMN textsearchable_index_col tsvector
-#                GENERATED ALWAYS AS (to_tsvector('english', coalesce(descr, '') || ' ' || coalesce(descrrep, ''))) STORED;
-# CREATE INDEX textsearch_idx ON mtn_order USING GIN (textsearchable_index_col);

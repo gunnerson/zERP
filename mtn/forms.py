@@ -19,8 +19,6 @@ class OrderCreateForm(forms.ModelForm):
     def __init__(self, *args, request=None, **kwargs):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         limited_choices = [('RE', 'Repair'), ('ST', 'Setup'), ]
-        # group = request.GET.get('group')
-        # subgroup = request.GET.get('subgroup')
         self.fields['local'].queryset = Press.objects.filter(
             group='PR', subgroup='CN')
         self.fields['ordertype'].choices = limited_choices

@@ -28,13 +28,20 @@ class PartListView(LoginRequiredMixin, ListView):
         # Keep search fields populated after GET request submitted
         query = request.GET.get('query', None)
         by_vendor = request.GET.get('by_vendor', None)
-        if is_valid_queryparam(query) or is_valid_vendor(by_vendor):
+        press_checked = request.GET.get('press', None)
+        if is_valid_queryparam(query):
             search_on = True
+            context['page_query'] = "query={0};".format(query)
+            context['query'] = query
+        if is_valid_vendor(by_vendor):
+            search_on = True
+            context['by_vendor'] = by_vendor
+            context['page_vendor'] = "by_vendor={0};".format(by_vendor)
+        if is_valid_queryparam(press_checked):
+            context['press_checked'] = press_checked
+            context['page_press'] = "press_checked={0};".format(press_checked)
         context['search_on'] = search_on
         context['count'] = self.count or 0
-        context['query'] = query
-        context['by_vendor'] = by_vendor
-        context['press_checked'] = request.GET.get('press', None)
         context['vendors'] = Vendor.objects.exclude(name__exact=by_vendor)
         return context
 
