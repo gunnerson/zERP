@@ -42,7 +42,7 @@
       <div class="">
         <div class="form-check mx-2">
           {% if production_checked %}
-           <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}" checked>
+            <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}" checked>
           {% else %}
             <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}">
           {% endif %}
@@ -86,9 +86,10 @@
 <br>
 <div class="container justify-content-start ml-1">
     {% for object in object_list %}
+      <a href="{% url 'equip:press' object.id %}">
         <div class="row border justify-content-start" style="width:500px; background-color:white;">
           <div class="col-6 border-right text-nowrap text-truncate align-self-center my-2">
-            <a href="{% url 'equip:press' object.id %}">{{ object.pname }}</a>
+            <span>{{ object.pname }}</span>
           </div>
            <div class="col-3 border-right text-nowrap text-truncate align-self-center">
             <span>{{ object.get_group_display }}</span>
@@ -105,6 +106,7 @@
             {% endif %}
           </div>
         </div>
+      </a>
     {% endfor %}
   </div>
 

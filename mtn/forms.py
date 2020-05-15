@@ -12,17 +12,17 @@ class OrderCreateForm(forms.ModelForm):
         model = Order
         fields = ['origin', 'local', 'ordertype', 'descr', ]
         labels = {'origin': 'Originator', 'local': 'Location',
-                  'ordertype': 'Type', 'descr': 'Description', }
+                  'ordertype': 'Type', 'descr': 'Description',
+                  }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
     def __init__(self, *args, request=None, **kwargs):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         limited_choices = [('RE', 'Repair'), ('ST', 'Setup'), ]
-        if has_group(request.user, 'maintenance'):
-            equip_qs = Press.objects.all()
-        else:
-            equip_qs = Press.objects.filter(group='PR')
-        self.fields['local'].queryset = equip_qs
+        # group = request.GET.get('group')
+        # subgroup = request.GET.get('subgroup')
+        self.fields['local'].queryset = Press.objects.filter(
+            group='PR', subgroup='CN')
         self.fields['ordertype'].choices = limited_choices
 
 

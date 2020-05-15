@@ -1,6 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.postgres.search import SearchVectorField
 
 from equip.models import Press
 from mtn.cm import dbsearch, is_valid_queryparam, is_valid_vendor
@@ -10,7 +9,7 @@ class PartManager(models.Manager):
     def search(self, query, by_vendor):
         qs = self.get_queryset()
         if is_valid_queryparam(query):
-            qs = dbsearch(qs, query, 'B')
+            qs = dbsearch(qs, query, 'B', 'partnum', 'descr')
         if is_valid_vendor(by_vendor):
             qs = qs.filter(vendr__name=by_vendor)
         return qs
@@ -25,7 +24,6 @@ class Part(models.Model):
     unit = models.CharField(max_length=5)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     vendr = models.ManyToManyField('Vendor', blank=True)
-    textsearchable_index_col = SearchVectorField(null=True)
 
     objects = PartManager()
 

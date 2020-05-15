@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import now
 from django.db.models import Q
-from django.contrib.postgres.search import SearchVectorField
 from staff.models import Employee
 from equip.models import Press
 from invent.models import Part
@@ -63,7 +62,6 @@ class Order(models.Model):
                               )
     closed = models.BooleanField(default=False)
     parts = models.ManyToManyField(Part, through='invent.UsedPart')
-    textsearchable_index_col = SearchVectorField(null=True)
 
     def cost_of_repair(self):
         cost_of_repair = 0

@@ -2,6 +2,36 @@
 
 {% load crispy_forms_tags %}
 
+<script>
+  {% block jquery %}
+
+    $("#group_select, #subgroup_select").change(function () {
+      var endpoint = "{% url 'mtn:ajax_new_order' %}";
+      var group = $("#group_select").val();
+      var subgroup = $("#subgroup_select").val();
+
+      if(group != "PR" ){
+        $("#subgroupField").hide();
+      } else {
+        $("#subgroupField").show();
+      };
+
+      $.ajax({
+        url: endpoint,
+        data: {
+          'group': group,
+          'subgroup': subgroup,
+        },
+        success: function (data) {
+          $("#id_local").html(data);
+        }
+      });
+
+    });
+
+  {% endblock %}
+</script>
+
 {% block left-menu%}
 
   <ul>
@@ -27,13 +57,32 @@
 
 {% block content %}
 
-  <form action="{% url 'mtn:new_order' %}" method='post'>
+  <form action="{% url 'mtn:new_order' %}" method='post' id="orderForm">
     {% csrf_token %}
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm">
           {{ form.origin|as_crispy_field }}
         </div>
+          <div class="form-group col align-self-end" id="groupField">
+            <label class="requiredField" for="group_select">Group</label>
+            <select class="form-control" name="group" id="group_select">
+              <option value="PR">Production</option>
+              <option value="GN">General</option>
+              <option value="BD">Building</option>
+              <option value="LF">Lifting equipment</option>
+            </select>
+          </div>
+          <div class="form-group col align-self-end" id="subgroupField">
+            <label class="requiredField" for="subgroup_select">Type</label>
+            <select class="form-control" name="subgroup" id="subgroup_select">
+              <option value="CN">Conventional</option>
+              <option value="VC">Vacuum</option>
+              <option value="IN">Injection</option>
+              <option value="PN">Punching</option>
+              <option value="OT">Other</option>
+            </select>
+          </div>
         <div class="col-sm">
           {{ form.local|as_crispy_field }}
         </div>

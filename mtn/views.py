@@ -24,7 +24,7 @@ class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
     count = 0
-    paginate_by = 3
+    paginate_by = 20
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -58,7 +58,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         # Search orders
         query = self.request.GET.get('query', None)
         if is_valid_queryparam(query):
-            qs = dbsearch(qs, query, 'B')
+            qs = dbsearch(qs, query, 'B', 'descr', 'descrrep')
             self.count = len(qs)
         return qs
 
@@ -91,6 +91,11 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return (has_group(self.request.user, 'maintenance') or
                 has_group(self.request.user, 'supervisor'))
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['group'] = self.request.GET.get('group')
+        return context
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
@@ -101,10 +106,21 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         self.object.save()
         return redirect('mtn:order-list')
 
-    def get_form_kwargs(self, **kwargs):
-        kwargs = super(OrderCreateView, self).get_form_kwargs()
-        kwargs.update(request=self.request)
-        return kwargs
+    # def get_form_kwargs(self, **kwargs):
+    #     kwargs = super(OrderCreateView, self).get_form_kwargs()
+    #     kwargs.update(request=self.request)
+    #     return kwargs
+
+
+def load_locales(request):
+    group = request.GET.get('group')
+    subgroup = request.GET.get('subgroup')
+    if group == 'PR':
+        locales = Press.objects.filter(group=group, subgroup=subgroup)
+    else:
+        locales = Press.objects.filter(group=group)
+    return render(request, 'mtn/local_dropdown_list_options.html',
+                  {'locales': locales})
 
 
 @login_required

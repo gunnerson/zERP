@@ -7,6 +7,7 @@ from .views import (
     OrderCreateView,
     OrderUpdateView,
     ImageCreateView,
+    load_locales,
 )
 from invent.views import PartListView, OrderPartsListView
 
@@ -21,6 +22,8 @@ urlpatterns = [
     path('mwo/order/<int:pk>', OrderDetailView.as_view(), name='order'),
 
     path('mwo/order/create/', OrderCreateView.as_view(), name='new_order'),
+
+    path('ajax/mwo/order/create/', load_locales, name='ajax_new_order'),
 
     path('mwo/order/<int:pk>/edit', OrderUpdateView.as_view(),
          name='edit_order'),

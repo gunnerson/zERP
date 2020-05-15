@@ -15,9 +15,27 @@ class Press(models.Model):
         (BUILDING, 'Building'),
         (LIFTING, 'Lifting equipment'),
     ]
+    CONVENTIONAL = 'CN'
+    VACUUM = 'VC'
+    INJECTION = 'IN'
+    PUNCHING = 'PN'
+    OTHER = 'OT'
+    SUBGROUPS = [
+        (CONVENTIONAL, 'Conventional'),
+        (VACUUM, 'Vacuum'),
+        (INJECTION, 'Injection'),
+        (PUNCHING, 'Punching'),
+        (OTHER, 'Other'),
+    ]
     group = models.CharField(
         max_length=2,
         choices=GROUPS,
+    )
+    subgroup = models.CharField(
+        max_length=2,
+        choices=SUBGROUPS,
+        null=True,
+        blank=True,
     )
     contacts = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
