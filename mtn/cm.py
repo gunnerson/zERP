@@ -49,10 +49,23 @@ def is_valid_vendor(param):
             )
 
 
-def is_valid_queryparam(param):
+def is_valid_param(param):
     return param != '' and param is not None
 
 
 def has_group(user, group_name):
     # Check if the user belongs to a certain group
     return user.groups.filter(name=group_name).exists()
+
+
+def get_url_kwargs(request):
+    rkwargs = list(request.GET.items())
+    context = {}
+    p_name = ""
+    if rkwargs is not None:
+        for key, value in rkwargs:
+            if is_valid_param(value) and key != 'page':
+                context[key] = value
+                p_name += "{0}={1}&".format(key,value)
+        context['page_kwargs'] = p_name
+        return context

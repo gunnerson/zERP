@@ -49,7 +49,7 @@
     </div>
   </form>
 
-  {% if search_on %}
+  {% if query is not None or by_vendor is not None and by_vendor != 'All vendors' %}
     <div class='row my-3'>
         <div class='col-12 py-0'>
           {% if by_vendor == "Choose vendor..." %}
@@ -63,7 +63,7 @@
 
   <hr />
 
-  <div class="container justify-content-start ml-1" style="background-color:white;">
+  <div class="container justify-content-start ml-1 mt-4" style="background-color:white;">
     {% for object in object_list %}
         <div class="row border">
           <div class="col-2 border-right text-nowrap text-truncate">
@@ -89,20 +89,20 @@
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }};{{ page_query }}{{ page_vendor }}{{ page_press }}" aria-label="Previous">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ page_kwargs }}" aria-label="Previous">
                   <span>{{ page_obj.previous_page_number }}</span>
                 </a>
               </li>
             {% endif %}
-            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }};{{ page_query }}{{ page_vendor }}{{ page_press }}"><span>{{ page_obj.number }}</span></a></li>
+            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }}&{{ page_kwargs }}"><span>{{ page_obj.number }}</span></a></li>
            {% if page_obj.has_next %}
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }};{{ page_query }}{{ page_vendor }}{{ page_press }}" aria-label="Next">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ page_kwargs }}" aria-label="Next">
                   <span>{{ page_obj.next_page_number }}</span>
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }};{{ page_query }}{{ page_vendor }}{{ page_press }}" aria-label="Last">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ page_kwargs }}" aria-label="Last">
                   <span aria-hidden="true">&raquo;</span>
                 </a>
               </li>

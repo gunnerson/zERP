@@ -13,7 +13,7 @@ from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
 from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm
-from .cm import dbsearch, has_group, is_valid_queryparam
+from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs
 
 
 def index(request):
@@ -30,24 +30,21 @@ class OrderListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         press_excl = False
         search_exp = "collapse"
+        request = self.request
+        context.update(get_url_kwargs(request))
         if 'pk' in self.kwargs:
             press_id = self.kwargs['pk']
             press = Press.objects.get(id=self.kwargs['pk'])
             press_excl = True
             context['press_id'] = press_id
             context['press'] = press
-        closed_checked = self.request.GET.get('closed', '')
-        if is_valid_queryparam(closed_checked):
-            context['closed_checked'] = closed_checked
-            context['page_closed'] = "closed={0};".format(closed_checked)
-        query = self.request.GET.get('query', None)
-        if is_valid_queryparam(query):
+        query = request.GET.get('query', None)
+        if is_valid_param(query):
             search_exp = "collapse show"
-            context['query'] = query
             context['count'] = self.count or 0
-            context['page_query'] = "query={0};".format(query)
         context['search_exp'] = search_exp
         context['press_excl'] = press_excl
+        print('>>>>>>>>>>>>>>>>>>>>', context)
         return context
 
     def get_queryset(self):
@@ -60,7 +57,7 @@ class OrderListView(LoginRequiredMixin, ListView):
             qs = qs.exclude(closed=True)
         # Search orders
         query = self.request.GET.get('query', None)
-        if is_valid_queryparam(query):
+        if is_valid_param(query):
             qs = dbsearch(qs, query, 'B', 'descr', 'descrrep')
             self.count = len(qs)
         return qs

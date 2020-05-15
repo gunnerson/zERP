@@ -2,13 +2,13 @@ from django.db import models
 from django.urls import reverse
 
 from equip.models import Press
-from mtn.cm import dbsearch, is_valid_queryparam, is_valid_vendor
+from mtn.cm import dbsearch, is_valid_param, is_valid_vendor
 
 
 class PartManager(models.Manager):
     def search(self, query, by_vendor):
         qs = self.get_queryset()
-        if is_valid_queryparam(query):
+        if is_valid_param(query):
             qs = dbsearch(qs, query, 'B', 'partnum', 'descr')
         if is_valid_vendor(by_vendor):
             qs = qs.filter(vendr__name=by_vendor)

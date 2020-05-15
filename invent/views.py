@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from .models import Part, UsedPart, Vendor
 from .forms import PartCreateForm, VendorCreateForm
-from mtn.cm import has_group, is_valid_vendor, is_valid_queryparam
+from mtn.cm import has_group, is_valid_vendor, is_valid_param, get_url_kwargs
 from mtn.models import Order
 
 
@@ -24,23 +24,8 @@ class PartListView(LoginRequiredMixin, ListView):
             order_id = self.kwargs['pk']
             context['order_id'] = order_id
         request = self.request
-        search_on = False
-        # Keep search fields populated after GET request submitted
-        query = request.GET.get('query', None)
+        context.update(get_url_kwargs(request))
         by_vendor = request.GET.get('by_vendor', None)
-        press_checked = request.GET.get('press', None)
-        if is_valid_queryparam(query):
-            search_on = True
-            context['page_query'] = "query={0};".format(query)
-            context['query'] = query
-        if is_valid_vendor(by_vendor):
-            search_on = True
-            context['by_vendor'] = by_vendor
-            context['page_vendor'] = "by_vendor={0};".format(by_vendor)
-        if is_valid_queryparam(press_checked):
-            context['press_checked'] = press_checked
-            context['page_press'] = "press_checked={0};".format(press_checked)
-        context['search_on'] = search_on
         context['count'] = self.count or 0
         context['vendors'] = Vendor.objects.exclude(name__exact=by_vendor)
         return context
@@ -56,7 +41,7 @@ class PartListView(LoginRequiredMixin, ListView):
         query = request.GET.get('query', None)
         by_vendor = request.GET.get('by_vendor', None)
         press_checked = request.GET.get('press', None)
-        if is_valid_queryparam(query) or is_valid_vendor(by_vendor):
+        if is_valid_param(query) or is_valid_vendor(by_vendor):
             qs = Part.objects.search(query, by_vendor)
             self.count = len(qs)
         if press_checked:

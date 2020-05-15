@@ -1,0 +1,91 @@
+% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Rahco Rubber Maintenance Admin Dashboard</title>
+
+    {# Include Bootstrap 4 and jQuery and Font Awesome #}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7ad714b2f7.js" crossorigin="anonymous"></script>
+    {# Django Tempus Dominus assets are included in `{{ form.media }}` #}
+    {{ form.media }}
+
+    <link rel="stylesheet" href="{% static 'css/template.css' %}">
+
+  </head>
+
+  <body style="background-color:#FAFAFA;">
+
+    <nav class="navbar navbar-expand-md navbar-dark sticky-top" style="background-color: #336699;" >
+      <a class="navbar-brand" href="{% url 'mtn:index' %}">
+        <img src="{% static 'rahco_rubber_logo-white.png' %}" width="200" height="50" class="d-inline-block align-top" alt="">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto font-weight-bold text-uppercase">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'mtn:order-list' %}">Work Orders</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'invent:partlist' %}">Inventory</a>
+          </li>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'equip:presslist' %}">Equipment</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
+          </li>
+          {% if user.is_superuser %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Admin
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin page</a>
+                <a class="dropdown-item" href="{% url 'invent:usedpartlist' %}">Clean Used Parts</a>
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right" style="color:white;">
+          {% if user.is_authenticated %}
+            <li><a>Hello, {{ user.username }}. &nbsp</a></li>
+            <li><a href="{% url 'users:logout' %}" style="color:white;">log out</a></li>
+          {% else %}
+            <li><a href="{% url 'users:register' %}" style="color:white;">register &nbsp</a></li>
+            <li><a href="{% url 'users:login' %}" style="color:white;">log in</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <br>
+
+    <div class="container">
+
+      <div class="page-header">
+        {% block header %}{% endblock header %}
+      </div>
+      <div>
+        {% block content %}{% endblock content %}
+      </div>
+
+    </div>
+
+  <br>
+  </body>
+
+</html>
+

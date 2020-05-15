@@ -1,0 +1,33 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+ <ul>
+  <li>
+    <a href="{% url 'equip:press' press_id %}" class="side-menu-link" role="button">Back</a>
+  </li>
+</ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
+        <li class="breadcrumb-item active">Uploads</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Delete uploaded files</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form method="post">{% csrf_token %}
+      <p>Are you sure you want to delete "{{ object }}"?</p>
+      <input type="submit" value="Confirm">
+  </form>
+{% endblock content %}

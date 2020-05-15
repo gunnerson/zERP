@@ -82,7 +82,7 @@
 
     <div class="container mx-0" id="checkbox-container">
       <div class="form-check">
-        {% if closed_checked %}
+        {% if closed %}
           <input type="checkbox" class="form-check-input" name="closed" id="closed" checked>
         {% else %}
           <input type="checkbox" class="form-check-input" name="closed" id="closed" >
@@ -145,25 +145,25 @@
           <ul class="pagination">
             {% if page_obj.has_previous %}
               <li class="page-item">
-                <a class="page-link" href="?page=1;{{ page_query }};{{ page_closed }}" aria-label="First">
+                <a class="page-link" href="?page=1;{{ page_kwargs }}" aria-label="First">
                   <span aria-hidden="true">&laquo;</span>
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }};{{ page_query }}{{ page_closed }}" aria-label="Previous">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ page_kwargs }}" aria-label="Previous">
                   <span>{{ page_obj.previous_page_number }}</span>
                 </a>
               </li>
             {% endif %}
-            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }}{{ page_query }}{{ page_closed }}"><span>{{ page_obj.number }}</span></a></li>
+            <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number }}&{{ page_kwargs }}"><span>{{ page_obj.number }}</span></a></li>
            {% if page_obj.has_next %}
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }};{{ page_query }}{{ page_closed }}" aria-label="Next">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ page_kwargs }}" aria-label="Next">
                   <span>{{ page_obj.next_page_number }}</span>
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }};{{ page_query }}{{ page_closed }}" aria-label="Last">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ page_kwargs }}" aria-label="Last">
                   <span aria-hidden="true">&raquo;</span>
                 </a>
               </li>
