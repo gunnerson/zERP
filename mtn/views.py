@@ -23,28 +23,27 @@ def index(request):
 class OrderListView(LoginRequiredMixin, ListView):
     """List of existing work orders"""
     model = Order
-    count = 0
-    paginate_by = 2
+    # count = 0
+    paginate_by = 20
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         press_excl = False
         search_exp = "collapse"
         request = self.request
-        # context.update(get_url_kwargs(request))
+        context.update(get_url_kwargs(request))
         if 'pk' in self.kwargs:
             press_id = self.kwargs['pk']
             press = Press.objects.get(id=self.kwargs['pk'])
             press_excl = True
             context['press_id'] = press_id
             context['press'] = press
-        query = request.GET.get('query', None)
+        query = context.get('query', None)
         if is_valid_param(query):
             search_exp = "collapse show"
             context['count'] = self.count or 0
         context['search_exp'] = search_exp
         context['press_excl'] = press_excl
-        print('>>>>>>>>>>>>>>>>>>>>', context)
         return context
 
     def get_queryset(self):

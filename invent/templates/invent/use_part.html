@@ -3,7 +3,11 @@
 <script>
   {% block jquery %}
 
-    $("#checkbox-container :checkbox").change(function() {
+    $("#vendorSelect").change(function() {
+      document.getElementById('selectform').submit();
+    });
+
+    $("#pressCheck").change(function() {
       document.getElementById('selectform').submit();
     });
 
@@ -14,7 +18,7 @@
 
   <ul>
     <li>
-      <a href="{% url 'mtn:order' order_id %}" role="button" class="side-menu-link">Back</a>
+      <a href="{% url 'mtn:order' view.kwargs.pk %}" role="button" class="side-menu-link">Back</a>
     </li>
   </ul>
 
@@ -26,7 +30,7 @@
     <ol class="breadcrumb m-0">
         <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
         <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'mtn:order' order_id %}">Order</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order' view.kwargs.pk %}">Order</a></li>
         <li class="breadcrumb-item active">Add part</li>
     </ol>
   </div>
@@ -39,12 +43,12 @@
   <form method="GET" action="." id="selectform">
     <div class="form-row justify-content-start">
       <div class="form-group col align-self-center">
-        <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder="Search by part number" name="query" value="{{ query|default:"" }}">
+        <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder="Search by part number" name="query" value="{{ query|default:'' }}">
       </div>
       <div class="form-group col align-self-center">
-        <select class="form-control" name="by_vendor">
-          <option selected>{{ by_vendor|default:"Choose vendor..." }}</option>
-          {% if by_vendor != "All vendors" %}
+        <select class="form-control" name="vendor" id="vendorSelect">
+          <option selected>{{ vendor|default:"Choose vendor..." }}</option>
+          {% if vendor != "All vendors" %}
             <option>All vendors</option>
           {% endif %}
           {% for vendor in vendors %}
@@ -52,13 +56,13 @@
           {% endfor %}
         </select>
       </div>
-      <div class="form-group form-check align-self-center ml-3" id="checkbox-container">
-        {% if press_checked %}
-            <input type="checkbox" class="form-check-input" name="press" checked>
+      <div class="form-group form-check align-self-center ml-3">
+        {% if press %}
+            <input type="checkbox" class="form-check-input" name="press" id="pressCheck"checked>
         {% else %}
-            <input type="checkbox" class="form-check-input" name="press">
+            <input type="checkbox" class="form-check-input" name="press" id="pressCheck">
         {% endif %}
-        <label class="form-check-label" for="exampleCheck1">Filter by press</label>
+        <label class="form-check-label" for="pressCheck">Filter by press</label>
       </div>
       <div class="form-group col align-self-center ml-4">
        <button type="submit" class="btn btn-rahco">Search</button>

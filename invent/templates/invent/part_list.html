@@ -1,5 +1,15 @@
 {% extends "mtn/base.html" %}
 
+<script>
+  {% block jquery %}
+
+    $("#vendorSelect").change(function() {
+      document.getElementById('selectform').submit();
+    });
+
+  {% endblock %}
+</script>
+
 {% block left-menu %}
 
   <ul>
@@ -27,15 +37,15 @@
 
 {% block content %}
 
-  <form method="GET" action=".">
+  <form method="GET" action="." id="selectform">
     <div class="form-row">
       <div class="form-group col align-self-center">
         <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder=" Find part" name="query" value="{{ query|default:'' }}">
       </div>
       <div class="form-group col align-self-center">
-        <select class="form-control" name="by_vendor">
-          <option selected>{{ by_vendor|default:"Choose vendor..." }}</option>
-          {% if by_vendor != "All vendors" %}
+        <select class="form-control" name="vendor" id="vendorSelect">
+          <option selected>{{ vendor|default:"Choose vendor..." }}</option>
+          {% if vendor != "All vendors" %}
             <option>All vendors</option>
           {% endif %}
           {% for vendor in vendors %}
@@ -49,13 +59,13 @@
     </div>
   </form>
 
-  {% if query is not None or by_vendor is not None and by_vendor != 'All vendors' %}
+  {% if query is not None or vendor is not None and vendor != 'All vendors' %}
     <div class='row my-3'>
         <div class='col-12 py-0'>
-          {% if by_vendor == "Choose vendor..." %}
+          {% if vendor == "Choose vendor..." %}
             <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>All vendors</b></h3>
           {% else %}
-            <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>{{ by_vendor|default:"All vendors" }}</b></h3>
+            <h4 class='my-0 py-0'>{{ count }} results for <b>{{ query|default:"All part numbers" }}</b> and <b>{{ vendor|default:"All vendors" }}</b></h3>
           {% endif %}
         </div>
     </div>

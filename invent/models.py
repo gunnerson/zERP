@@ -6,12 +6,12 @@ from mtn.cm import dbsearch, is_valid_param, is_valid_vendor
 
 
 class PartManager(models.Manager):
-    def search(self, query, by_vendor):
+    def search(self, query, vendor):
         qs = self.get_queryset()
         if is_valid_param(query):
             qs = dbsearch(qs, query, 'B', 'partnum', 'descr')
-        if is_valid_vendor(by_vendor):
-            qs = qs.filter(vendr__name=by_vendor)
+        if is_valid_vendor(vendor):
+            qs = qs.filter(vendr__name=vendor)
         return qs
 
 

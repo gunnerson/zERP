@@ -7,6 +7,15 @@
       document.getElementById('selectform').submit();
     });
 
+    $("#searchButton").click(function() {
+      if($("#collapseSearch").is(":visible")){
+        $("#query").val('');
+        document.getElementById('selectform').submit();
+      } else {
+        $("#collapseSearch").show("slow");
+      }
+    });
+
   {% endblock %}
 </script>
 
@@ -23,7 +32,7 @@
       </li>
     {% endif %}
     <li>
-        <a class="side-menu-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Search</a>
+        <a class="side-menu-link" role="button" id="searchButton">Search</a>
     </li>
   </ul>
 
@@ -58,13 +67,12 @@
 {% endblock page-title %}
 
 {% block content %}
-  <p> {{ group }}</p>
   <form method="GET" action="" id="selectform">
 
-    <div class="{{ search_exp }}" id="collapseExample">
+    <div class="{{ search_exp }}" id="collapseSearch">
       <div class="form-row">
         <div class="form-group col-3 align-self-center">
-          <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder=" Find work order" name="query" value="{{ query }}">
+          <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem;" type="search" placeholder=" Find work order" id="query" name="query" value="{{ query }}">
         </div>
         <div class="form-group col align-self-center ml-4">
          <button type="submit" class="btn btn-rahco">Search</button>

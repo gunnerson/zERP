@@ -14,38 +14,31 @@ class PartListView(LoginRequiredMixin, ListView):
     """List of all parts in the inventory and list of parts to add
     to an existing work order"""
     model = Part
-    count = 0
     paginate_by = 50
+    count = 0
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        # Get order_id for "Back" button in template
-        if 'pk' in self.kwargs:
-            order_id = self.kwargs['pk']
-            context['order_id'] = order_id
-        request = self.request
-        context.update(get_url_kwargs(request))
-        by_vendor = request.GET.get('by_vendor', None)
+        context.update(get_url_kwargs(self.request))
+        vendor = context.get('vendor', None)
         context['count'] = self.count or 0
-        context['vendors'] = Vendor.objects.exclude(name__exact=by_vendor)
+        context['vendors'] = Vendor.objects.exclude(name__exact=vendor)
         return context
 
     def get_queryset(self):
         # Filter parts by part number, vendor and press
         if 'pk' in self.kwargs:
-            order_id = self.kwargs['pk']
-            order = Order.objects.get(id=order_id)
-            press = order.local
+            order = Order.objects.get(id=self.kwargs['pk'])
         qs = Part.objects.all()
         request = self.request
         query = request.GET.get('query', None)
-        by_vendor = request.GET.get('by_vendor', None)
-        press_checked = request.GET.get('press', None)
-        if is_valid_param(query) or is_valid_vendor(by_vendor):
-            qs = Part.objects.search(query, by_vendor)
+        vendor = request.GET.get('vendor', None)
+        press = request.GET.get('press', None)
+        if is_valid_param(query) or is_valid_vendor(vendor):
+            qs = Part.objects.search(query, vendor)
             self.count = len(qs)
-        if press_checked:
-            qs = qs.filter(cat=press)
+        if press:
+            qs = qs.filter(cat=order.local)
         return qs
 
     def post(self, request, *args, **kwargs):

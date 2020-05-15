@@ -2,17 +2,19 @@
 
 {% block content %}
 
-	<ul>
-	  {% for employee in employees %}
-      <li>
-        <div class="row" style="height: 35px">
-          <p>{{ employee }} ({{ employee.get_role_display }})</p>
-        </div>
-      </li>
-	  {% empty %}
-		  <li>No employees have been added yet.</li>
-    {% endfor %}
-	</ul>
+	<div class="container ml-0 pl-0 mt-4">
+    <ul>
+  	  {% for employee in employees %}
+        <li>
+          <div class="row" style="height: 35px">
+            <p>{{ employee }} ({{ employee.get_role_display }})</p>
+          </div>
+        </li>
+  	  {% empty %}
+  		  <li>No employees have been added yet.</li>
+      {% endfor %}
+  	</ul>
+  </div>
 
 {% endblock content %}
 
