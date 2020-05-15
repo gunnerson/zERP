@@ -31,7 +31,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         press_excl = False
         search_exp = "collapse"
         request = self.request
-        context.update(get_url_kwargs(request))
+        # context.update(get_url_kwargs(request))
         if 'pk' in self.kwargs:
             press_id = self.kwargs['pk']
             press = Press.objects.get(id=self.kwargs['pk'])
