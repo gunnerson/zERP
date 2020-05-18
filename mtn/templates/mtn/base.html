@@ -28,23 +28,23 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto font-weight-bold text-uppercase">
-          <li class="nav-item active">
+          <li class="nav-item" id="navItem1">
             <a class="nav-link" href="{% url 'mtn:order-list' %}">Work Orders</a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item" id="navItem2">
             <a class="nav-link" href="{% url 'invent:partlist' %}">Inventory</a>
           </li>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item" id="navItem3">
             <a class="nav-link" href="{% url 'equip:presslist' %}">Equipment</a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item" id="navItem4">
             <a class="nav-link" href="{% url 'staff:staff' %}">Staff</a>
           </li>
 
           {% if user.is_superuser %}
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Admin
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -118,9 +118,23 @@
 
   {% include 'mtn/base/js.html' %}
   <script>
+
     $(document).ready(function(){
+
+      var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
+      if (section == "mwo" ) {
+        $("#navItem1").addClass('active');
+      } else if (section == "inventory" ) {
+        $("#navItem2").addClass('active');
+      } else if (section == "equipment" ) {
+        $("#navItem3").addClass('active');
+      } else if (section == "staff" ) {
+        $("#navItem4").addClass('active');
+      };
+
       {% block jquery %}{% endblock %}
     })
+
   </script>
 
   <br>
