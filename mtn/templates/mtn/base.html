@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Rahco Rubber Maintenance Admin Dashboard</title>
+    <title>Rahco Rubber Production Management Dashboard</title>
 
     {% include 'mtn/base/css.html' %}
 
@@ -83,7 +83,7 @@
       <div class="wrapper">
 
         <!-- ========== Left Sidebar Start ========== -->
-        <div class="left-side-menu left-side-menu-detached">
+        <div class="left-side-menu left-side-menu-detached" id="sidebarBlock">
           {% block left-menu %}{% endblock left-menu %}
         </div>
         <!-- Left Sidebar End -->
@@ -96,6 +96,7 @@
               <div class="col-12">
                 <div class="page-title-box">
                   {% block page-title %}{% endblock page-title %}
+                  <hr>
                 </div>
               </div>
             </div>

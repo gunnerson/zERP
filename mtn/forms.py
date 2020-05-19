@@ -3,8 +3,6 @@ from django import forms
 from tempus_dominus.widgets import DatePicker
 
 from .models import Order, Image
-from equip.models import Press
-from mtn.cm import has_group
 
 
 class OrderCreateForm(forms.ModelForm):
@@ -16,11 +14,9 @@ class OrderCreateForm(forms.ModelForm):
                   }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
-    def __init__(self, *args, request=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         limited_choices = [('RE', 'Repair'), ('ST', 'Setup'), ]
-        self.fields['local'].queryset = Press.objects.filter(
-            group='PR', subgroup='CN')
         self.fields['ordertype'].choices = limited_choices
 
 

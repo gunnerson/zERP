@@ -10,6 +10,7 @@ from .views import (
     load_locales,
 )
 from invent.views import PartListView, OrderPartsListView
+from .forms import OrderCreateForm
 
 app_name = "mtn"
 

@@ -37,7 +37,7 @@ body {
     transition: all .2s ease-out;
     top: 0;
     padding-top: 70px;
-    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+    /*box-shadow: 0 0 35px 0 rgba(154,161,171,.15);*/
 }
 
 dl, ol, ul {
@@ -64,7 +64,7 @@ a {
 
 .page-title-box .page-title-right {
     float: right;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
 }
 
 .page-title-box .breadcrumb {
@@ -74,7 +74,7 @@ a {
 .page-title-box .page-title {
     font-size: 18px;
     margin: 0;
-    line-height: 75px;
+    line-height: 30px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -161,7 +161,6 @@ body {
 }
 
 .left-side-menu {
-    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
     display: none;
     z-index: 10!important;
 }

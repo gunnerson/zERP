@@ -1,3 +1,4 @@
+<option value="">---------</option>
 {% for local in locales %}
-    <option value="{{ local }}">{{ local }}</option>
+    <option value="{{ local.pk }}">{{ local }}</option>
 {% endfor %}

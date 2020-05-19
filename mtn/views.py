@@ -105,16 +105,12 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         self.object.save()
         return redirect('mtn:order-list')
 
-    # def get_form_kwargs(self, **kwargs):
-    #     kwargs = super(OrderCreateView, self).get_form_kwargs()
-    #     kwargs.update(request=self.request)
-    #     return kwargs
 
-
+@login_required
 def load_locales(request):
     group = request.GET.get('group')
     subgroup = request.GET.get('subgroup')
-    if group == 'PR':
+    if group == 'PR' and is_valid_param(subgroup):
         locales = Press.objects.filter(group=group, subgroup=subgroup)
     else:
         locales = Press.objects.filter(group=group)

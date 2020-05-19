@@ -5,10 +5,10 @@
 <script>
   {% block jquery %}
 
-    $("#group_select, #subgroup_select").change(function () {
+    $("#groupSelect, #subgroupSelect").change(function () {
       var endpoint = "{% url 'mtn:ajax_new_order' %}";
-      var group = $("#group_select").val();
-      var subgroup = $("#subgroup_select").val();
+      var group = $("#groupSelect").val();
+      var subgroup = $("#subgroupSelect").val();
 
       if(group != "PR" ){
         $("#subgroupField").hide();
@@ -57,7 +57,7 @@
 
 {% block content %}
 
-  <form action="{% url 'mtn:new_order' %}" method='post' id="orderForm">
+  <form method='post' id="orderForm" novalidate>
     {% csrf_token %}
     <div class="container-fluid">
       <div class="row">
@@ -66,7 +66,7 @@
         </div>
           <div class="form-group col align-self-end" id="groupField">
             <label class="requiredField" for="group_select">Group</label>
-            <select class="form-control" name="group" id="group_select">
+            <select class="form-control" name="group" id="groupSelect">
               <option value="PR">Production</option>
               <option value="GN">General</option>
               <option value="BD">Building</option>
@@ -75,7 +75,8 @@
           </div>
           <div class="form-group col align-self-end" id="subgroupField">
             <label class="requiredField" for="subgroup_select">Type</label>
-            <select class="form-control" name="subgroup" id="subgroup_select">
+            <select class="form-control" name="subgroup" id="subgroupSelect">
+              <option value="">All</option>
               <option value="CN">Conventional</option>
               <option value="VC">Vacuum</option>
               <option value="IN">Injection</option>
@@ -94,6 +95,5 @@
     </div>
     <button name="submit" role="button" class="btn btn-rahco">Save order</button>
   </form>
-</form>
 
 {% endblock content %}
