@@ -116,7 +116,32 @@ ul {
     color: inherit;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr {
+  margin-bottom: -1px;
+}
+
+tr:nth-child(odd) {
+  background-color: #fafbfe;
+}
+
+tr:hover{
+  color: #336699;
+  text-decoration: inherit;
+}
+
+[data-href] {
+  cursor: pointer;
+}
 
 
 

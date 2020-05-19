@@ -5,6 +5,8 @@
 <script>
   {% block jquery %}
 
+    $("#sidebarBlock").hide();
+
     $("#checkbox-container :checkbox").change(function() {
       document.getElementById('selectform').submit();
     });
@@ -12,9 +14,7 @@
   {% endblock %}
 </script>
 
-{% block left-menu %}
-
-{% endblock left-menu %}
+{% block left-menu %}{% endblock left-menu %}
 
 {% block page-title %}
 
