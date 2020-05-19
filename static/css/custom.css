@@ -67,6 +67,7 @@ ul {
 
 .left-side-menu {
   width: 180px;
+  height:100%;
   padding-top: 110px;
   margin-top: 0;
   background: #fafbfe;
@@ -74,7 +75,6 @@ ul {
   border-right-style: double;
   border-width: 1px;
   border-color: rgb(180, 180, 180, 0.2);
-
 }
 
 .left-side-menu ul {
@@ -83,6 +83,10 @@ ul {
 
 .nav-link {
   font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.nav navbar-right {
 }
 
 .page-title-box .page-title {
