@@ -5,6 +5,10 @@
 <script>
   {% block jquery %}
 
+    $(".clickable-row").click(function() {
+      window.location = $(this).data("href");
+    });
+
     $("#sidebarBlock").hide();
 
     $("#checkbox-container :checkbox").change(function() {
@@ -30,71 +34,71 @@
 
 {% block content %}
 
-<form method="GET" action="" id="selectform">
-  <div class="container mx-0" id="checkbox-container">
-    <div class="row">
-      <div class="">
-        <div class="form-check mx-2">
-          <input type="checkbox" class="form-check-input" name="all" id="all" >
-          <label class="form-check-label" for="all">Show all</label>
+  <form method="GET" action="" id="selectform">
+    <div class="container mx-0" id="checkbox-container">
+      <div class="row">
+        <div class="">
+          <div class="form-check mx-2">
+            <input type="checkbox" class="form-check-input" name="all" id="all" >
+            <label class="form-check-label" for="all">Show all</label>
+          </div>
         </div>
-      </div>
-      <div class="">
-        <div class="form-check mx-2">
-          {% if production_checked %}
-            <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}" checked>
-          {% else %}
-            <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}">
-          {% endif %}
-          <label class="form-check-label" for="production">Production</label>
+        <div class="">
+          <div class="form-check mx-2">
+            {% if production_checked %}
+              <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}" checked>
+            {% else %}
+              <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}">
+            {% endif %}
+            <label class="form-check-label" for="production">Production</label>
+          </div>
         </div>
-      </div>
-      <div class="">
-        <div class="form-check mx-2">
-          {% if building_checked %}
-            <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}" checked>
-          {% else %}
-            <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}">
-          {% endif %}
-          <label class="form-check-label" for="building">Building</label>
+        <div class="">
+          <div class="form-check mx-2">
+            {% if building_checked %}
+              <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}" checked>
+            {% else %}
+              <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}">
+            {% endif %}
+            <label class="form-check-label" for="building">Building</label>
+          </div>
         </div>
-      </div>
-      <div class="">
-        <div class="form-check mx-2">
-          {% if lifting_checked %}
-            <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}" checked>
-          {% else %}
-            <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}">
-          {% endif %}
-          <label class="form-check-label" for="lifting">Lifting Equipment</label>
+        <div class="">
+          <div class="form-check mx-2">
+            {% if lifting_checked %}
+              <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}" checked>
+            {% else %}
+              <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}">
+            {% endif %}
+            <label class="form-check-label" for="lifting">Lifting Equipment</label>
+          </div>
         </div>
-      </div>
-      <div class="">
-        <div class="form-check mx-2">
-          {% if general_checked %}
-            <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}" checked>
-          {% else %}
-            <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}">
-          {% endif %}
-          <label class="form-check-label" for="general">General</label>
+        <div class="">
+          <div class="form-check mx-2">
+            {% if general_checked %}
+              <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}" checked>
+            {% else %}
+              <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}">
+            {% endif %}
+            <label class="form-check-label" for="general">General</label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
 
-<br>
-<div class="container justify-content-start ml-1">
-    {% for object in object_list %}
-      <a href="{% url 'equip:press' object.id %}">
-        <div class="row border justify-content-start" style="width:500px; background-color:white;">
-          <div class="col-6 border-right text-nowrap text-truncate align-self-center my-2">
-            <span>{{ object.pname }}</span>
-          </div>
-           <div class="col-3 border-right text-nowrap text-truncate align-self-center">
-            <span>{{ object.get_group_display }}</span>
-          </div>
-          <div class="col-3 align-self-center">
+  <br>
+  <div class="container justify-content-start ml-1">
+    <table>
+      {% for object in object_list %}
+        <tr class="clickable-row row border justify-content-start" data-href="{% url 'equip:press' object.id %}" style="width:500px;">
+          <th class="col-6 border-right text-nowrap text-truncate align-self-center my-2">
+            {{ object.pname }}
+          </th>
+          <th class="col-3 border-right text-nowrap text-truncate align-self-center">
+            {{ object.get_group_display }}
+          </th>
+          <th class="col-3 align-self-center">
             {% if object.id|press_status == "RE" %}
               <div class="badge badge-danger py-2 mx-1">Out of Order</div>
             {% elif object.id|press_status == "ST" %}
@@ -104,10 +108,10 @@
             {% else %}
               <div class="badge badge-success py-2 mx-1">OK</div>
             {% endif %}
-          </div>
-        </div>
-      </a>
-    {% endfor %}
+          </th>
+        </tr>
+      {% endfor %}
+    </table>
   </div>
 
   <br>

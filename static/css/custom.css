@@ -55,6 +55,12 @@ ul {
   background-color: #164979;
 }
 
+.clickable-row:hover {
+  color: #336699;
+  text-decoration: inherit;
+  cursor: pointer;
+}
+
 .container-fluid {
   padding-left: 0!important;
 }
@@ -136,15 +142,6 @@ tr {
 
 tr:nth-child(odd) {
   background-color: #fafbfe;
-}
-
-tr:hover{
-  color: #336699;
-  text-decoration: inherit;
-}
-
-[data-href] {
-  cursor: pointer;
 }
 
 

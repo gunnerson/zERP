@@ -93,7 +93,7 @@
           <div class="content">
 
             <!-- start page title -->
-            <div class="row">
+            <div class="row" id="pagetitleBlock">
               <div class="col-12">
                 <div class="page-title-box">
                   {% block page-title %}{% endblock page-title %}
@@ -119,6 +119,7 @@
     <!-- end content -->
 
   {% include 'mtn/base/js.html' %}
+
   <script>
 
     $(document).ready(function(){

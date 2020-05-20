@@ -24,18 +24,21 @@
 
 {% block content %}
 
-	<div class="container ml-0 pl-0 mt-4">
-    <ul>
-  	  {% for employee in employees %}
-        <li>
-          <div class="row" style="height: 35px">
-            <p>{{ employee }} ({{ employee.get_role_display }})</p>
-          </div>
-        </li>
-  	  {% empty %}
-  		  <li>No employees have been added yet.</li>
+  <div class="container justify-content-start ml-1">
+    <table>
+      {% for employee in employees %}
+        <tr class="row border justify-content-start" style="width:500px;">
+          <th class="col-8 border-right text-nowrap text-truncate align-self-center my-2">
+            {{ employee }}
+          </th>
+          <th class="col-4 border-right text-nowrap text-truncate align-self-center">
+            {{ employee.get_role_display }}
+          </th>
+        </tr>
+      {% empty %}
+        <li>No employees have been added yet.</li>
       {% endfor %}
-  	</ul>
+    </table>
   </div>
 
 {% endblock content %}
