@@ -4,3 +4,4 @@ __pycache__/
 *.sqlite3
 *.json
 linux_signing_key.pub
+envvar
