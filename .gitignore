@@ -1,14 +1,5 @@
-media/
-envvar
-static/admin
-static/rest_framework
 __pycache__/
 **/*.pyc
 **/__pycache__
 *.sqlite3
 *.json
-node_modules/
-rahco.sublime**
-logs/
-output
-erp/settings.py
