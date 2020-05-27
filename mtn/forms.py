@@ -27,7 +27,7 @@ class OrderUpdateForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['origin', 'local', 'ordertype', 'descr', 'repdate',
-                  'repby', 'cause', 'descrrep', 'timerep', 'closed', ]
+                  'repby', 'cause', 'descrrep', 'timerep',]
         labels = {'origin': 'Originator', 'local': 'Location',
                   'ordertype': 'Type', 'descr': 'Description',
                   'repby': 'Repaired by', 'repdate': 'Repair date',
