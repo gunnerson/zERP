@@ -23,3 +23,6 @@ class Employee(models.Model):
             return str(self.first_name) + " " + str(self.last_name)
         else:
             return str(self.first_name)
+
+    class Meta:
+        ordering = ['first_name']
