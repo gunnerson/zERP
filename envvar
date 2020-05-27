@@ -1,7 +1,0 @@
-DJANGO_SECRET_KEY="x$ruwio0cp5lm1bx2r@)_6v86gl=@2cjino934d0m2f0280kgv5k4850dkkdk0480dk0948948002rn43-or3ibzb#@a3z"
-DJANGO_DEBUG=False
-DJANGO_STATICFILES_DIRS=""
-DJANGO_STATIC_ROOT="/home/mtn/rahco-mtn/rahco/static"
-DJANGO_MEDIA_ROOT="/mnt/work-data/media"
-db_user="db_user"
-db_pass="yVa7uJ51"

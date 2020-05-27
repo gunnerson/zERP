@@ -21,8 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-DEBUG = False
+DEBUG = os.environ.get('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.138.184']
 
@@ -139,10 +138,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = []
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+STATICFILES_DIRS = [os.environ.get('DJANGO_STATICFILES_DIRS'), ]
+STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
+MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
 
 # My settings
 LOGIN_URL = '/users/login/'
