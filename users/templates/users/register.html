@@ -6,8 +6,8 @@
   {% csrf_token %}
   {{ form.as_p }}
 
-  <button name="submit">register</button>
+  <button name="submit" class="btn btn-rahco">register</button>
   <input type="hidden" name="next" value="{% url 'mtn:index' %}" />
   </form>
-  
+
 {% endblock content %}

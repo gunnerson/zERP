@@ -16,6 +16,10 @@ class Order(models.Model):
     NORMAL = 'NW'
     DAMAGE = 'DM'
     UNKNOWN = 'UN'
+    DOWN = 'DN'
+    STANDBY = 'SB'
+    PARTS = 'AP'
+    PRODUCTION = 'PR'
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
@@ -26,16 +30,23 @@ class Order(models.Model):
         (DAMAGE, 'Damage'),
         (UNKNOWN, 'Unknown'),
     ]
+    PRESS_STATUS = [
+        (STANDBY, 'Stand-by'),
+        (PRODUCTION, 'Production'),
+        (DOWN, 'Out of order'),
+        (REPAIR, 'Maintenance'),
+        (PARTS, 'Awaiting parts'),
+    ]
     ordertype = models.CharField(
         max_length=2,
         choices=ORDER_TYPE,
     )
-    origin = models.ForeignKey(Employee,
-                               on_delete=models.SET_NULL,
-                               null=True,
-                               limit_choices_to=Q(role='SV') | Q(role='MT'),
-                               related_name='+',
-                               )
+    # origin = models.ForeignKey(Employee,
+    #                            on_delete=models.SET_NULL,
+    #                            null=True,
+    #                            limit_choices_to=Q(role='SV') | Q(role='MT'),
+    #                            related_name='+',
+    #                            )
     local = models.ForeignKey(Press,
                               models.SET_NULL,
                               null=True,
@@ -60,6 +71,11 @@ class Order(models.Model):
                               on_delete=models.SET_NULL,
                               null=True,
                               )
+    status = models.CharField(
+        max_length=2,
+        choices=PRESS_STATUS,
+        default='SB',
+    )
     closed = models.BooleanField(default=False)
     parts = models.ManyToManyField(Part, through='invent.UsedPart')
 
@@ -88,3 +104,30 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.image.url)
+
+
+class Downtime(models.Model):
+    """Downtime sessions"""
+    REPAIR = 'RE'
+    PARTS = 'AP'
+    PENDING = 'PE'
+    DT_STATUS = [
+        (PENDING, 'Idle'),
+        (REPAIR, 'Work in progress'),
+        (PARTS, 'Awaiting parts'),
+    ]
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    start = models.DateTimeField(null=True)
+    end = models.DateTimeField(null=True)
+    dt_status = models.CharField(
+        max_length=2,
+        choices=DT_STATUS,
+        default='SB',
+    )
+    owner = models.ForeignKey(User,
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              )
+
+    def dur(self):
+        return self.end - self.start

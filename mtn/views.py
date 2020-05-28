@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
 
-from .models import Order, Image
+from .models import Order, Image, Downtime
 from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
@@ -103,6 +103,9 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"
         self.object.save()
+        if self.object.status == 'DN':
+            Downtime(order=self.object, start=timezone.now(),
+                     dt_status='PE').save()
         return redirect('mtn:order-list')
 
 
@@ -145,7 +148,7 @@ def add_pm(request, pk):
         else:
             new_pm = Order(
                 owner=request.user,
-                origin=Employee.objects.get(id=3),
+                # origin=Employee.objects.get(id=3),
                 local=press,
                 ordertype='PM',
                 cause='NW',
@@ -179,6 +182,10 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.cause = 'UN'
             if timereph == '' or timereph is None:
                 self.object.timerep = timezone.now() - self.object.date_added
+            dt_session = Downtime.objects.filter(order=self.object).last()
+            dt_session.end = timezone.now()
+            dt_session.save(update_fields=['end'])
+            self.object.status = 'SB'
         if timereph != '' and timereph is not None:
             self.object.timerep = timedelta(hours=float(timereph))
         self.object.save()
@@ -218,3 +225,37 @@ class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
+
+
+@login_required
+def start_repair(request, pk):
+    order = Order.objects.get(id=pk)
+    pending_session = Downtime.objects.filter(order=order).last()
+    pending_session.end = timezone.now()
+    pending_session.save(update_fields=['end'])
+    Downtime(order=order,
+             start=timezone.now(),
+             dt_status='RE',
+             owner=request.user,
+             ).save()
+    order.status = 'DN'
+    order.save(update_fields=['status'])
+
+
+@login_required
+def end_repair(request, pk):
+    order = Order.objects.get(id=pk)
+    pending_session = Downtime.objects.filter(order_id=pk).last()
+    pending_session.end = timezone.now()
+    pending_session.save(update_fields=['end'])
+    Downtime(order=order,
+             start=timezone.now(),
+             dt_status='PE',
+             ).save()
+
+
+@login_required
+def order_status(request, pk):
+    order = Order.objects.get(id=pk)
+    order.status = request.GET.get('order_status')
+    order.save(update_fields=['status'])

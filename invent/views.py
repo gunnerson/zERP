@@ -70,7 +70,12 @@ class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = PartCreateForm
 
     def test_func(self):
-        return has_group(self.request.user, 'maintenance')
+        if (has_group(self.request.user, 'maintenance') or
+                has_group(self.request.user, 'supervisor')):
+            test_func = True
+        else:
+            test_func = False
+        return test_func
 
 
 class PartDetailView(LoginRequiredMixin, DetailView):
@@ -85,7 +90,12 @@ class PartUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'invent/part_update_form.html'
 
     def test_func(self):
-        return has_group(self.request.user, 'maintenance')
+        if (has_group(self.request.user, 'maintenance') or
+                has_group(self.request.user, 'supervisor')):
+            test_func = True
+        else:
+            test_func = False
+        return test_func
 
 
 class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -159,7 +169,12 @@ class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = VendorCreateForm
 
     def test_func(self):
-        return has_group(self.request.user, 'maintenance')
+        if (has_group(self.request.user, 'maintenance') or
+                has_group(self.request.user, 'supervisor')):
+            test_func = True
+        else:
+            test_func = False
+        return test_func
 
 
 class VendorDetailView(LoginRequiredMixin, DetailView):
@@ -174,4 +189,9 @@ class VendorUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'invent/vendor_update_form.html'
 
     def test_func(self):
-        return has_group(self.request.user, 'maintenance')
+        if (has_group(self.request.user, 'maintenance') or
+                has_group(self.request.user, 'supervisor')):
+            test_func = True
+        else:
+            test_func = False
+        return test_func
