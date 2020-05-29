@@ -20,6 +20,7 @@ class Order(models.Model):
     STANDBY = 'SB'
     PARTS = 'AP'
     PRODUCTION = 'PR'
+    IDLE = 'ID'
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
@@ -30,12 +31,13 @@ class Order(models.Model):
         (DAMAGE, 'Damage'),
         (UNKNOWN, 'Unknown'),
     ]
-    PRESS_STATUS = [
-        (STANDBY, 'Stand-by'),
+    ORDER_STATUS = [
+        (STANDBY, 'Ready'),
         (PRODUCTION, 'Production'),
         (DOWN, 'Out of order'),
         (REPAIR, 'Maintenance'),
         (PARTS, 'Awaiting parts'),
+        (IDLE, 'Awaiting repairs'),
     ]
     ordertype = models.CharField(
         max_length=2,
@@ -73,7 +75,7 @@ class Order(models.Model):
                               )
     status = models.CharField(
         max_length=2,
-        choices=PRESS_STATUS,
+        choices=ORDER_STATUS,
         default='SB',
     )
     closed = models.BooleanField(default=False)
@@ -110,19 +112,18 @@ class Downtime(models.Model):
     """Downtime sessions"""
     REPAIR = 'RE'
     PARTS = 'AP'
-    PENDING = 'PE'
-    DT_STATUS = [
-        (PENDING, 'Idle'),
-        (REPAIR, 'Work in progress'),
+    IDLE = 'ID'
+    DT_TYPE = [
+        (IDLE, 'Awaiting repair'),
+        (REPAIR, 'Repair'),
         (PARTS, 'Awaiting parts'),
     ]
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
-    dt_status = models.CharField(
+    dt_type = models.CharField(
         max_length=2,
-        choices=DT_STATUS,
-        default='SB',
+        choices=DT_TYPE,
     )
     owner = models.ForeignKey(User,
                               on_delete=models.SET_NULL,

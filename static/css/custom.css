@@ -95,6 +95,12 @@ ul {
 .nav navbar-right {
 }
 
+.order-status {
+  font-weight: bold;
+  color: black;
+  text-shadow: 2px 2px 5px yellow;
+}
+
 .page-title-box .page-title {
   font-size: 1.3rem !important;
 }

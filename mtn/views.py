@@ -103,9 +103,9 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"
         self.object.save()
-        if self.object.status == 'DN':
+        if self.object.status == 'ID':
             Downtime(order=self.object, start=timezone.now(),
-                     dt_status='PE').save()
+                     dt_type='ID').save()
         return redirect('mtn:order-list')
 
 
@@ -228,34 +228,63 @@ class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 @login_required
-def start_repair(request, pk):
-    order = Order.objects.get(id=pk)
+def repair_toggle(request):
+    order_id = request.GET.get('order_id')
+    func = request.GET.get('func')
+    order = Order.objects.get(id=order_id)
+    if func == 'start':
+        new_type = 'RE'
+    else:
+        new_type = 'ID'
     pending_session = Downtime.objects.filter(order=order).last()
-    pending_session.end = timezone.now()
-    pending_session.save(update_fields=['end'])
+    if pending_session is not None:
+        pending_session.end = timezone.now()
+        pending_session.save(update_fields=['end'])
     Downtime(order=order,
              start=timezone.now(),
-             dt_status='RE',
-             owner=request.user,
+             dt_type=new_type,
              ).save()
-    order.status = 'DN'
+    order.status = new_type
     order.save(update_fields=['status'])
+    if func == 'stop':
+        return render(request, 'mtn/work_order_start.html')
+    else:
+        return render(request, 'mtn/work_order_pause.html')
 
 
-@login_required
-def end_repair(request, pk):
-    order = Order.objects.get(id=pk)
-    pending_session = Downtime.objects.filter(order_id=pk).last()
-    pending_session.end = timezone.now()
-    pending_session.save(update_fields=['end'])
-    Downtime(order=order,
-             start=timezone.now(),
-             dt_status='PE',
-             ).save()
+# @login_required
+# def start_repair(request):
+#     order_id = request.GET.get('order_id')
+#     order = Order.objects.get(id=order_id)
+#     pending_session = Downtime.objects.filter(order=order).last()
+#     if pending_session is not None:
+#         pending_session.end = timezone.now()
+#         pending_session.save(update_fields=['end'])
+#     Downtime(order=order,
+#              start=timezone.now(),
+#              dt_type='RE',
+#              owner=request.user,
+#              ).save()
+#     order.status = 'DN'
+#     order.save(update_fields=['status'])
+#     return render(request, 'mtn/work_order_pause.html')
 
 
-@login_required
-def order_status(request, pk):
-    order = Order.objects.get(id=pk)
-    order.status = request.GET.get('order_status')
-    order.save(update_fields=['status'])
+# @login_required
+# def end_repair(request):
+#     order_id = request.GET.get('order_id')
+#     order = Order.objects.get(id=order_id)
+#     new_type = 'RE'
+#     pending_session = Downtime.objects.filter(order=order).last()
+#     if pending_session is not None:
+#         pending_session.end = timezone.now()
+#         pending_session.save(update_fields=['end'])
+#         if pending_session.dt_type == 'RE':
+#             new_type = 'ID'
+#     Downtime(order=order,
+#              start=timezone.now(),
+#              dt_type=new_type,
+#              ).save()
+#     order.status = 'DN'
+#     order.save(update_fields=['status'])
+#     return render(request, 'mtn/work_order_start.html')

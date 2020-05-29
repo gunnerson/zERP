@@ -8,9 +8,11 @@ from .views import (
     OrderUpdateView,
     ImageCreateView,
     load_locales,
+    # start_repair,
+    # end_repair,
+    repair_toggle,
 )
 from invent.views import PartListView, OrderPartsListView
-from .forms import OrderCreateForm
 
 app_name = "mtn"
 
@@ -38,5 +40,11 @@ urlpatterns = [
 
     path('mwo/order/<int:pk>/add_image/',
          ImageCreateView.as_view(), name='image'),
+
+    # path('ajax/mwo/order/start/', start_repair, name='ajax_start_order'),
+
+    # path('ajax/mwo/order/stop/', end_repair, name='ajax_stop_order'),
+
+    path('ajax/mwo/order/toggle/', repair_toggle , name='ajax_repair_toggle'),
 
 ]
