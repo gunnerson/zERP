@@ -36,7 +36,7 @@
 
   <ul>
     <li>
-      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" class="side-menu-link" role="button">Back</a>
     </li>
   </ul>
 
@@ -64,26 +64,26 @@
         <div class="col-sm">
           {{ form.origin|as_crispy_field }}
         </div>
-          <div class="form-group col align-self-end" id="groupField">
-            <label class="requiredField" for="group_select">Group</label>
-            <select class="form-control" name="group" id="groupSelect">
-              <option value="PR">Production</option>
-              <option value="GN">General</option>
-              <option value="BD">Building</option>
-              <option value="LF">Lifting equipment</option>
-            </select>
-          </div>
-          <div class="form-group col align-self-end" id="subgroupField">
-            <label class="requiredField" for="subgroup_select">Type</label>
-            <select class="form-control" name="subgroup" id="subgroupSelect">
-              <option value="">All</option>
-              <option value="CN">Conventional</option>
-              <option value="VC">Vacuum</option>
-              <option value="IN">Injection</option>
-              <option value="PN">Punching</option>
-              <option value="OT">Other</option>
-            </select>
-          </div>
+        <div class="form-group col-sm" id="groupField">
+          <label class="requiredField" for="group_select">Group</label>
+          <select class="form-control" name="group" id="groupSelect">
+            <option value="PR">Production</option>
+            <option value="GN">General</option>
+            <option value="BD">Building</option>
+            <option value="LF">Lifting equipment</option>
+          </select>
+        </div>
+        <div class="form-group col-sm" id="subgroupField">
+          <label class="requiredField" for="subgroup_select">Type</label>
+          <select class="form-control" name="subgroup" id="subgroupSelect">
+            <option value="">All</option>
+            <option value="CN">Conventional</option>
+            <option value="VC">Vacuum</option>
+            <option value="IN">Injection</option>
+            <option value="PN">Punching</option>
+            <option value="OT">Other</option>
+          </select>
+        </div>
         <div class="col-sm">
           {{ form.local|as_crispy_field }}
         </div>

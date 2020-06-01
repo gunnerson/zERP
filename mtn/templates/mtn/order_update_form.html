@@ -36,7 +36,7 @@
           {{ form.status|as_crispy_field }}
         </div>
         <div class="col">
-          {{ form.owner|as_crispy_field }}
+          {{ form.origin|as_crispy_field }}
         </div>
         <div class="col">
           {{ form.local|as_crispy_field }}
@@ -49,13 +49,10 @@
       <br>
       <hr>
       <div class="row">
-        <div class="col">
+        <div class="col-3">
           {{ form.repby|as_crispy_field }}
         </div>
-        <div class="col">
-          {{ form.repdate|as_crispy_field }}
-        </div>
-        <div class="col">
+        <div class="col-2">
           {{ form.cause|as_crispy_field }}
         </div>
         <div class="col-2">

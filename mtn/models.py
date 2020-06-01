@@ -37,18 +37,17 @@ class Order(models.Model):
         (DOWN, 'Out of order'),
         (REPAIR, 'Maintenance'),
         (PARTS, 'Awaiting parts'),
-        (IDLE, 'Awaiting repairs'),
     ]
     ordertype = models.CharField(
         max_length=2,
         choices=ORDER_TYPE,
     )
-    # origin = models.ForeignKey(Employee,
-    #                            on_delete=models.SET_NULL,
-    #                            null=True,
-    #                            limit_choices_to=Q(role='SV') | Q(role='MT'),
-    #                            related_name='+',
-    #                            )
+    origin = models.ForeignKey(Employee,
+                               on_delete=models.SET_NULL,
+                               null=True,
+                               limit_choices_to=Q(role='SV') | Q(role='MT'),
+                               related_name='+',
+                               )
     local = models.ForeignKey(Press,
                               models.SET_NULL,
                               null=True,
@@ -58,6 +57,7 @@ class Order(models.Model):
     repby = models.ForeignKey(Employee,
                               on_delete=models.SET_NULL,
                               null=True,
+                              blank=True,
                               limit_choices_to={'role': "MT"},
                               )
     cause = models.CharField(
@@ -66,9 +66,9 @@ class Order(models.Model):
         max_length=2,
         choices=CAUSE_OF_REPAIR,
     )
-    descrrep = models.TextField(null=True)
+    descrrep = models.TextField(null=True, blank=True)
     timerep = models.DurationField(null=True, blank=True)
-    repdate = models.DateField(null=True, blank=True)
+    timerepidle = models.DurationField(null=True, blank=True)
     owner = models.ForeignKey(User,
                               on_delete=models.SET_NULL,
                               null=True,
@@ -125,10 +125,3 @@ class Downtime(models.Model):
         max_length=2,
         choices=DT_TYPE,
     )
-    owner = models.ForeignKey(User,
-                              on_delete=models.SET_NULL,
-                              null=True,
-                              )
-
-    def dur(self):
-        return self.end - self.start

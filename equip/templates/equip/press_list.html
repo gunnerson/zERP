@@ -91,7 +91,7 @@
   <div class="container justify-content-start ml-1">
     <table>
       {% for object in object_list %}
-        <tr class="clickable-row row border justify-content-start" data-href="{% url 'equip:press' object.id %}" style="width:500px;">
+        <tr class="clickable-row row border justify-content-start" data-href="{% url 'equip:press' object.id %}" style="width:700px;">
           <th class="col-6 border-right text-nowrap text-truncate align-self-center my-2">
             {{ object.pname }}
           </th>
@@ -99,15 +99,7 @@
             {{ object.get_group_display }}
           </th>
           <th class="col-3 align-self-center">
-            {% if object.id|press_status == "RE" %}
-              <div class="badge badge-danger py-2 mx-1">Out of Order</div>
-            {% elif object.id|press_status == "ST" %}
-              <div class="badge badge-warning py-2 mx-1">Setup Due</div>
-            {% elif object.id|press_status == "PM" %}
-              <div class="badge badge-info py-2 mx-1">PM Due</div>
-            {% else %}
-              <div class="badge badge-success py-2 mx-1">OK</div>
-            {% endif %}
+            {{ object.id|press_status }}
           </th>
         </tr>
       {% endfor %}

@@ -13,7 +13,7 @@ from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
 from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm
-from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs
+from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, is_empty_param
 
 
 def index(request):
@@ -103,10 +103,15 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 self.object.ordertype == "PM"):
             self.object.cause = "NW"
         self.object.save()
-        if self.object.status == 'ID':
+        if self.object.status == 'DN':
             Downtime(order=self.object, start=timezone.now(),
-                     dt_type='ID').save()
+                     dt_type='DN').save()
         return redirect('mtn:order-list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(request=self.request)
+        return kwargs
 
 
 @login_required
@@ -117,7 +122,7 @@ def load_locales(request):
         locales = Press.objects.filter(group=group, subgroup=subgroup)
     else:
         locales = Press.objects.filter(group=group)
-    return render(request, 'mtn/local_dropdown_list_options.html',
+    return render(request, 'mtn/elements/local_dropdown_list_options.html',
                   {'locales': locales})
 
 
@@ -170,24 +175,32 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return has_group(self.request.user, 'maintenance')
 
     def form_valid(self, form):
-        """If order closed fill empty repair date and cause"""
+        self.object = form.save(commit=False)
         check_closed = self.request.POST.get('check_closed', None)
         timereph = self.request.POST.get('timereph', None)
-        self.object = form.save(commit=False)
-        if check_closed is not None:
-            self.object.closed = True
-            if self.object.repdate == '' or self.object.repdate is None:
-                self.object.repdate = date.today()
-            if self.object.cause == '' or self.object.cause is None:
-                self.object.cause = 'UN'
-            if timereph == '' or timereph is None:
-                self.object.timerep = timezone.now() - self.object.date_added
-            dt_session = Downtime.objects.filter(order=self.object).last()
-            dt_session.end = timezone.now()
-            dt_session.save(update_fields=['end'])
-            self.object.status = 'SB'
-        if timereph != '' and timereph is not None:
+        if is_valid_param(timereph):
             self.object.timerep = timedelta(hours=float(timereph))
+        if check_closed is not None:
+            # Compress downtime sessions
+            dt_sessions = Downtime.objects.filter(order=self.object)
+            last_dt_session = dt_sessions.last()
+            last_dt_session.end = timezone.now()
+            last_dt_session.save(update_fields=['end'])
+            all_rep_sessions = dt_sessions.filter(dt_type='RE')
+            rep_dur = timedelta()
+            for session in all_rep_sessions:
+                rep_dur += (session.end - session.start)
+            if is_empty_param(timereph):
+                self.object.timerep = rep_dur
+            else:
+                self.object.timerep = timedelta(hours=float(timereph))
+            self.object.timerepidle = timezone.now() - \
+                self.object.date_added - self.object.timerep
+            dt_sessions.delete()
+            if is_empty_param(self.object.cause):
+                self.object.cause = 'UN'
+            self.object.closed = True
+            self.object.status = 'SB'
         self.object.save()
         return redirect(self.get_success_url())
 
@@ -228,12 +241,18 @@ class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 @login_required
-def repair_toggle(request):
-    order_id = request.GET.get('order_id')
-    func = request.GET.get('func')
-    order = Order.objects.get(id=order_id)
+def repair_toggle(request, pk, func):
+    order = Order.objects.get(id=pk)
     if func == 'start':
         new_type = 'RE'
+        if order.repby is None:
+            try:
+                repby_initial = Employee.objects.get(user=request.user)
+            except Employee.DoesNotExist:
+                repby_initial = None
+            if repby_initial is not None:
+                order.repby = repby_initial
+                order.save(update_fields=['repby'])
     else:
         new_type = 'ID'
     pending_session = Downtime.objects.filter(order=order).last()
@@ -246,45 +265,4 @@ def repair_toggle(request):
              ).save()
     order.status = new_type
     order.save(update_fields=['status'])
-    if func == 'stop':
-        return render(request, 'mtn/work_order_start.html')
-    else:
-        return render(request, 'mtn/work_order_pause.html')
-
-
-# @login_required
-# def start_repair(request):
-#     order_id = request.GET.get('order_id')
-#     order = Order.objects.get(id=order_id)
-#     pending_session = Downtime.objects.filter(order=order).last()
-#     if pending_session is not None:
-#         pending_session.end = timezone.now()
-#         pending_session.save(update_fields=['end'])
-#     Downtime(order=order,
-#              start=timezone.now(),
-#              dt_type='RE',
-#              owner=request.user,
-#              ).save()
-#     order.status = 'DN'
-#     order.save(update_fields=['status'])
-#     return render(request, 'mtn/work_order_pause.html')
-
-
-# @login_required
-# def end_repair(request):
-#     order_id = request.GET.get('order_id')
-#     order = Order.objects.get(id=order_id)
-#     new_type = 'RE'
-#     pending_session = Downtime.objects.filter(order=order).last()
-#     if pending_session is not None:
-#         pending_session.end = timezone.now()
-#         pending_session.save(update_fields=['end'])
-#         if pending_session.dt_type == 'RE':
-#             new_type = 'ID'
-#     Downtime(order=order,
-#              start=timezone.now(),
-#              dt_type=new_type,
-#              ).save()
-#     order.status = 'DN'
-#     order.save(update_fields=['status'])
-#     return render(request, 'mtn/work_order_start.html')
+    return redirect('mtn:order-list')

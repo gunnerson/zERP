@@ -6,11 +6,11 @@
 
   <ul>
     <li>
-      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" class="side-menu-link" role="button">Back</a>
     </li>
     {% if request.user|has_group:"maintenance" %}
       <li>
-        <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="side-menu-link">Edit order</a>
+        <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="side-menu-link">Update order</a>
       </li>
       <li>
         <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link">Add part</a>
@@ -42,15 +42,23 @@
 {% block content %}
 
   <div class="row">
-    <div class="col-md-6 col-xl-3">
+    <div class="col">
       <div class="card">
-        <div class="card-header supervisor"><b>Originator:</b></div>
+        <div class="card-header supervisor"><b>Status:</b></div>
         <div class="card-body">
-          <p class="card-text">{{ order.owner.first_name }}</p>
+          <p class="card-text">{{ order.get_status_display }}</p>
         </div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header supervisor"><b>Originator:</b></div>
+        <div class="card-body">
+          <p class="card-text">{{ order.origin }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
       <div class="card">
         <div class="card-header supervisor"><b>Location:</b></div>
         <div class="card-body">
@@ -60,7 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
+    <div class="col">
       <div class="card">
         <div class="card-header supervisor"><b>Type:</b></div>
         <div class="card-body">
@@ -68,7 +76,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
+    <div class="col">
        <div class="card">
         <div class="card-header supervisor"><b>Date:</b></div>
         <div class="card-body">
@@ -95,14 +103,6 @@
         <div class="card-header repair"><b>Repaired by:</b></div>
         <div class="card-body">
           <p class="card-text">{{ order.repby }}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-xl-3">
-       <div class="card">
-        <div class="card-header repair"><b>Repair date:</b></div>
-        <div class="card-body">
-          <p class="card-text">{{ order.repdate }}</p>
         </div>
       </div>
     </div>

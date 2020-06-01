@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Employee(models.Model):
@@ -17,6 +18,10 @@ class Employee(models.Model):
         max_length=2,
         choices=ROLES,
     )
+    user = models.ForeignKey(User,
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             )
 
     def __str__(self):
         if self.last_name is not None:

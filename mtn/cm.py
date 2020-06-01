@@ -53,6 +53,10 @@ def is_valid_param(param):
     return param != '' and param is not None
 
 
+def is_empty_param(param):
+    return param == '' or param is None
+
+
 def has_group(user, group_name):
     # Check if the user belongs to a certain group
     return user.groups.filter(name=group_name).exists()
@@ -66,6 +70,41 @@ def get_url_kwargs(request):
         for key, value in rkwargs:
             if is_valid_param(value) and key != 'page':
                 context[key] = value
-                p_name += "{0}={1}&".format(key,value)
+                p_name += "{0}={1}&".format(key, value)
         context['page_kwargs'] = p_name
         return context
+
+    # if(!!window.performance && window.performance.navigation.type == 2)
+    # {
+    #     window.location.reload();
+    # }
+
+    # var btns = document.querySelectorAll(".repairToggle");
+    # for (i = 0; i < btns.length; i++) {
+    #   btns[i].addEventListener("click", manageOrderStatus);
+    # }
+    # function manageOrderStatus() {
+    #   var order_id = this.getAttribute("order_id");
+    #   var func = this.getAttribute("func");
+    #   var btn = this;
+    #   var endpoint = "{% url 'mtn:ajax_repair_toggle' %}";
+    #   $.ajax({
+    #     url: endpoint,
+    #     type: "GET",
+    #     data: {
+    #       'order_id': order_id,
+    #       'func': func,
+    #     },
+    #     success: function (data) {
+    #       $(btn).html(data);
+    #       if(func == 'start'){
+    #         btn.setAttribute("func", "stop");
+    #       } else {
+    #         btn.setAttribute("func", "start");
+    #       }
+    #     },
+    #     error: function (error_data) {
+    #       console.log(error_data)
+    #     }
+    #   });
+    # }
