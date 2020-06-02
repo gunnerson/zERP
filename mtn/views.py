@@ -186,11 +186,13 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             last_dt_session = dt_sessions.last()
             if is_empty_param(timereph):
                 if dt_sessions.exists():
-                    if is_empty_param(last_dt_session.end):
+                    if last_dt_session.end is None:
                         last_dt_session.end = timezone.now()
                         last_dt_session.save(update_fields=['end'])
                     for session in dt_sessions:
-                        rep_dur += (session.end - session.start)
+                        if (is_valid_param(session.start) and
+                                is_valid_param(session.end)):
+                            rep_dur += (session.end - session.start)
                     self.object.timerep = rep_dur
             else:
                 self.object.timerep = timedelta(hours=float(timereph))
