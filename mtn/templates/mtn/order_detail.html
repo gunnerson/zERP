@@ -9,9 +9,11 @@
       <a href="" onClick="window.location.replace(document.referrer);return false;" class="side-menu-link" role="button">Back</a>
     </li>
     {% if request.user|has_group:"maintenance" %}
-      <li>
-        <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="side-menu-link">Update order</a>
-      </li>
+      {% if order.closed == False %}
+        <li>
+          <a href="{% url 'mtn:edit_order' order.id %}" role="button" class="side-menu-link">Update order</a>
+        </li>
+      {% endif %}
       <li>
         <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link">Add part</a>
       </li>

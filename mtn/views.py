@@ -183,8 +183,9 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             # Compress downtime sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
             last_dt_session = dt_sessions.last()
-            last_dt_session.end = timezone.now()
-            last_dt_session.save(update_fields=['end'])
+            if is_empty_param(last_dt_session.end):
+                last_dt_session.end = timezone.now()
+                last_dt_session.save(update_fields=['end'])
             rep_dur = timedelta()
             for session in dt_sessions:
                 rep_dur += (session.end - session.start)
