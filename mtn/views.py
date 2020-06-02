@@ -182,19 +182,28 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if check_closed is not None:
             # Compress downtime sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
-            last_dt_session = dt_sessions.last()
-            if is_empty_param(last_dt_session.end):
-                last_dt_session.end = timezone.now()
-                last_dt_session.save(update_fields=['end'])
             rep_dur = timedelta()
-            for session in dt_sessions:
-                rep_dur += (session.end - session.start)
+            last_dt_session = dt_sessions.last()
+            if dt_sessions.exists():
+                if is_empty_param(last_dt_session.end):
+                    last_dt_session.end = timezone.now()
+                    last_dt_session.save(update_fields=['end'])
+                for session in dt_sessions:
+                    rep_dur += (session.end - session.start)
             if is_empty_param(timereph):
-                self.object.timerep = rep_dur
+                if rep_dur != timedelta():
+                    self.object.timerep = rep_dur
             else:
                 self.object.timerep = timedelta(hours=float(timereph))
-            self.object.timerepidle = last_dt_session.end - \
-                self.object.date_added - self.object.timerep
+            if dt_sessions.exists() and is_valid_param(self.object.timerep):
+                self.object.timerepidle = last_dt_session.end - \
+                    self.object.date_added - self.object.timerep
+            elif is_valid_param(self.object.timerep):
+                self.object.timerepidle = timezone.now() - \
+                    self.object.date_added - self.object.timerep
+            else:
+                self.object.timerepidle = timezone.now() - \
+                    self.object.date_added
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
                 self.object.cause = 'UN'

@@ -62,6 +62,7 @@ class OrderUpdateForm(forms.ModelForm):
             self.fields['descr'].disabled = True
 
 
+
 class ImageCreateForm(forms.ModelForm):
     class Meta:
         model = Image
