@@ -192,7 +192,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.timerep = rep_dur
             else:
                 self.object.timerep = timedelta(hours=float(timereph))
-            self.object.timerepidle = last_rep_session.end - \
+            self.object.timerepidle = last_dt_session.end - \
                 self.object.date_added - self.object.timerep
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
