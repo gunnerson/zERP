@@ -258,12 +258,23 @@ def repair_toggle(request, pk, func):
         new_status = 'DN'
         pending_session = Downtime.objects.filter(order=order).last()
         if pending_session is not None:
-            pending_session.end = timezone.now()
-            pending_session.save(update_fields=['end'])
+            if is_empty_param(pending_session.end):
+                pending_session.end = timezone.now()
+                pending_session.save(update_fields=['end'])
     elif func == 'ready':
         new_status = 'SB'
+        pending_session = Downtime.objects.filter(order=order).last()
+        if pending_session is not None:
+            if is_empty_param(pending_session.end):
+                pending_session.end = timezone.now()
+                pending_session.save(update_fields=['end'])
     else:
         new_status = 'AP'
+        pending_session = Downtime.objects.filter(order=order).last()
+        if pending_session is not None:
+            if is_empty_param(pending_session.end):
+                pending_session.end = timezone.now()
+                pending_session.save(update_fields=['end'])
     order.status = new_status
     order.save(update_fields=['status'])
     return redirect('mtn:order-list')
