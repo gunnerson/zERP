@@ -104,8 +104,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             self.object.cause = "NW"
         self.object.save()
         if self.object.status == 'DN':
-            Downtime(order=self.object, start=timezone.now(),
-                     dt_type='DN').save()
+            Downtime(order=self.object, start=timezone.now()).save()
         return redirect('mtn:order-list')
 
     def get_form_kwargs(self):
@@ -187,6 +186,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             last_dt_session.end = timezone.now()
             last_dt_session.save(update_fields=['end'])
             all_rep_sessions = dt_sessions.filter(dt_type='RE')
+            last_rep_session = all_rep_sessions.last()
             rep_dur = timedelta()
             for session in all_rep_sessions:
                 rep_dur += (session.end - session.start)
@@ -194,7 +194,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.timerep = rep_dur
             else:
                 self.object.timerep = timedelta(hours=float(timereph))
-            self.object.timerepidle = timezone.now() - \
+            self.object.timerepidle = last_rep_session.end - \
                 self.object.date_added - self.object.timerep
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
@@ -244,7 +244,7 @@ class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 def repair_toggle(request, pk, func):
     order = Order.objects.get(id=pk)
     if func == 'start':
-        new_type = 'RE'
+        new_status = 'RE'
         if order.repby is None:
             try:
                 repby_initial = Employee.objects.get(user=request.user)
@@ -253,16 +253,17 @@ def repair_toggle(request, pk, func):
             if repby_initial is not None:
                 order.repby = repby_initial
                 order.save(update_fields=['repby'])
+        Downtime(order=order, start=timezone.now()).save()
+    elif func == 'stop':
+        new_status = 'DN'
+        pending_session = Downtime.objects.filter(order=order).last()
+        if pending_session is not None:
+            pending_session.end = timezone.now()
+            pending_session.save(update_fields=['end'])
+    elif func == 'ready':
+        new_status = 'SB'
     else:
-        new_type = 'ID'
-    pending_session = Downtime.objects.filter(order=order).last()
-    if pending_session is not None:
-        pending_session.end = timezone.now()
-        pending_session.save(update_fields=['end'])
-    Downtime(order=order,
-             start=timezone.now(),
-             dt_type=new_type,
-             ).save()
-    order.status = new_type
+        new_status = 'AP'
+    order.status = new_status
     order.save(update_fields=['status'])
     return redirect('mtn:order-list')

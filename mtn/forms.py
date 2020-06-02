@@ -10,7 +10,7 @@ class OrderCreateForm(forms.ModelForm):
         fields = ['origin', 'local', 'ordertype', 'descr', 'status', ]
         labels = {'origin': 'Originator', 'local': 'Location',
                   'ordertype': 'Type', 'descr': 'Description',
-                  'status': 'Status',
+                  'status': 'Priority',
                   }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
