@@ -7,6 +7,7 @@ from equip.views import (
     DowntimeChartData,
     UploadCreateView,
     load_map,
+    MapData,
 )
 
 from mtn.views import (
@@ -19,6 +20,7 @@ app_name = "equip"
 urlpatterns = [
     path('equipment/', PressListView.as_view(), name='presslist'),
     path('equipment/map', load_map, name='load_map'),
+    path('api/data/equipment/map', MapData.as_view(), name='map-data'),
     path('equipment/press/<int:pk>/', PressDetailView.as_view(), name='press'),
     path('equipment/press/<int:pk>/add_pm/', add_pm,
          name='add_pm'),

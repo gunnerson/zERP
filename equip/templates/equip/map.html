@@ -7,6 +7,27 @@
 
     $("#sidebarBlock").hide();
 
+    var press = document.querySelectorAll("rect");
+    var presses = [];
+    var endpoint = "{% url 'equip:map-data' %}"
+
+    for (i = 0; i < press.length; i++) {
+      // press[i].addEventListener("click", pressOnClick);
+      presses.push(parseInt(press[i].getAttribute("press")));
+    }
+
+    $.ajax({
+      method: "GET",
+      url: endpoint,
+      data: { 'presses' : presses,  },
+      success: function(qs_json){
+          console.log(qs_json)
+      },
+      error: function(error_data){
+        console.log(error_data)
+      }
+    })
+
    {% endblock %}
 </script>
 
