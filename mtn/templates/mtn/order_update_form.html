@@ -30,7 +30,7 @@
 
   <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
-
+      <h5 style="color: red;">{{ form.errors.timerep }}</h5>
       <div class="row">
         <div class="col">
           {{ form.status|as_crispy_field }}
@@ -66,10 +66,7 @@
       </div>
       {{ form.descrrep|as_crispy_field }}
       {% if order.closed == False %}
-        <div class="form-group form-check align-self-center">
-          <input type="checkbox" class="form-check-input" name="check_closed" id="exampleCheck1">
-          <label class="form-check-label" for="exampleCheck1">Closed</label>
-        </div>
+        {{ form.closed|as_crispy_field }}
       {% endif %}
     <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
     <br>

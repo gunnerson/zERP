@@ -59,7 +59,7 @@
 
         <ul class="navbar-nav navbar-right" style="color:white; white-space: nowrap;">
           {% if user.is_authenticated %}
-            <li><a>Hello, {{ user.username }}. &nbsp</a></li>
+            <li><a>Hello, {{ user.first_name }}. &nbsp</a></li>
             <li><a href="{% url 'users:logout' %}" style="color:white;">log out</a></li>
           {% else %}
             <li><a href="{% url 'users:register' %}" style="color:white;">register &nbsp</a></li>

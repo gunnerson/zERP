@@ -175,11 +175,11 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        check_closed = self.request.POST.get('check_closed', None)
+        # check_closed = self.request.POST.get('check_closed', None)
         timereph = self.request.POST.get('timereph', None)
         if is_valid_param(timereph):
             self.object.timerep = timedelta(hours=float(timereph))
-        if check_closed is not None:
+        if self.object.closed:
             # Compress downtime sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
             rep_dur = timedelta()
@@ -208,7 +208,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
                 self.object.cause = 'UN'
-            self.object.closed = True
+            # self.object.closed = True
             self.object.status = 'SB'
         self.object.save()
         return redirect(self.get_success_url())
@@ -220,6 +220,16 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             timereph = timereph.total_seconds() / 3600
         context['timereph'] = timereph
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        dt_sessions = Downtime.objects.filter(order=self.object)
+        if dt_sessions.exists():
+            has_dt_sessions = True
+        else:
+            has_dt_sessions = False
+        kwargs.update(has_dt=has_dt_sessions)
+        return kwargs
 
 
 class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

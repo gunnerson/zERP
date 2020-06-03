@@ -123,17 +123,21 @@
                   <a href="{% url 'mtn:repair_toggle' pk=order.id func='stop' %}">
                     {% include 'mtn/elements/pause-button.html'%}
                   </a>
-                  {% else %}
+                {% else %}
                   <a href="{% url 'mtn:repair_toggle' pk=order.id func='start' %}">
                     {% include 'mtn/elements/start-button.html'%}
                   </a>
-                  {% endif %}
+                {% endif %}
+                {% if order.status != 'AP' %}
                   <a href="{% url 'mtn:repair_toggle' pk=order.id func='parts' %}">
                     {% include 'mtn/elements/parts-button.html'%}
                   </a>
+                {% endif %}
+                {% if order.status != 'SB' %}
                   <a href="{% url 'mtn:repair_toggle' pk=order.id func='ready' %}">
                     {% include 'mtn/elements/ok-button.html'%}
                   </a>
+                {% endif %}
                 </div>
               {% endif %}
               {% if order.ordertype == "ST" %}

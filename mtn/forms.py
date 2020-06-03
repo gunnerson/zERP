@@ -2,6 +2,7 @@ from django import forms
 
 from .models import Order, Image
 from staff.models import Employee
+from .cm import is_empty_param
 
 
 class OrderCreateForm(forms.ModelForm):
@@ -38,7 +39,7 @@ class OrderUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['origin', 'local', 'ordertype', 'descr',
+        fields = ['origin', 'local', 'ordertype', 'descr', 'closed',
                   'repby', 'cause', 'descrrep', 'timerep', 'status', ]
         labels = {'origin': 'Originator', 'local': 'Location',
                   'ordertype': 'Type', 'descr': 'Description',
@@ -51,6 +52,7 @@ class OrderUpdateForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.has_dt = kwargs.pop('has_dt')
         super(OrderUpdateForm, self).__init__(*args, **kwargs)
         self.fields['origin'].disabled = True
         self.fields['local'].disabled = True
@@ -61,11 +63,20 @@ class OrderUpdateForm(forms.ModelForm):
             self.fields['ordertype'].disabled = True
             self.fields['descr'].disabled = True
 
+    def clean(self):
+        cleaned_data = super().clean()
+        cc_timerep = cleaned_data.get("timerep")
+        cc_closed = cleaned_data.get("closed")
+        if cc_closed and is_empty_param(cc_timerep) and self.has_dt is False:
+            cleaned_data.update({'closed': False})
+            msg = forms.ValidationError(
+                ('No downtime sessions clocked. Please fill-in repair time field'),
+                code='invalid')
+            self.add_error('timerep', msg)
 
 
 class ImageCreateForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ['image']
-        labels = {'image': '',
-                  }
+        labels = {'image': '', }
