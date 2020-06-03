@@ -175,11 +175,11 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        check_closed = self.request.POST.get('check_closed', None)
+        # Convert repair time input to hours
         timerep = self.object.timerep
         if is_valid_param(timerep):
-            timereps = timerep.microseconds / 1000000
-            self.object.timerep = timedelta(hours=timereps)
+            timereph = timerep.seconds + timerep.microseconds / 1000000
+            self.object.timerep = timedelta(hours=timereph)
         if self.object.closed:
             # Compress downtime sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
