@@ -175,6 +175,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+        check_closed = self.request.POST.get('check_closed', None)
         timerep = self.object.timerep
         if is_valid_param(timerep):
             timereps = timerep.microseconds / 1000000
