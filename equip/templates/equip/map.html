@@ -1,0 +1,34 @@
+{% extends "mtn/base.html" %}
+
+
+
+<script>
+  {% block jquery %}
+
+    $("#sidebarBlock").hide();
+
+   {% endblock %}
+</script>
+
+{% block left-menu %}{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item active">Map</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Floor map</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <img>{% include 'equip/elements/map.svg'%}</img>
+
+{% endblock content %}
+
+
+

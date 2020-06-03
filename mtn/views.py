@@ -175,10 +175,10 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        # check_closed = self.request.POST.get('check_closed', None)
-        timereph = self.request.POST.get('timereph', None)
-        if is_valid_param(timereph):
-            self.object.timerep = timedelta(hours=float(timereph))
+        timerep = self.object.timerep
+        if is_valid_param(timerep):
+            timereps = timerep.microseconds / 1000000
+            self.object.timerep = timedelta(hours=timereps)
         if self.object.closed:
             # Compress downtime sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
@@ -225,10 +225,10 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         dt_sessions = Downtime.objects.filter(order=self.object)
         if dt_sessions.exists():
-            has_dt_sessions = True
+            has_dt = True
         else:
-            has_dt_sessions = False
-        kwargs.update(has_dt=has_dt_sessions)
+            has_dt = False
+        kwargs.update(has_dt=has_dt)
         return kwargs
 
 

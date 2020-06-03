@@ -109,14 +109,14 @@
     {% for order in object_list %}
       <div class="col-md-6 col-xl-3">
         <!-- project card -->
-        <a href="{% url 'mtn:order' order.id %}">
           <div class="card d-block">
             <div class="card-body">
               <!-- project title-->
               <h4 class="mt-0">
+                <a href="{% url 'mtn:order' order.id %}">
                   <span class="text-title">{{ order.local }}</span>
+                </a>
               </h4>
-        </a>
               {% if order.closed == False and request.user|has_group:"maintenance"%}
                 <div type="button" class="float-right mx-3 repairToggle">
                 {% if order.status == 'RE' %}

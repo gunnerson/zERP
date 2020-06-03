@@ -1,5 +1,5 @@
 import calendar
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
@@ -239,3 +239,7 @@ class DowntimeChartData(RetrieveAPIView):
             "default": dts,
         }
         return Response(data)
+
+
+def load_map(request):
+    return render(request, 'equip/map.html')
