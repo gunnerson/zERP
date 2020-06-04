@@ -13,6 +13,15 @@
     for (i = 0; i < pressList.length; i++) {
       // press[i].addEventListener("click", pressOnClick);
       pressIdList.push(parseInt(pressList[i].getAttribute("press")));
+      var pg = pressList[i].parentElement
+      var pgt = pg.lastElementChild
+      var pgtt = pgt.firstElementChild
+      var pgr = pressList[i]
+      var tl = pgr.getAttribute("width");
+      var pgx = pg.getAttribute("x");
+      var pgy = pg.getAttribute("y");
+      pgtt.setAttribute("x", pgx)
+      pgtt.setAttribute("y", pgy)
     };
 
     $.ajax({

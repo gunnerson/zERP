@@ -44,7 +44,7 @@ svg .awaiting_parts {
 
 svg tspan {
   fill: black!important;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 svg text {
