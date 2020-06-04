@@ -1,32 +1,43 @@
 {% extends "mtn/base.html" %}
 
-
-
 <script>
   {% block jquery %}
 
     $("#sidebarBlock").hide();
 
-    var press = document.querySelectorAll("rect");
-    var presses = [];
+    var pressList = document.querySelectorAll("rect");
+    var pressIdList = [];
+    var statusDict = {};
     var endpoint = "{% url 'equip:map-data' %}"
 
-    for (i = 0; i < press.length; i++) {
+    for (i = 0; i < pressList.length; i++) {
       // press[i].addEventListener("click", pressOnClick);
-      presses.push(parseInt(press[i].getAttribute("press")));
-    }
+      pressIdList.push(parseInt(pressList[i].getAttribute("press")));
+    };
 
     $.ajax({
       method: "GET",
       url: endpoint,
-      data: { 'presses' : presses,  },
-      success: function(qs_json){
-          console.log(qs_json)
+      data: { 'pressIdList' : pressIdList,  },
+      success: function(data){
+        statusDict = data.statusDict
+        updateStatus(statusDict)
       },
       error: function(error_data){
         console.log(error_data)
       }
-    })
+    });
+
+    function updateStatus(data){
+      const object = data;
+      for (const [key, value] of Object.entries(object)) {
+        for (i = 0; i < pressList.length; i++) {
+          if(pressList[i].getAttribute("press") == key){
+            pressList[i].classList.add(value.toLowerCase().replace(/ /g,"_"));
+          };
+        };
+      };
+    };
 
    {% endblock %}
 </script>
@@ -47,7 +58,7 @@
 
 {% block content %}
 
-  <img>{% include 'equip/elements/map.svg'%}</img>
+  {% include 'equip/elements/map.svg'%}
 
 {% endblock content %}
 

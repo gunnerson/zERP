@@ -77,14 +77,15 @@ class Press(models.Model):
             last_pm_date = 'Never'
         return last_pm_date
 
-    def press_status(self):
+    def status(self):
         """Get press status"""
         last_order = self.order_set.last()
         if last_order is not None:
-            press_status = last_order.get_status_display()
+            status = last_order.get_status_display()
         else:
-            press_status = 'Ready'
-        return press_status
+            status = 'Ready'
+        return status
+
 
 class Upload(models.Model):
     """Uploaded files with press documentaiton"""

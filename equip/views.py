@@ -10,8 +10,6 @@ from rest_framework.response import Response
 from pathlib import Path
 from django.contrib import messages
 from django.db.models import Q
-from django.core import serializers
-from django.http import HttpResponse
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload
@@ -249,15 +247,14 @@ def load_map(request):
 
 class MapData(RetrieveAPIView):
     """Get data for floor map"""
-    # authentication_classes = []
-    # permission_classes = []
-    # queryset = Press.objects.all()
 
     def get(self, request, *args, **kwargs):
-        presses = request.GET.getlist('presses[]')
-        qs = Press.objects.filter(id__in=presses)
-        # qs.annotate(press_status=Press.press_status())
-        # for press in qs:
-        #     press.annotate(press_status=Press.press_status(press))
-        qs_json = serializers.serialize('json', qs)
-        return HttpResponse(qs_json, content_type='application/json')
+        id_list = request.GET.getlist('pressIdList[]')
+        status_dict = {}
+        qs = Press.objects.filter(id__in=id_list)
+        for press in qs:
+            status_dict.update({press.id: press.status()})
+        data = {
+            "statusDict": status_dict,
+        }
+        return Response(data)

@@ -26,6 +26,32 @@ nav {
   background-color: #336699;
 }
 
+svg .ready {
+  fill: green!important;
+}
+svg .production {
+  fill: purple!important;
+}
+svg .out_of_order {
+  fill: red!important;
+}
+svg .maintenance {
+  fill: yellow!important;
+}
+svg .awaiting_parts {
+  fill: blue!important;
+}
+
+svg tspan {
+  fill: black!important;
+  font-size: 10px;
+}
+
+svg text {
+  text-align: center;
+  width: 75%;
+}
+
 ul {
   list-style-type: none;
 }
