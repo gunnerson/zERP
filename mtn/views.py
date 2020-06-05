@@ -185,7 +185,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             dt_sessions = Downtime.objects.filter(order=self.object)
             rep_dur = timedelta()
             last_dt_session = dt_sessions.last()
-            if is_empty_param(timereph):
+            if is_empty_param(timerep):
                 if dt_sessions.exists():
                     if last_dt_session.end is None:
                         last_dt_session.end = timezone.now()
