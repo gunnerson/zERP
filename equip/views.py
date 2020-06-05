@@ -1,4 +1,5 @@
 import calendar
+import json
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from datetime import timedelta
@@ -7,12 +8,14 @@ from django.views.generic.edit import UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
+# from rest_framework import serializers
 from pathlib import Path
 from django.contrib import messages
 from django.db.models import Q
+from django.core import serializers
 # from rest_framework import authentication, permissions
 
-from .models import Press, Upload
+from .models import Press, Upload, Imprint
 from mtn.models import Order
 from mtn.cm import has_group
 from .forms import PressUpdateForm, UploadCreateForm
@@ -249,12 +252,30 @@ class MapData(RetrieveAPIView):
     """Get data for floor map"""
 
     def get(self, request, *args, **kwargs):
+
+        # Generate imprints from existing SVG
+        # imprint_array = json.loads(request.GET['imprintArray'])
+        # for imprint in imprint_array:
+        #     press = Press.objects.get(id=imprint.get('press_id'))
+        #     Imprint(
+        #         press=press,
+        #         x=int(imprint.get('x')),
+        #         y=int(imprint.get('y')),
+        #         width=int(imprint.get('width')),
+        #         height=int(imprint.get('height'))
+        #     ).save()
+
+        imps = serializers.serialize('json', Imprint.objects.all())
+
         id_list = request.GET.getlist('pressIdList[]')
+        print('>>>>>>>>>>>>>>>>>>', id_list)
         status_dict = {}
         qs = Press.objects.filter(id__in=id_list)
         for press in qs:
             status_dict.update({press.id: press.status()})
+
         data = {
             "statusDict": status_dict,
+            "impsDict": imps,
         }
         return Response(data)

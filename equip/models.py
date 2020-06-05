@@ -95,3 +95,15 @@ class Upload(models.Model):
 
     def __str__(self):
         return str(self.descr)
+
+
+class Imprint(models.Model):
+    """Press drawing"""
+    press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
+    x = models.IntegerField()
+    y = models.IntegerField()
+    width = models.IntegerField()
+    height = models.IntegerField()
+
+    def __str__(self):
+        return str(self.press.pname)

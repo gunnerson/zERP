@@ -8,29 +8,56 @@
     var pressList = document.querySelectorAll("rect");
     var pressIdList = [];
     var statusDict = {};
-    var endpoint = "{% url 'equip:map-data' %}"
+    var endpoint = "{% url 'equip:map-data' %}";
+    var imprintArray = [];
 
     for (i = 0; i < pressList.length; i++) {
-      // press[i].addEventListener("click", pressOnClick);
+      // pressList[i].addEventListener("click", pressOnClick);
       pressIdList.push(parseInt(pressList[i].getAttribute("press")));
-      var pg = pressList[i].parentElement
-      var pgt = pg.lastElementChild
-      var pgtt = pgt.firstElementChild
-      var pgr = pressList[i]
-      var tl = pgr.getAttribute("width");
-      var pgx = pg.getAttribute("x");
-      var pgy = pg.getAttribute("y");
-      pgt.setAttribute("x", pgx)
-      pgt.setAttribute("y", pgy)
+      // var pg = pressList[i].parentElement
+      // var pgt = pg.lastElementChild
+      // var pgtt = pgt.firstElementChild
+      // var pgr = pressList[i]
+      // var tl = pgr.getAttribute("width");
+      // var pgx = pg.getAttribute("x");
+      // var pgy = pg.getAttribute("y");
+      // pgt.setAttribute("x", pgx)
+      // pgt.setAttribute("y", pgy)
+    };
+
+    function drawMap(data){
+      console.log(data)
+    }
+
+    function reapImprints(){
+      for (i = 0; i < pressList.length; i++) {
+        var pr = pressList[i]
+        var prid = pr.getAttribute("press");
+        var prx = Math.round(pr.getAttribute("x"));
+        var pry = Math.round(pr.getAttribute("y"));
+        var prwidth = Math.round(pr.getAttribute("width"));
+        var prheight = Math.round(pr.getAttribute("height"));
+        var imprint = {
+          "press_id" : prid,
+          "x" : prx,
+          "y" : pry,
+          "width" : prwidth,
+          "height" : prheight
+        };
+        imprintArray.push(imprint);
+      };
     };
 
     $.ajax({
       method: "GET",
       url: endpoint,
-      data: { 'pressIdList' : pressIdList,  },
+      data: {
+        "pressIdList" : pressIdList,
+        // "imprintArray" : JSON.stringify(imprintArray),
+      },
       success: function(data){
-        statusDict = data.statusDict
-        updateStatus(statusDict)
+        updateStatus(data.statusDict);
+        drawMap(JSON.parse(data.impsDict));
       },
       error: function(error_data){
         console.log(error_data)
