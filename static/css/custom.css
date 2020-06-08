@@ -26,6 +26,10 @@ nav {
   background-color: #336699;
 }
 
+svg rect:hover {
+  cursor: pointer;
+}
+
 svg .ready {
   fill: green!important;
 }
@@ -43,8 +47,9 @@ svg .awaiting_parts {
 }
 
 svg tspan {
-  fill: black!important;
-  font-size: 12px;
+  fill: white!important;
+  font-size: 6px;
+  cursor: pointer;
 }
 
 svg text {

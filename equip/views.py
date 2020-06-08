@@ -252,7 +252,6 @@ class MapData(RetrieveAPIView):
     """Get data for floor map"""
 
     def get(self, request, *args, **kwargs):
-
         # Generate imprints from existing SVG
         # imprint_array = json.loads(request.GET['imprintArray'])
         # for imprint in imprint_array:
@@ -264,18 +263,19 @@ class MapData(RetrieveAPIView):
         #         width=int(imprint.get('width')),
         #         height=int(imprint.get('height'))
         #     ).save()
-
-        imps = serializers.serialize('json', Imprint.objects.all())
-
-        id_list = request.GET.getlist('pressIdList[]')
-        print('>>>>>>>>>>>>>>>>>>', id_list)
+        imps = Imprint.objects.all()
+        imps_json = serializers.serialize('json', imps)
+        id_list = imps.values_list('press', flat=True)
         status_dict = {}
+        span_dict = {}
         qs = Press.objects.filter(id__in=id_list)
         for press in qs:
             status_dict.update({press.id: press.status()})
-
+            short_name = press.pname.split(' ')[-1]
+            span_dict.update({press.id: short_name})
         data = {
             "statusDict": status_dict,
-            "impsDict": imps,
+            "spanDict": span_dict,
+            "impsDict": imps_json,
         }
         return Response(data)

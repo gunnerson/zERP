@@ -13,7 +13,8 @@ from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
 from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm
-from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, is_empty_param
+from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, \
+    is_empty_param
 
 
 def index(request):
@@ -185,6 +186,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             dt_sessions = Downtime.objects.filter(order=self.object)
             rep_dur = timedelta()
             last_dt_session = dt_sessions.last()
+            first_dt_session = dt_sessions.first()
             if is_empty_param(timerep):
                 if dt_sessions.exists():
                     if last_dt_session.end is None:
@@ -199,7 +201,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.timerep = timedelta(hours=float(timereph))
             if dt_sessions.exists() and is_valid_param(self.object.timerep):
                 self.object.timerepidle = last_dt_session.end - \
-                    self.object.date_added - self.object.timerep
+                    first_dt_session.start - self.object.timerep
             elif is_valid_param(self.object.timerep):
                 self.object.timerepidle = timezone.now() - \
                     self.object.date_added - self.object.timerep

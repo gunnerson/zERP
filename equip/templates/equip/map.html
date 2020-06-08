@@ -5,75 +5,66 @@
 
     $("#sidebarBlock").hide();
 
-    var pressList = document.querySelectorAll("rect");
-    var pressIdList = [];
-    var statusDict = {};
-    var endpoint = "{% url 'equip:map-data' %}";
-    var imprintArray = [];
-
-    for (i = 0; i < pressList.length; i++) {
-      // pressList[i].addEventListener("click", pressOnClick);
-      pressIdList.push(parseInt(pressList[i].getAttribute("press")));
-      // var pg = pressList[i].parentElement
-      // var pgt = pg.lastElementChild
-      // var pgtt = pgt.firstElementChild
-      // var pgr = pressList[i]
-      // var tl = pgr.getAttribute("width");
-      // var pgx = pg.getAttribute("x");
-      // var pgy = pg.getAttribute("y");
-      // pgt.setAttribute("x", pgx)
-      // pgt.setAttribute("y", pgy)
-    };
-
     function drawMap(data){
-      console.log(data)
-    }
-
-    function reapImprints(){
-      for (i = 0; i < pressList.length; i++) {
-        var pr = pressList[i]
-        var prid = pr.getAttribute("press");
-        var prx = Math.round(pr.getAttribute("x"));
-        var pry = Math.round(pr.getAttribute("y"));
-        var prwidth = Math.round(pr.getAttribute("width"));
-        var prheight = Math.round(pr.getAttribute("height"));
-        var imprint = {
-          "press_id" : prid,
-          "x" : prx,
-          "y" : pry,
-          "width" : prwidth,
-          "height" : prheight
+      const impData = JSON.parse(data.impsDict)
+      const statusData = data.statusDict
+      const spanData = data.spanDict
+      var svgMap = document.getElementsByClassName('container-fluid')[1].lastElementChild;
+      for (i = 0; i < impData.length; i++) {
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        var press = impData[i]["fields"]["press"];
+        var width = impData[i]["fields"]["width"];
+        var height = impData[i]["fields"]["height"];
+        var x = impData[i]["fields"]["x"];
+        var y = impData[i]["fields"]["y"];
+        rect.setAttribute('id', 'rect' + press);
+        rect.setAttribute('width', width);
+        rect.setAttribute('height', height);
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', y);
+        svgMap.appendChild(rect);
+        var txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute('id', 'text' + press);
+        txt.setAttribute('width', width);
+        txt.setAttribute('height', height);
+        txt.setAttribute('y', y + height - (height - 4) / 2);
+        svgMap.appendChild(txt);
+        var tsp = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+        txt.appendChild(tsp);
+        for (const [key, value] of Object.entries(statusData)) {
+          if(impData[i]["fields"]["press"] == key){
+            rect.classList.add(value.toLowerCase().replace(/ /g,"_"));
+            rect.addEventListener("click", function(){
+              window.location = "/equipment/press/" + key;
+            });
+          };
         };
-        imprintArray.push(imprint);
+        for (const [key, value] of Object.entries(spanData)) {
+          if(impData[i]["fields"]["press"] == key){
+            tsp.innerHTML = value;
+            var size = tsp.getComputedTextLength();
+            txt.setAttribute('x', x + width / 2 - size / 2);
+            tsp.addEventListener("click", function(){
+              window.location = "/equipment/press/" + key;
+            });
+          };
+        };
       };
     };
 
     $.ajax({
       method: "GET",
-      url: endpoint,
+      url: "{% url 'equip:map-data' %}",
       data: {
-        "pressIdList" : pressIdList,
         // "imprintArray" : JSON.stringify(imprintArray),
       },
       success: function(data){
-        updateStatus(data.statusDict);
-        drawMap(JSON.parse(data.impsDict));
+        drawMap(data);
       },
       error: function(error_data){
         console.log(error_data)
       }
     });
-
-    function updateStatus(data){
-      const object = data;
-      for (const [key, value] of Object.entries(object)) {
-        for (i = 0; i < pressList.length; i++) {
-          if(pressList[i].getAttribute("press") == key){
-            pressList[i].classList.add(value.toLowerCase().replace(/ /g,"_"));
-          };
-        };
-      };
-    };
 
    {% endblock %}
 </script>
@@ -94,9 +85,7 @@
 
 {% block content %}
 
-  {% include 'equip/elements/map.svg'%}
+  <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1120.0001" height="859.99994" viewBox="0 0 296.33332 227.54167" version="1.1" id="svgMap" inkscape:version="1.0 (1.0+r73+1)" sodipodi:docname="map.svg"></svg>
 
 {% endblock content %}
-
-
 
