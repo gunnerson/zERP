@@ -9,8 +9,6 @@
       window.location = $(this).data("href");
     });
 
-    $("#sidebarBlock").hide();
-
     $("#checkbox-container :checkbox").change(function() {
       document.getElementById('selectform').submit();
     });
@@ -18,7 +16,15 @@
   {% endblock %}
 </script>
 
-{% block left-menu %}{% endblock left-menu %}
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'equip:load_map' %}" class="side-menu-link" role="button">Map View</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
 
 {% block page-title %}
 

@@ -3,8 +3,6 @@
 <script>
   {% block jquery %}
 
-    $("#sidebarBlock").hide();
-
     function drawMap(data){
       const impData = JSON.parse(data.impsDict)
       const statusData = data.statusDict
@@ -66,7 +64,15 @@
    {% endblock %}
 </script>
 
-{% block left-menu %}{% endblock left-menu %}
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'equip:presslist' %}" class="side-menu-link" role="button">List View</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
 
 {% block page-title %}
 
