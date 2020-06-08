@@ -71,7 +71,7 @@ class Press(models.Model):
             ordertype='PM'
         )
         if orders.exists():
-            last_pm_order = orders.last()
+            last_pm_order = orders.first()
             last_pm_date = last_pm_order.repdate
         else:
             last_pm_date = 'Never'
@@ -79,7 +79,7 @@ class Press(models.Model):
 
     def status(self):
         """Get press status"""
-        last_order = self.order_set.last()
+        last_order = self.order_set.first()
         if last_order is not None:
             status = last_order.get_status_display()
         else:

@@ -14,7 +14,7 @@ def has_group(user, group_name):
 def press_status(press_id):
     """Get press status"""
     press = Press.objects.get(id=press_id)
-    last_order = press.order_set.last()
+    last_order = press.order_set.first()
     if last_order is not None:
         press_status = last_order.get_status_display()
     else:
