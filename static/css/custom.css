@@ -27,7 +27,7 @@ nav {
 }
 
 svg rect:hover {
-  cursor: pointer;
+  /*cursor: pointer;*/
 }
 
 svg .ready {
@@ -49,7 +49,7 @@ svg .awaiting_parts {
 svg tspan {
   fill: white!important;
   font-size: 6px;
-  cursor: pointer;
+  /*cursor: pointer;*/
 }
 
 svg text {

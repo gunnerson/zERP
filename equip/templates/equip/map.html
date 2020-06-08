@@ -11,32 +11,32 @@
       const spanData = data.spanDict
       var svgMap = document.getElementsByClassName('container-fluid')[1].lastElementChild;
       for (i = 0; i < impData.length; i++) {
-        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         var press = impData[i]["fields"]["press"];
         var width = impData[i]["fields"]["width"];
         var height = impData[i]["fields"]["height"];
         var x = impData[i]["fields"]["x"];
         var y = impData[i]["fields"]["y"];
+        var a = document.createElementNS("http://www.w3.org/2000/svg", "a");
+        a.setAttribute('href', "/equipment/press/" + press);
+        svgMap.appendChild(a);
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         rect.setAttribute('id', 'rect' + press);
         rect.setAttribute('width', width);
         rect.setAttribute('height', height);
         rect.setAttribute('x', x);
         rect.setAttribute('y', y);
-        svgMap.appendChild(rect);
+        a.appendChild(rect);
         var txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
         txt.setAttribute('id', 'text' + press);
         txt.setAttribute('width', width);
         txt.setAttribute('height', height);
         txt.setAttribute('y', y + height - (height - 4) / 2);
-        svgMap.appendChild(txt);
+        a.appendChild(txt);
         var tsp = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
         txt.appendChild(tsp);
         for (const [key, value] of Object.entries(statusData)) {
           if(impData[i]["fields"]["press"] == key){
             rect.classList.add(value.toLowerCase().replace(/ /g,"_"));
-            rect.addEventListener("click", function(){
-              window.location = "/equipment/press/" + key;
-            });
           };
         };
         for (const [key, value] of Object.entries(spanData)) {
@@ -44,9 +44,6 @@
             tsp.innerHTML = value;
             var size = tsp.getComputedTextLength();
             txt.setAttribute('x', x + width / 2 - size / 2);
-            tsp.addEventListener("click", function(){
-              window.location = "/equipment/press/" + key;
-            });
           };
         };
       };
