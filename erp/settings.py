@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'staff',
     'equip',
     'invent',
+    'prod',
     'bugs',
 ]
 

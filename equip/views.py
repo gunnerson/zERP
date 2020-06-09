@@ -8,7 +8,6 @@ from django.views.generic.edit import UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
-# from rest_framework import serializers
 from pathlib import Path
 from django.contrib import messages
 from django.db.models import Q
@@ -272,8 +271,8 @@ class MapData(RetrieveAPIView):
             press_dict[press.pk] = {}
             press_dict[press.pk].update({'status': press.status()})
             press_dict[press.pk].update({'name': press.pname})
-            short_name = press.pname.split(' ')[-1]
-            press_dict[press.pk].update({'short_name': short_name})
+            press_dict[press.pk].update(
+                {'short_name': press.pname.split(' ')[-1]})
             press_dict[press.pk].update({'job': press.job()})
         data = {
             "impsDict": imps_json,
