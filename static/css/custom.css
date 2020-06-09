@@ -26,11 +26,6 @@ nav {
   background-color: #336699;
 }
 
-svg {
-  height:100%;
-  width:100%
-}
-
 svg rect:hover {
   /*cursor: pointer;*/
 }
@@ -158,6 +153,11 @@ ul {
 
 .side-menu-link:hover {
   color: #336699 !important;
+}
+
+.svgmap {
+  height:100%;
+  width:100%
 }
 
 .supervisor {
