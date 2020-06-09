@@ -110,6 +110,8 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        press_id = self.kwargs.get('pk', None)
+        kwargs.update(press_id=press_id)
         kwargs.update(request=self.request)
         return kwargs
 

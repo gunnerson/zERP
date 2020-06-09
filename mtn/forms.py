@@ -2,6 +2,7 @@ from django import forms
 
 from .models import Order, Image
 from staff.models import Employee
+from equip.models import Press
 from .cm import is_empty_param
 
 
@@ -15,8 +16,11 @@ class OrderCreateForm(forms.ModelForm):
                   }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
-    def __init__(self, request=None, *args, **kwargs):
+    def __init__(self, request=None, press_id=None, *args, **kwargs):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
+        if press_id is not None:
+            press = Press.objects.get(id=press_id)
+            self.fields['local'].initial = press
         ordertype_choices = [('', '---------'), ('RE', 'Repair'),
                              ('ST', 'Setup')]
         status_choices = [('', '---------'),

@@ -51,6 +51,9 @@
       <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
     </li>
     <li>
+      <a href="{% url 'mtn:new_order' press.id %}" class="side-menu-link" role="button">+ New Order</a>
+    </li>
+    <li>
       <a href="{% url 'equip:press-orders' press.id %}?closed=on" class="side-menu-link" role="button">Orders</a>
     </li>
     {% if request.user|has_group:"maintenance" %}

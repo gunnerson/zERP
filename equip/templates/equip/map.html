@@ -7,6 +7,7 @@
       const impData = JSON.parse(data.impsDict);
       const statusData = data.statusDict;
       const spanData = data.spanDict;
+      const nameData = data.nameDict;
       var svgMap = document.getElementsByClassName('container-fluid')[1].lastElementChild;
       for (i = 0; i < impData.length; i++) {
         var press = impData[i]["fields"]["press"];
@@ -16,6 +17,8 @@
         var y = impData[i]["fields"]["y"];
         var a = document.createElementNS("http://www.w3.org/2000/svg", "a");
         a.setAttribute('href', "/equipment/press/" + press);
+        a.setAttribute('data-toggle', "tooltip");
+        a.setAttribute('container', "body");
         svgMap.appendChild(a);
         var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         rect.setAttribute('id', 'rect' + press);
@@ -32,11 +35,6 @@
         a.appendChild(txt);
         var tsp = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
         txt.appendChild(tsp);
-        for (const [key, value] of Object.entries(statusData)) {
-          if(impData[i]["fields"]["press"] == key){
-            rect.classList.add(value.toLowerCase().replace(/ /g,"_"));
-          };
-        };
         for (const [key, value] of Object.entries(spanData)) {
           if(impData[i]["fields"]["press"] == key){
             tsp.innerHTML = value;
@@ -44,7 +42,21 @@
             txt.setAttribute('x', x + width / 2 - size / 2);
           };
         };
+        for (const [key, value] of Object.entries(nameData)) {
+          if(impData[i]["fields"]["press"] == key){
+            a.setAttribute('title', value);
+          };
+        };
+        for (const [key, value] of Object.entries(statusData)) {
+          if(impData[i]["fields"]["press"] == key){
+            rect.classList.add(value.toLowerCase().replace(/ /g,"_"));
+            var old_tooltip = a.getAttribute('title');
+            var new_tooltip = old_tooltip + ': ' + value;
+            a.setAttribute('title', new_tooltip);
+          };
+        };
       };
+      $('[data-toggle="tooltip"]').tooltip()
     };
 
     $.ajax({
