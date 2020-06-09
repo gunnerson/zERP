@@ -31,16 +31,17 @@ svg rect:hover {
 }
 
 svg .ready {
-  fill: green!important;
+  fill: green;
 }
 svg .production {
   fill: purple!important;
 }
+
 svg .out_of_order {
   fill: red!important;
 }
 svg .maintenance {
-  fill: yellow!important;
+  fill: orange!important;
 }
 svg .awaiting_parts {
   fill: blue!important;
@@ -176,6 +177,20 @@ table {
 th, td {
   text-align: left;
   padding: 8px;
+}
+
+.tooltip-inner {
+  white-space:pre-wrap;
+  background-color: #FFFACD;
+  color: black;
+  text-align: left;
+  border: 1px solid #ccc!important;
+  border-radius: 5px;
+}
+
+.tooltip.show {
+  opacity: 1.0!important;
+  filter: alpha(opacity=100);
 }
 
 tr {

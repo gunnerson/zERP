@@ -266,19 +266,17 @@ class MapData(RetrieveAPIView):
         imps = Imprint.objects.all()
         imps_json = serializers.serialize('json', imps)
         id_list = imps.values_list('press', flat=True)
-        status_dict = {}
-        span_dict = {}
-        name_dict = {}
+        press_dict = {}
         qs = Press.objects.filter(id__in=id_list)
         for press in qs:
-            status_dict.update({press.id: press.status()})
-            name_dict.update({press.id: press.pname})
+            press_dict[press.pk] = {}
+            press_dict[press.pk].update({'status': press.status()})
+            press_dict[press.pk].update({'name': press.pname})
             short_name = press.pname.split(' ')[-1]
-            span_dict.update({press.id: short_name})
+            press_dict[press.pk].update({'short_name': short_name})
+            press_dict[press.pk].update({'job': press.job()})
         data = {
-            "statusDict": status_dict,
-            "spanDict": span_dict,
             "impsDict": imps_json,
-            "nameDict": name_dict,
+            "pressDict": press_dict,
         }
         return Response(data)

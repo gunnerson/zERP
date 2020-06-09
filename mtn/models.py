@@ -19,8 +19,6 @@ class Order(models.Model):
     DOWN = 'DN'
     STANDBY = 'SB'
     PARTS = 'AP'
-    PRODUCTION = 'PR'
-    IDLE = 'ID'
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
@@ -33,7 +31,6 @@ class Order(models.Model):
     ]
     ORDER_STATUS = [
         (STANDBY, 'Ready'),
-        (PRODUCTION, 'Production'),
         (DOWN, 'Out of order'),
         (REPAIR, 'Maintenance'),
         (PARTS, 'Awaiting parts'),

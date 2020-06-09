@@ -5,9 +5,7 @@
 
     function drawMap(data){
       const impData = JSON.parse(data.impsDict);
-      const statusData = data.statusDict;
-      const spanData = data.spanDict;
-      const nameData = data.nameDict;
+      const pressData = data.pressDict;
       var svgMap = document.getElementsByClassName('container-fluid')[1].lastElementChild;
       for (i = 0; i < impData.length; i++) {
         var press = impData[i]["fields"]["press"];
@@ -35,24 +33,19 @@
         a.appendChild(txt);
         var tsp = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
         txt.appendChild(tsp);
-        for (const [key, value] of Object.entries(spanData)) {
-          if(impData[i]["fields"]["press"] == key){
-            tsp.innerHTML = value;
+        for (const [key, value] of Object.entries(pressData)) {
+          if (impData[i]["fields"]["press"] == key) {
+            tsp.innerHTML = value.short_name;
             var size = tsp.getComputedTextLength();
             txt.setAttribute('x', x + width / 2 - size / 2);
-          };
-        };
-        for (const [key, value] of Object.entries(nameData)) {
-          if(impData[i]["fields"]["press"] == key){
-            a.setAttribute('title', value);
-          };
-        };
-        for (const [key, value] of Object.entries(statusData)) {
-          if(impData[i]["fields"]["press"] == key){
-            rect.classList.add(value.toLowerCase().replace(/ /g,"_"));
-            var old_tooltip = a.getAttribute('title');
-            var new_tooltip = old_tooltip + ': ' + value;
-            a.setAttribute('title', new_tooltip);
+            if (value.job != "") {
+              a.setAttribute('title', value.name + '\nStatus: ' + value.status + '\nJob: ' + value.job);
+              rect.classList.add('production');
+            } else {
+              a.setAttribute('title', value.name + '\nStatus: ' + value.status)
+              rect.classList.add('ready');
+            };
+            rect.classList.add(value.status.toLowerCase().replace(/ /g,"_"));
           };
         };
       };
@@ -66,6 +59,7 @@
         // "imprintArray" : JSON.stringify(imprintArray),
       },
       success: function(data){
+        // console.log(data);
         drawMap(data)
       },
       error: function(error_data){
