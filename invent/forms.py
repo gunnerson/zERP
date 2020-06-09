@@ -21,7 +21,7 @@ class PartCreateForm(forms.ModelForm):
                 'size': '20',
             }
             ),
-            'vendr': forms.Select(attrs={
+            'vendr': forms.SelectMultiple(attrs={
                 'size': '20',
             }
             ),

@@ -4,9 +4,9 @@
   {% block jquery %}
 
     function drawMap(data){
-      const impData = JSON.parse(data.impsDict)
-      const statusData = data.statusDict
-      const spanData = data.spanDict
+      const impData = JSON.parse(data.impsDict);
+      const statusData = data.statusDict;
+      const spanData = data.spanDict;
       var svgMap = document.getElementsByClassName('container-fluid')[1].lastElementChild;
       for (i = 0; i < impData.length; i++) {
         var press = impData[i]["fields"]["press"];
@@ -54,7 +54,7 @@
         // "imprintArray" : JSON.stringify(imprintArray),
       },
       success: function(data){
-        drawMap(data);
+        drawMap(data)
       },
       error: function(error_data){
         console.log(error_data)
