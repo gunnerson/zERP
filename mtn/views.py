@@ -185,35 +185,39 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             timereph = timerep.seconds + timerep.microseconds / 1000000
             self.object.timerep = timedelta(hours=timereph)
         if self.object.closed:
+            order_timeframe = timezone.now() - self.object.date_added
             # Calculate DT and delete DT sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
-            rep_dur = timedelta()
-            last_dt_session = dt_sessions.last()
-            first_dt_session = dt_sessions.first()
-            rep_dt_sessions = dt_sessions.filter(dttype='RE')
             if dt_sessions.exists():
+                rep_dt_sessions = dt_sessions.filter(dttype='RE')
+                last_dt_session = dt_sessions.last()
                 if last_dt_session.end is None:
                     last_dt_session.end = timezone.now()
                     last_dt_session.save(update_fields=['end'])
             if is_empty_param(timerep):
                 if rep_dt_sessions.exists():
+                    rep_dur = timedelta()
                     for session in rep_dt_sessions:
                         if (is_valid_param(session.start) and
                                 is_valid_param(session.end)):
                             rep_dur += (session.end - session.start)
-                        else:
-                            rep_dur += timedelta()
                     self.object.timerep = rep_dur
-            if dt_sessions.exists() and is_valid_param(self.object.timerep):
-                self.object.timerepidle = last_dt_session.end - \
-                    first_dt_session.start - self.object.timerep
-            elif is_valid_param(timerep):
-                self.object.timerepidle = timezone.now() - \
-                    self.object.date_added - self.object.timerep
+            if self.object.timerep < order_timeframe:
+                if dt_sessions.exists() and is_valid_param(self.object.timerep):
+                    dt_dur = timedelta()
+                    idle_dt_sessions = dt_sessions.exclude(dttype='RE')
+                    if idle_dt_sessions.exists():
+                        for session in idle_dt_sessions:
+                            if (is_valid_param(session.start) and
+                                    is_valid_param(session.end)):
+                                dt_dur += (session.end - session.start)
+                    self.object.timerepidle = abs(dt_dur - self.object.timerep)
+                elif is_valid_param(self.object.timerep):
+                    self.object.timerepidle = order_timeframe - \
+                        self.object.timerep
+                else:
+                    self.object.timerepidle = order_timeframe
             else:
-                self.object.timerepidle = timezone.now() - \
-                    self.object.date_added
-            if self.object.timerepidle < timedelta():
                 self.object.timerepidle = timedelta()
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
