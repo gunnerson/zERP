@@ -39,7 +39,7 @@ def generate_schedule(f):
     firstshift = book.sheet_by_index(0)
     datexl = firstshift.cell(1, 6).value
     date = xlrd.xldate_as_datetime(datexl, 0)
-    for sheet_idx in range(0, 2):
+    for sheet_idx in range(0, 3):
         daily_sheet = book.sheet_by_index(sheet_idx)
         for row_idx in range(3, daily_sheet.nrows - 2):
             press_id = str(daily_sheet.cell(row_idx, 0).value)
@@ -99,6 +99,10 @@ class JobInstListView(LoginRequiredMixin, ListView):
     """list scheduled jobs"""
     model = JobInst
     # paginate_by = 20
+
+    def get_queryset(self):
+        qs = JobInst.objects.all().order_by('shift', 'press', 'job')
+        return qs
 
 
 class JobInstCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

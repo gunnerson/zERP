@@ -28,4 +28,22 @@
 
 {% block content %}
 
+  <div class="container justify-content-start ml-1">
+    <table>
+      {% for object in object_list %}
+        <tr class="clickable-row row border justify-content-start" data-href="" style="width:500px;">
+          <th class="col-4 border-right align-self-center my-2">
+            {{ object.press }}
+          </th>
+          <th class="col-4 border-right align-self-center">
+            {{ object.job }}
+          </th>
+          <th class="col-4 align-self-center">
+            {{ object.get_shift_display }}
+          </th>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
 {% endblock content %}
