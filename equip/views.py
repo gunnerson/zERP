@@ -273,7 +273,13 @@ class MapData(RetrieveAPIView):
             press_dict[press.pk].update({'name': press.pname})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
-            press_dict[press.pk].update({'job': press.job()})
+            job = press.job()
+            print(job)
+            if job is not None:
+                if (job.start_time() < timezone.now() and
+                        job.end_time() >= timezone.now()):
+                    press_dict[press.pk].update({'job': str(job)})
+
         data = {
             "impsDict": imps_json,
             "pressDict": press_dict,

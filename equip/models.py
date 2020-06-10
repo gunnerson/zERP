@@ -89,12 +89,11 @@ class Press(models.Model):
 
     def job(self):
         """Get press status"""
-        job = ''
         last_job = self.jobinst_set.first()
         if last_job is not None:
-            if last_job.date == timezone.now().date():
-                job = str(last_job)
-        return job
+            return last_job
+        else:
+            return None
 
 
 class Upload(models.Model):

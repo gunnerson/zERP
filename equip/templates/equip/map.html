@@ -38,7 +38,7 @@
             tsp.innerHTML = value.short_name;
             var size = tsp.getComputedTextLength();
             txt.setAttribute('x', x + width / 2 - size / 2);
-            if (value.job != "") {
+            if (value.job != null) {
               a.setAttribute('title', value.name + '\nStatus: ' + value.status + '\nJob: ' + value.job);
               rect.classList.add('production');
             } else {
@@ -59,7 +59,7 @@
         // "imprintArray" : JSON.stringify(imprintArray),
       },
       success: function(data){
-        // console.log(data);
+        console.log(data);
         drawMap(data)
       },
       error: function(error_data){

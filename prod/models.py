@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime, timedelta
 
 from equip.models import Press
 
@@ -17,7 +18,7 @@ class JobInst(models.Model):
     """Production schedule"""
     job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True)
     press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
-    date = models.DateField(null=True)
+    date = models.DateTimeField(null=True)
     shift = models.IntegerField(null=True,
                                 choices=((1, '1st Shift'), (0, '2nd Shift'),
                                          (2, '3rd Shift'), (3, 'SAT')))
@@ -25,3 +26,21 @@ class JobInst(models.Model):
 
     def __str__(self):
         return str(self.job.name)
+
+    def start_time(self):
+        if self.shift == 0:
+            start_time = self.date + timedelta(hours=8)
+        elif self.shift == 1:
+            start_time = self.date + timedelta(hours=24)
+        elif self.shift == 2:
+            start_time = self.date + timedelta(hours=16)
+        return start_time
+
+    def end_time(self):
+        if self.shift == 0:
+            end_time = self.date + timedelta(hours=16)
+        elif self.shift == 1:
+            end_time = self.date + timedelta(hours=32)
+        elif self.shift == 2:
+            end_time = self.date + timedelta(hours=24)
+        return end_time

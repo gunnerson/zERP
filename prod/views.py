@@ -38,7 +38,7 @@ def generate_schedule(f):
                 Job(name=job, rate=rate).save()
     firstshift = book.sheet_by_index(0)
     datexl = firstshift.cell(1, 6).value
-    date = xlrd.xldate_as_datetime(datexl, 0).date()
+    date = xlrd.xldate_as_datetime(datexl, 0)
     for sheet_idx in range(0, 2):
         daily_sheet = book.sheet_by_index(sheet_idx)
         for row_idx in range(3, daily_sheet.nrows - 2):
@@ -59,26 +59,17 @@ def generate_schedule(f):
                 try:
                     job = qs.get(name=job_name)
                 except Job.DoesNotExist:
-                    job = None
+                    job = Job(name=job_name, rate=db_sheet.cell(
+                        row_idx, 2).value).save()
                 if is_valid_param(press) and is_valid_param(job):
-                    if sheet_idx == 1:
-                        try:
-                            iqs.get(press=press, job=job, shift=sheet_idx,
-                                    date=date + timedelta(days=1))
-                        except JobInst.DoesNotExist:
-                            JobInst.objects.filter(
-                                press=press, job=job, shift=sheet_idx).delete()
-                            JobInst(press=press, job=job, shift=sheet_idx,
-                                    date=date + timedelta(days=1)).save()
-                    else:
-                        try:
-                            iqs.get(press=press, job=job, shift=sheet_idx,
-                                    date=date)
-                        except JobInst.DoesNotExist:
-                            JobInst.objects.filter(
-                                press=press, job=job, shift=sheet_idx).delete()
-                            JobInst(press=press, job=job, shift=sheet_idx,
-                                    date=date).save()
+                    try:
+                        iqs.get(press=press, job=job, shift=sheet_idx,
+                                date=date)
+                    except JobInst.DoesNotExist:
+                        JobInst.objects.filter(
+                            press=press, job=job, shift=sheet_idx).delete()
+                        JobInst(press=press, job=job, shift=sheet_idx,
+                                date=date).save()
     return redirect('prod:prod_sched')
 
 
