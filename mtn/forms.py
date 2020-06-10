@@ -24,9 +24,8 @@ class OrderCreateForm(forms.ModelForm):
         ordertype_choices = [('', '---------'), ('RE', 'Repair'),
                              ('ST', 'Setup')]
         status_choices = [('', '---------'),
-                          ('DN', 'Priority 1: not operational, in production'),
-                          ('SB', 'Priority 2: not in production'),
-                          ('PR', 'Priority 3: operational, in production'), ]
+                          ('DN', 'Priority 1: out of order'),
+                          ('SB', 'Priority 2: operational'), ]
         try:
             origin_initial = Employee.objects.get(user=request.user)
         except Employee.DoesNotExist:

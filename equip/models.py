@@ -80,7 +80,7 @@ class Press(models.Model):
 
     def status(self):
         """Get press status"""
-        last_order = self.order_set.first()
+        last_order = self.order_set.filter(closed=False).first()
         if last_order is not None:
             status = last_order.get_status_display()
         else:

@@ -110,3 +110,4 @@ class Downtime(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
+    dttype = models.CharField(max_length=2, null=True)

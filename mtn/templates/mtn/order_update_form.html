@@ -30,7 +30,7 @@
 
   <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
-      <h5 style="color: red;">{{ form.errors.timerep }}</h5>
+<!--       <h5 style="color: red;">{{ form.errors.timerep }}</h5> -->
       <div class="row">
         <div class="col">
           {{ form.status|as_crispy_field }}

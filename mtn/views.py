@@ -105,7 +105,8 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             self.object.cause = "NW"
         self.object.save()
         if self.object.status == 'DN':
-            Downtime(order=self.object, start=timezone.now()).save()
+            Downtime(order=self.object, start=timezone.now(),
+                     dttype='DN').save()
         return redirect('mtn:order-list')
 
     def get_form_kwargs(self):
@@ -184,36 +185,39 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             timereph = timerep.seconds + timerep.microseconds / 1000000
             self.object.timerep = timedelta(hours=timereph)
         if self.object.closed:
-            # Compress downtime sessions
+            # Calculate DT and delete DT sessions
             dt_sessions = Downtime.objects.filter(order=self.object)
             rep_dur = timedelta()
             last_dt_session = dt_sessions.last()
             first_dt_session = dt_sessions.first()
+            rep_dt_sessions = dt_sessions.filter(dttype='RE')
+            if dt_sessions.exists():
+                if last_dt_session.end is None:
+                    last_dt_session.end = timezone.now()
+                    last_dt_session.save(update_fields=['end'])
             if is_empty_param(timerep):
-                if dt_sessions.exists():
-                    if last_dt_session.end is None:
-                        last_dt_session.end = timezone.now()
-                        last_dt_session.save(update_fields=['end'])
-                    for session in dt_sessions:
+                if rep_dt_sessions.exists():
+                    for session in rep_dt_sessions:
                         if (is_valid_param(session.start) and
                                 is_valid_param(session.end)):
                             rep_dur += (session.end - session.start)
+                        else:
+                            rep_dur += timedelta()
                     self.object.timerep = rep_dur
-            else:
-                self.object.timerep = timedelta(hours=float(timereph))
             if dt_sessions.exists() and is_valid_param(self.object.timerep):
                 self.object.timerepidle = last_dt_session.end - \
                     first_dt_session.start - self.object.timerep
-            elif is_valid_param(self.object.timerep):
+            elif is_valid_param(timerep):
                 self.object.timerepidle = timezone.now() - \
                     self.object.date_added - self.object.timerep
             else:
                 self.object.timerepidle = timezone.now() - \
                     self.object.date_added
+            if self.object.timerepidle < timedelta():
+                self.object.timerepidle = timedelta()
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
                 self.object.cause = 'UN'
-            # self.object.closed = True
             self.object.status = 'SB'
         self.object.save()
         return redirect(self.get_success_url())
@@ -277,7 +281,7 @@ def repair_toggle(request, pk, func):
             if repby_initial is not None:
                 order.repby = repby_initial
                 order.save(update_fields=['repby'])
-        Downtime(order=order, start=timezone.now()).save()
+        Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     elif func == 'stop':
         new_status = 'DN'
         pending_session = Downtime.objects.filter(order=order).last()
@@ -285,6 +289,7 @@ def repair_toggle(request, pk, func):
             if is_empty_param(pending_session.end):
                 pending_session.end = timezone.now()
                 pending_session.save(update_fields=['end'])
+        Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     elif func == 'ready':
         new_status = 'SB'
         pending_session = Downtime.objects.filter(order=order).last()
@@ -299,6 +304,7 @@ def repair_toggle(request, pk, func):
             if is_empty_param(pending_session.end):
                 pending_session.end = timezone.now()
                 pending_session.save(update_fields=['end'])
+        Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     order.status = new_status
     order.save(update_fields=['status'])
     return redirect('mtn:order-list')
