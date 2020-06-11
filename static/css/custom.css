@@ -103,6 +103,10 @@ ul {
   padding-left: 30px;
 }
 
+.error input, .error select {
+    border: 2px red solid;
+}
+
 .left-side-menu {
   width: 180px;
   height:100%;
@@ -202,13 +206,12 @@ tr:nth-child(odd) {
 }
 
 
-
-
-
-
-
-
-
-
+.prsch input[type=text] {
+  width: 100%;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  margin-bottom: -1px;
+}
 
 

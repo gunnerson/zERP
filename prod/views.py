@@ -1,12 +1,11 @@
 import xlrd
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
-from django.views.generic.edit import UpdateView, CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views import View
 from datetime import timedelta
+from django.forms import formset_factory
 
 from .models import Job, JobInst
-from .forms import UploadFileForm
+from .forms import UploadFileForm, JobInstForm
 from mtn.cm import has_group, is_valid_param
 from equip.models import Press
 
@@ -73,49 +72,39 @@ def generate_schedule(f):
     return redirect('prod:prod_sched')
 
 
-class JobListView(LoginRequiredMixin, ListView):
-    """List of jobs"""
-    model = Job
-    # paginate_by = 20
+class ScheduleView(View):
+    press_list = Press.objects.filter(group='PR').exclude(subgroup='OT')
+    JobInstFormSet = formset_factory(JobInstForm, extra=len(press_list))
 
+    template_name = "prod/schedule.html"
 
-class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Create a job"""
-    model = Job
+    def get(self, request, *args, **kwargs):
+        formset = self.JobInstFormSet()
+        i = 0
+        for press in self.press_list:
+            job = press.job()
+            if job is not None:
+                formset[i].initial = {
+                    'press': press.pname, 'job': press.job().job.name}
+            else:
+                formset[i].initial = {'press': press.pname}
+            i += 1
+        context = {
+            'formset': formset,
+        }
+        return render(request, self.template_name, context)
 
-    def test_func(self):
-        return has_group(self.request.user, 'maintenance')
+    def post(self, request, *args, **kwargs):
+        jobinst_formset = self.JobInstFormSet(self.request.POST)
+        if jobinst_formset.is_valid():
+            for jobinst in jobinst_formset:
+                pass
+            return redirect('prod:prod_sched')
+        else:
+            context = {
+                'formset': jobinst_formset,
+            }
+            return render(request, self.template_name, context)
 
-
-class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Update job"""
-    model = Job
-
-    def test_func(self):
-        return has_group(self.request.user, 'maintenance')
-
-
-class JobInstListView(LoginRequiredMixin, ListView):
-    """list scheduled jobs"""
-    model = JobInst
-    # paginate_by = 20
-
-    def get_queryset(self):
-        qs = JobInst.objects.all().order_by('shift', 'press', 'job')
-        return qs
-
-
-class JobInstCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Upload a file"""
-    model = JobInst
-
-    def test_func(self):
-        return has_group(self.request.user, 'manager')
-
-
-class JobInstUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Add notes"""
-    model = JobInst
-
-    def test_func(self):
-        return has_group(self.request.user, 'manager')
+    # def test_func(self):
+    #     return has_group(self.request.user, 'manager')

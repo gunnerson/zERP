@@ -274,7 +274,6 @@ class MapData(RetrieveAPIView):
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
             job = press.job()
-            print(job)
             if job is not None:
                 if (job.start_time() < timezone.now() and
                         job.end_time() >= timezone.now()):

@@ -1,0 +1,104 @@
+{% extends "mtn/base.html" %}
+
+{% load poll_extras %}
+
+<script>
+  {% block jquery %}
+
+  $(function () {
+    $('#datetimepicker').datetimepicker({
+      format: 'L'
+    });
+  });
+
+  {% endblock %}
+</script>
+
+{% block left-menu %}
+
+  <ul>
+    {% if request.user|has_group:"manager" %}
+      <li>
+        <a href="{% url 'prod:upload' %}" class="side-menu-link" role="button">Upload</a>
+      </li>
+    {% endif %}
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="">Jobs</a></li>
+        <li class="breadcrumb-item active">Schedule</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Production schedule</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  {% if formset.errors %}
+    {% for field in formset %}
+      {% for key,value in field.errors.items %}
+        <div class="col-3 alert alert-danger">
+          <strong>{{ value|escape }}</strong>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+  <div class="container">
+    <div class="row">
+
+    </div>
+  </div>
+
+    {{ formset.management_form }}
+    <div class="row">
+      <div class="col-3 mr-3">
+        <label>Date:</label>
+        <input type="text" class="form-control datetimepicker-input" id="datetimepicker" data-toggle="datetimepicker" data-target="#datetimepicker"/>
+      </div>
+      <div class="col-1 align-self-center mt-4">
+        <input type="checkbox" class="form-check-input" name="first" id="shift0"checked>
+        <label class="form-check-label" for="shift0">2nd Shift</label>
+      </div>
+      <div class="col-1 align-self-center mt-4">
+        <input type="checkbox" class="form-check-input" name="second" id="shift1"checked>
+        <label class="form-check-label" for="shift1">3rd Shift</label>
+      </div>
+      <div class="col-1 align-self-center mt-4">
+        <input type="checkbox" class="form-check-input" name="third" id="shift2"checked>
+        <label class="form-check-label" for="shift2">1st Shift</label>
+      </div>
+      <div class="col-1 align-self-center mt-4">
+        <input type="checkbox" class="form-check-input" name="sat" id="shift3"checked>
+        <label class="form-check-label" for="shift3">SAT Shift</label>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-2 pl-4">Press</div>
+      <div class="col-1">Job</div>
+      <div class="col-9">Comment</div>
+    </div>
+    {% for form in formset %}
+    <div class="row prsch" >
+      <div class="col-2 pr-0">{{ form.press }}{{ form.press.errors }}</div>
+      <div class="col-1 px-0">{{ form.job }}{{ form.job.errors }}</div>
+      <div class="col-9 pl-0">{{ form.comment }}{{ form.comment.errors }}</div>
+    </div>
+    {% endfor %}
+
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Save schedule</button>
+  </form>
+
+{% endblock content %}

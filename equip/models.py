@@ -5,7 +5,6 @@ from django.utils import timezone
 
 
 class Press(models.Model):
-    pname = models.CharField(max_length=40)
     PRODUCTION = 'PR'
     GENERAL = 'GN'
     BUILDING = 'BD'
@@ -28,6 +27,7 @@ class Press(models.Model):
         (PUNCHING, 'Punching'),
         (OTHER, 'Other'),
     ]
+    pname = models.CharField(max_length=40)
     group = models.CharField(
         max_length=2,
         choices=GROUPS,
