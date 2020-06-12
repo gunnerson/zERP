@@ -29,18 +29,18 @@ class JobInst(models.Model):
 
     def start_time(self):
         if self.shift == 0:
-            start_time = self.date + timedelta(hours=8)
-        elif self.shift == 1:
-            start_time = self.date + timedelta(hours=24)
-        elif self.shift == 2:
             start_time = self.date + timedelta(hours=16)
+        elif self.shift == 1:
+            start_time = self.date + timedelta(hours=8)
+        elif self.shift == 2:
+            start_time = self.date + timedelta(hours=24)
         return start_time
 
     def end_time(self):
         if self.shift == 0:
-            end_time = self.date + timedelta(hours=16)
-        elif self.shift == 1:
-            end_time = self.date + timedelta(hours=32)
-        elif self.shift == 2:
             end_time = self.date + timedelta(hours=24)
+        elif self.shift == 1:
+            end_time = self.date + timedelta(hours=16)
+        elif self.shift == 2:
+            end_time = self.date + timedelta(hours=32)
         return end_time
