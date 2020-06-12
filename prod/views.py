@@ -45,32 +45,43 @@ def generate_schedule(f):
         for row_idx in range(3, daily_sheet.nrows - 2):
             press_id = str(daily_sheet.cell(row_idx, 0).value)
             job_name = daily_sheet.cell(row_idx, 1).value
-            if is_valid_param(job_name):
-                if press_id[0].isdigit():
-                    press_name = 'Press ' + f'{int(press_id[:-2]):02}'
-                    try:
-                        press = pqs.get(pname=press_name)
-                    except Press.DoesNotExist:
-                        press = None
-                if press_id[0] == 'I':
-                    try:
-                        press = pqs.get(pname=press_id)
-                    except Press.DoesNotExist:
-                        press = None
+            if press_id[0].isdigit():
+                press_name = 'Press ' + f'{int(press_id[:-2]):02}'
                 try:
-                    job = qs.get(name=job_name)
-                except Job.DoesNotExist:
-                    job = Job(name=job_name, rate=db_sheet.cell(
-                        row_idx, 2).value).save()
-                if is_valid_param(press) and is_valid_param(job):
-                    jobinst = iqs.filter(
-                            press=press, job=job, shift=sheet_idx).last()
-                    if jobinst is not None:
-                        jobinst.date = date
-                        jobinst.save(update_fields=['date'])
-                    else:
-                        JobInst(press=press, job=job, shift=sheet_idx,
-                                date=date).save()
+                    press = pqs.get(pname=press_name)
+                except Press.DoesNotExist:
+                    press = None
+            elif press_id[0] == 'I':
+                try:
+                    press = pqs.get(pname=press_id)
+                except Press.DoesNotExist:
+                    press = None
+            if is_valid_param(press):
+                if is_valid_param(job_name):
+                    try:
+                        job = qs.get(name=job_name)
+                    except Job.DoesNotExist:
+                        job = Job(name=job_name, rate=db_sheet.cell(
+                            row_idx, 2).value).save()
+                    if is_valid_param(job):
+                        jobinst = iqs.filter(
+                                press=press, job=job, shift=sheet_idx).last()
+                        if jobinst is not None:
+                            jobinst.date = date
+                            jobinst.save(update_fields=['date'])
+                        else:
+                            JobInst(press=press, job=job, shift=sheet_idx,
+                                    date=date).save()
+                else:
+                    try:
+                        job = press.job()
+                        if job.date.date() == date.date() and job.shift == sheet_idx:
+                            job.date = None
+                            job.shift = None
+                            job.save(update_fields=['date', 'shift'])
+                            print('>>>>>>>>>>>>>', job.shift)
+                    except:
+                        pass
     return redirect('prod:prod_sched')
 
 
@@ -114,10 +125,6 @@ class ScheduleView(CreateView):
                 except ValueError:
                     dt = None
             if dt is not None and shift is not None:
-                if shift == 3 and dt.isoweekday() != 6:
-                    while dt.isoweekday() !=6:
-                        dt += timedelta(days=1)
-                    dt = dt + timedelta(hours=8)
                 for jobinst in formset:
                     data = jobinst.cleaned_data
                     press = self.press_list.get(pname=data['press'])

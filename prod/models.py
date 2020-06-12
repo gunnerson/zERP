@@ -18,8 +18,8 @@ class JobInst(models.Model):
     """Production schedule"""
     job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True)
     press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
-    date = models.DateTimeField(null=True)
-    shift = models.IntegerField(null=True,
+    date = models.DateTimeField(null=True, blank=True)
+    shift = models.IntegerField(null=True, blank=True,
                                 choices=((1, '1st Shift'), (0, '2nd Shift'),
                                          (2, '3rd Shift'), (3, 'SAT')))
     comment = models.TextField(null=True, blank=True)
