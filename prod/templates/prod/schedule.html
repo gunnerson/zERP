@@ -51,6 +51,14 @@
     {% endfor %}
   {% endif %}
 
+  {% if messages %}
+    <ul class="messages" style="color:red;">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
   <form method="post">
     {% csrf_token %}
 
@@ -64,24 +72,29 @@
     <div class="row">
       <div class="col-3 mr-3">
         <label>Date:</label>
-        <input type="text" class="form-control datetimepicker-input" id="datetimepicker" data-toggle="datetimepicker" data-target="#datetimepicker"/>
+        <input type="text" class="form-control datetimepicker-input" id="datetimepicker" name="dateinput" data-toggle="datetimepicker" data-target="#datetimepicker"/>
       </div>
-      <div class="col-1 align-self-center mt-4">
-        <input type="checkbox" class="form-check-input" name="first" id="shift0"checked>
-        <label class="form-check-label" for="shift0">2nd Shift</label>
+      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+        <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="0">
+        <label class="custom-control-label" for="customRadioInline1">2nd Shift</label>
       </div>
-      <div class="col-1 align-self-center mt-4">
-        <input type="checkbox" class="form-check-input" name="second" id="shift1"checked>
-        <label class="form-check-label" for="shift1">3rd Shift</label>
+      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+        <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="2">
+        <label class="custom-control-label" for="customRadioInline2">3rd Shift</label>
       </div>
-      <div class="col-1 align-self-center mt-4">
-        <input type="checkbox" class="form-check-input" name="third" id="shift2"checked>
-        <label class="form-check-label" for="shift2">1st Shift</label>
+      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+        <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="1">
+        <label class="custom-control-label" for="customRadioInline3">1st Shift</label>
       </div>
-      <div class="col-1 align-self-center mt-4">
-        <input type="checkbox" class="form-check-input" name="sat" id="shift3"checked>
-        <label class="form-check-label" for="shift3">SAT Shift</label>
+      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+        <input type="radio" id="customRadioInline4" name="shiftinput" class="custom-control-input" value="3">
+        <label class="custom-control-label" for="customRadioInline4">SAT Shift</label>
       </div>
+      {% if request.user|has_group:"manager" %}
+        <div class="col align-self-center mt-4 ml-3">
+          <button name="submit" role="button" class="btn btn-rahco">Schedule</button>
+        </div>
+      {% endif %}
     </div>
     <br>
     <div class="row">
@@ -96,9 +109,6 @@
       <div class="col-9 pl-0">{{ form.comment }}{{ form.comment.errors }}</div>
     </div>
     {% endfor %}
-
-    <br>
-    <button name="submit" role="button" class="btn btn-rahco">Save schedule</button>
   </form>
 
 {% endblock content %}

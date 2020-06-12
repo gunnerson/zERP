@@ -9,15 +9,6 @@
       document.getElementById('selectform').submit();
     });
 
-    $("#searchButton").click(function() {
-      if($("#collapseSearch").is(":visible")){
-        $("#query").val('');
-        document.getElementById('selectform').submit();
-      } else {
-        $("#collapseSearch").show("slow");
-      }
-    });
-
   {% endblock %}
 </script>
 

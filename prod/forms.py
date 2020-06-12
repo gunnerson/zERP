@@ -9,10 +9,11 @@ class UploadFileForm(forms.Form):
 
 
 class JobInstForm(forms.Form):
+    error_css_class = 'invalid-feedback'
+    required_css_class = 'required'
     press = forms.CharField()
     job = forms.CharField()
     comment = forms.CharField()
-    date = forms.DateField(widget=DatePicker())
 
     def __init__(self, *args, **kwargs):
         super(JobInstForm, self).__init__(*args, **kwargs)

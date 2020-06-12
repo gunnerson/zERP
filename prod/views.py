@@ -1,8 +1,10 @@
 import xlrd
 from django.shortcuts import render, redirect
 from django.views import View
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.forms import formset_factory
+from django.views.generic.edit import CreateView
+from django.contrib import messages
 
 from .models import Job, JobInst
 from .forms import UploadFileForm, JobInstForm
@@ -61,22 +63,24 @@ def generate_schedule(f):
                     job = Job(name=job_name, rate=db_sheet.cell(
                         row_idx, 2).value).save()
                 if is_valid_param(press) and is_valid_param(job):
-                    try:
-                        iqs.get(press=press, job=job, shift=sheet_idx,
-                                date=date)
-                    except JobInst.DoesNotExist:
-                        JobInst.objects.filter(
-                            press=press, job=job, shift=sheet_idx).delete()
+                    jobinst = iqs.filter(
+                            press=press, job=job, shift=sheet_idx).last()
+                    if jobinst is not None:
+                        jobinst.date = date
+                        jobinst.save(update_fields=['date'])
+                    else:
                         JobInst(press=press, job=job, shift=sheet_idx,
                                 date=date).save()
     return redirect('prod:prod_sched')
 
 
-class ScheduleView(View):
+class ScheduleView(CreateView):
+
+    model = JobInst
+    form_class = JobInstForm
+    template_name = "prod/schedule.html"
     press_list = Press.objects.filter(group='PR').exclude(subgroup='OT')
     JobInstFormSet = formset_factory(JobInstForm, extra=len(press_list))
-
-    template_name = "prod/schedule.html"
 
     def get(self, request, *args, **kwargs):
         formset = self.JobInstFormSet()
@@ -95,14 +99,45 @@ class ScheduleView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        jobinst_formset = self.JobInstFormSet(self.request.POST)
-        if jobinst_formset.is_valid():
-            for jobinst in jobinst_formset:
-                pass
-            return redirect('prod:prod_sched')
+        formset = self.JobInstFormSet(self.request.POST)
+        jqs = Job.objects.all()
+        iqs = JobInst.objects.all()
+        if formset.is_valid():
+            date = request.POST.get("dateinput")
+            shift = int(request.POST.get("shiftinput"))
+            try:
+                dt = datetime.strptime(date, '%m/%d/%Y')
+            except ValueError:
+                try:
+                    dt = datetime.strptime(date, '%m/%d/%Y %I:%M %p')
+                except ValueError:
+                    dt = None
+            if dt is not None and shift is not None:
+                if shift == 3 and dt.isoweekday() != 6:
+                    while dt.isoweekday() !=6:
+                        dt += timedelta(days=1)
+                    dt = dt + timedelta(hours=8)
+                for jobinst in formset:
+                    data = jobinst.cleaned_data
+                    press = self.press_list.get(pname=data['press'])
+                    job = jqs.get(name=data['job'])
+                    if is_valid_param(press) and is_valid_param(data['job']):
+                        jobinst = iqs.filter(
+                            press=press, job=job, shift=shift).last()
+                        if jobinst is not None:
+                            jobinst.date = dt
+                            jobinst.save(update_fields=['date'])
+                        else:
+                            JobInst(press=press, job=job, shift=shift,
+                                    date=dt).save()
+                return redirect('prod:prod_sched')
+            else:
+                messages.add_message(request, messages.INFO, 'Pick date and shift')
+                return redirect(request.META['HTTP_REFERER'])
         else:
+            print(formset.errors)
             context = {
-                'formset': jobinst_formset,
+                'formset': formset,
             }
             return render(request, self.template_name, context)
 
