@@ -75,20 +75,16 @@
         <input type="text" class="form-control datetimepicker-input" id="datetimepicker" name="dateinput" data-toggle="datetimepicker" data-target="#datetimepicker"/>
       </div>
       <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-        <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="0">
-        <label class="custom-control-label" for="customRadioInline1">2nd Shift</label>
+        <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1">
+        <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-        <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="2">
-        <label class="custom-control-label" for="customRadioInline2">3rd Shift</label>
+        <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="0">
+        <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-        <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="1">
-        <label class="custom-control-label" for="customRadioInline3">1st Shift</label>
-      </div>
-      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-        <input type="radio" id="customRadioInline4" name="shiftinput" class="custom-control-input" value="3">
-        <label class="custom-control-label" for="customRadioInline4">SAT Shift</label>
+        <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="2">
+        <label class="custom-control-label" for="customRadioInline3">3rd Shift</label>
       </div>
       {% if request.user|has_group:"manager" %}
         <div class="col align-self-center mt-4 ml-3">

@@ -79,7 +79,8 @@ class ScheduleView(CreateView):
     model = JobInst
     form_class = JobInstForm
     template_name = "prod/schedule.html"
-    press_list = Press.objects.filter(group='PR').exclude(subgroup='OT')
+    press_list = Press.objects.filter(group='PR')
+    press_list = press_list.exclude(subgroup='OT')
     JobInstFormSet = formset_factory(JobInstForm, extra=len(press_list))
 
     def get(self, request, *args, **kwargs):
