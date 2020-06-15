@@ -17,11 +17,9 @@
 {% block left-menu %}
 
   <ul>
-    {% if request.user|has_group:"manager" %}
-      <li>
-        <a href="{% url 'prod:upload' %}" class="side-menu-link" role="button">Upload</a>
-      </li>
-    {% endif %}
+    <li>
+      <a href="{% url 'prod:job-list' %}" class="side-menu-link" role="button">Back</a>
+    </li>
   </ul>
 
 {% endblock left-menu %}
@@ -31,7 +29,7 @@
   <div class="page-title-right">
     <ol class="breadcrumb m-0">
         <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
-        <li class="breadcrumb-item"><a href="">Jobs</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'prod:job-list' %}">Jobs</a></li>
         <li class="breadcrumb-item active">Schedule</li>
     </ol>
   </div>
@@ -61,12 +59,6 @@
 
   <form method="post">
     {% csrf_token %}
-
-  <div class="container">
-    <div class="row">
-
-    </div>
-  </div>
 
     {{ formset.management_form }}
     <div class="row">

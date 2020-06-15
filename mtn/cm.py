@@ -5,6 +5,7 @@ from django.contrib.postgres.search import (
     SearchVector,
     SearchQuery,
 )
+from django.utils import timezone
 
 
 def dbsearch(queryset, query, config, *args):
@@ -73,6 +74,17 @@ def get_url_kwargs(request):
                 p_name += "{0}={1}&".format(key, value)
         context['page_kwargs'] = p_name
         return context
+
+
+def get_shift():
+    now = timezone.localtime(timezone.now()).hour
+    if now in range(8, 16):
+        shift = 1
+    elif now in range(0, 8):
+        shift = 3
+    elif now in range(16, 24):
+        shift = 2
+    return shift
 
     # if(!!window.performance && window.performance.navigation.type == 2)
     # {

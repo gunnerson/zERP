@@ -3,6 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
+from mtn.cm import get_shift
+
 
 class Press(models.Model):
     PRODUCTION = 'PR'
@@ -87,13 +89,19 @@ class Press(models.Model):
             status = 'Ready'
         return status
 
-    def job(self):
+    def job(self, shift=None):
         """Get press status"""
-        last_job = self.jobinst_set.first()
-        if last_job is not None:
-            return last_job
+        from prod.models import JobInst
+        if shift is None:
+            try:
+                return self.jobinst_set.first()
+            except JobInst.DoesNotExist:
+                return None
         else:
-            return None
+            try:
+                return self.jobinst_set.filter(shift=shift).first()
+            except JobInst.DoesNotExist:
+                return None
 
 
 class Upload(models.Model):

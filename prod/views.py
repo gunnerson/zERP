@@ -2,13 +2,16 @@ import xlrd
 from django.shortcuts import render, redirect
 from django.views import View
 from datetime import timedelta, datetime
+from django.utils import timezone
 from django.forms import formset_factory
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
 from .models import Job, JobInst
 from .forms import UploadFileForm, JobInstForm
-from mtn.cm import has_group, is_valid_param
+from mtn.cm import has_group, is_valid_param, get_url_kwargs, get_shift
 from equip.models import Press
 
 
@@ -17,7 +20,7 @@ def upload_sched(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             generate_schedule(request.FILES['file'])
-            return redirect('prod:prod_sched')
+            return redirect('prod:job-list')
     else:
         form = UploadFileForm()
     return render(request, 'prod/sched_upload.html', {'form': form})
@@ -37,11 +40,11 @@ def generate_schedule(f):
                 qs.get(name=job)
             except Job.DoesNotExist:
                 Job(name=job, rate=rate).save()
-    firstshift = book.sheet_by_index(0)
-    datexl = firstshift.cell(1, 6).value
-    date = xlrd.xldate_as_datetime(datexl, 0)
     for sheet_idx in range(0, 3):
         daily_sheet = book.sheet_by_index(sheet_idx)
+        datexl = daily_sheet.cell(1, 6).value
+        xldate = xlrd.xldate_as_datetime(datexl, 0)
+        date = xldate.date()
         for row_idx in range(3, daily_sheet.nrows - 2):
             press_id = str(daily_sheet.cell(row_idx, 0).value)
             job_name = daily_sheet.cell(row_idx, 1).value
@@ -65,7 +68,7 @@ def generate_schedule(f):
                             row_idx, 2).value).save()
                     if is_valid_param(job):
                         jobinst = iqs.filter(
-                                press=press, job=job, shift=sheet_idx).last()
+                            press=press, job=job, shift=sheet_idx).last()
                         if jobinst is not None:
                             jobinst.date = date
                             jobinst.save(update_fields=['date'])
@@ -74,18 +77,18 @@ def generate_schedule(f):
                                     date=date).save()
                 else:
                     try:
-                        job = press.job()
-                        if job.date.date() == date.date() and job.shift == sheet_idx:
+                        job = press.job(shift=sheet_idx)
+                        if job.date == date:
                             job.date = None
                             job.shift = None
                             job.save(update_fields=['date', 'shift'])
-                            print('>>>>>>>>>>>>>', job.shift)
-                    except:
+                    except JobInst.DoesNotExist:
                         pass
-    return redirect('prod:prod_sched')
+                    except AttributeError:
+                        pass
 
 
-class ScheduleView(CreateView):
+class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     model = JobInst
     form_class = JobInstForm
@@ -118,29 +121,43 @@ class ScheduleView(CreateView):
             date = request.POST.get("dateinput")
             shift = int(request.POST.get("shiftinput"))
             try:
-                dt = datetime.strptime(date, '%m/%d/%Y')
+                dt = datetime.strptime(date, '%m/%d/%Y').date()
             except ValueError:
-                try:
-                    dt = datetime.strptime(date, '%m/%d/%Y %I:%M %p')
-                except ValueError:
-                    dt = None
+                dt = None
             if dt is not None and shift is not None:
                 for jobinst in formset:
                     data = jobinst.cleaned_data
                     press = self.press_list.get(pname=data['press'])
                     job = jqs.get(name=data['job'])
-                    if is_valid_param(press) and is_valid_param(data['job']):
-                        jobinst = iqs.filter(
-                            press=press, job=job, shift=shift).last()
-                        if jobinst is not None:
-                            jobinst.date = dt
-                            jobinst.save(update_fields=['date'])
+                    if is_valid_param(press):
+                        if is_valid_param(data['job']):
+                            jobinst = iqs.filter(
+                                press=press, job=job).last()
+                            if jobinst is not None:
+                                if jobinst.shift == shift:
+                                    jobinst.date = dt
+                                    jobinst.save(update_fields=['date'])
+                                elif jobinst.shift is None:
+                                    jobinst.date = dt
+                                    jobinst.shift = shift
+                                    jobinst.save(update_fields=['date', 'shift'])
+                                else:
+                                    JobInst(press=press, job=job, shift=shift,
+                                        date=dt).save()
+                            else:
+                                JobInst(press=press, job=job, shift=shift,
+                                        date=dt).save()
                         else:
-                            JobInst(press=press, job=job, shift=shift,
-                                    date=dt).save()
+                            job = press.job(shift=shift)
+                            if job is not None:
+                                if job.date == dt:
+                                    job.date = None
+                                    job.shift = None
+                                    job.save(update_fields=['date', 'shift'])
                 return redirect('prod:prod_sched')
             else:
-                messages.add_message(request, messages.INFO, 'Pick date and shift')
+                messages.add_message(
+                    request, messages.INFO, 'Pick date and shift')
                 return redirect(request.META['HTTP_REFERER'])
         else:
             print(formset.errors)
@@ -149,5 +166,33 @@ class ScheduleView(CreateView):
             }
             return render(request, self.template_name, context)
 
-    # def test_func(self):
-    #     return has_group(self.request.user, 'manager')
+    def test_func(self):
+        return has_group(self.request.user, 'manager')
+
+
+class JobInstListView(LoginRequiredMixin, ListView):
+    """List of scheduled jobs"""
+    model = JobInst
+    # count = 0
+    # paginate_by = 20
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update(get_url_kwargs(self.request))
+        try:
+            del context['dateinput']
+        except KeyError:
+            pass
+        context['shift'] = get_shift()
+        return context
+
+    def get_queryset(self):
+        qs = JobInst.objects.all().order_by('press')
+        dateinput = self.request.GET.get('dateinput', None)
+        shiftinput = self.request.GET.get('shiftinput', get_shift())
+        if is_valid_param(dateinput):
+            dt = datetime.strptime(dateinput, '%m/%d/%Y')
+        else:
+            dt = timezone.localtime(timezone.now()).date()
+        qs = qs.filter(date=dt, shift=shiftinput)
+        return qs

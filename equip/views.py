@@ -16,7 +16,7 @@ from django.core import serializers
 
 from .models import Press, Upload, Imprint
 from mtn.models import Order
-from mtn.cm import has_group
+from mtn.cm import has_group, get_shift
 from .forms import PressUpdateForm, UploadCreateForm
 
 
@@ -267,18 +267,18 @@ class MapData(RetrieveAPIView):
         id_list = imps.values_list('press', flat=True)
         press_dict = {}
         qs = Press.objects.filter(id__in=id_list)
+        shift = get_shift()
         for press in qs:
             press_dict[press.pk] = {}
             press_dict[press.pk].update({'status': press.status()})
             press_dict[press.pk].update({'name': press.pname})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
-            job = press.job()
+            job = press.job(shift=shift)
             if job is not None:
-                if (job.start_time() < timezone.now() and
-                        job.end_time() >= timezone.now()):
+                if (job.start_time() < timezone.localtime(timezone.now()) and
+                        job.end_time() >= timezone.localtime(timezone.now())):
                     press_dict[press.pk].update({'job': str(job)})
-
         data = {
             "impsDict": imps_json,
             "pressDict": press_dict,

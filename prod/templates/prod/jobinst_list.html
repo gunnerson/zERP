@@ -2,12 +2,27 @@
 
 {% load poll_extras %}
 
+<script>
+  {% block jquery %}
+
+  $(function () {
+    $('#datetimepicker').datetimepicker({
+      format: 'L'
+    });
+  });
+
+  {% endblock %}
+</script>
+
 {% block left-menu %}
 
   {% if request.user|has_group:"manager" %}
     <ul>
       <li>
         <a href="{% url 'prod:upload' %}" class="side-menu-link" role="button">Upload</a>
+      </li>
+      <li>
+        <a href="{% url 'prod:prod_sched' %}" class="side-menu-link" role="button">Schedule</a>
       </li>
     </ul>
   {% endif %}
@@ -22,14 +37,59 @@
         <li class="breadcrumb-item active">Jobs</li>
     </ol>
   </div>
-  <h4 class="page-title">Production schedule</h4>
+  <h4 class="page-title">Scheduled Jobs</h4>
 
 {% endblock page-title %}
 
 {% block content %}
 
-  <div class="container justify-content-start ml-1">
+  <form method="GET" action="" id="filterform">
+    <div class="row">
+      <div class="col-3 mr-3">
+        <label>Date:</label>
+        <input type="text" class="form-control datetimepicker-input" id="datetimepicker" name="dateinput" data-toggle="datetimepicker" data-target="#datetimepicker" value="{{ dateinput }}" />
+      </div>
+      {% if shiftinput is not None and shiftinput != '' %}
+        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+          <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1" {% if shiftinput == "1" %}checked="checked"{% endif %}>
+          <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+          <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="0" {% if shiftinput == "0" %}checked="checked"{% endif %}>
+          <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+          <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="2" {% if shiftinput == "2" %}checked="checked"{% endif %}>
+          <label class="custom-control-label" for="customRadioInline3">3rd Shift</label>
+        </div>
+      {% else %}
+        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+          <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1" {% if shift == 1 %}checked="checked"{% endif %}>
+          <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+          <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="0" {% if shift == 0 %}checked="checked"{% endif %}>
+          <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+          <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="2" {% if shift == 2 %}checked="checked"{% endif %}>
+          <label class="custom-control-label" for="customRadioInline3">3rd Shift</label>
+        </div>
+      {% endif %}
+      <div class="col align-self-center mt-4 ml-3">
+        <button name="submit" role="button" class="btn btn-rahco px-3">Filter</button>
+      </div>
+    </div>
+  </form>
+  <br>
+
+  <div class="container justify-content-center ml-1">
     <table>
+      <div class="row align-self-start">
+        <div class="col-1 pl-2">Press</div>
+        <div class="col-2" style="padding-left: 5rem!important;">Job</div>
+        <div class="col-9" style="padding-left: 4rem!important;">Comment</div>
+      </div>
       {% for object in object_list %}
         <tr class="clickable-row row border justify-content-start" data-href="" style="width:500px;">
           <th class="col-4 border-right align-self-center my-2">
