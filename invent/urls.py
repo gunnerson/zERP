@@ -12,6 +12,8 @@ from invent.views import (
     UsedPartListView,
 )
 
+from equip.views import UploadCreateView
+
 app_name = "invent"
 
 urlpatterns = [
@@ -19,6 +21,8 @@ urlpatterns = [
     path('inventory/part/<int:pk>', PartDetailView.as_view(), name='part'),
     path('inventory/part/<int:pk>/edit', PartUpdateView.as_view(),
          name='edit_part'),
+    path('inventory/part/<int:pk>/upload/', UploadCreateView.as_view(),
+         name='upload'),
     path('inventory/new_part/', PartCreateView.as_view(), name='new_part'),
     path('inventory/vendors/', VendorListView.as_view(), name='vendor-list'),
     path('inventory/new_vendor/', VendorCreateView.as_view(),

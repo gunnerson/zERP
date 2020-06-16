@@ -31,9 +31,9 @@ urlpatterns = [
         name='notes'),
     path('equipment/press/<int:pk>/upload/', UploadCreateView.as_view(),
          name='upload'),
-    path('equipment/press/<int:pk>/delete-upload/', PressUpdateView.as_view(
-        template_name='equip/press_delete_upload.html'),
-        name='delete-upload'),
+    # path('equipment/press/<int:pk>/delete-upload/', PressUpdateView.as_view(
+    #     template_name='equip/press_delete_upload.html'),
+    #     name='delete-upload'),
     path('api/data/equipment/press/<int:pk>/',
          DowntimeChartData.as_view(), name='chart-data'),
 ]

@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
 
-from equip.models import Press
 from mtn.cm import dbsearch, is_valid_param, is_valid_vendor
 
 
@@ -19,7 +18,7 @@ class Part(models.Model):
     """List of inventory"""
     partnum = models.CharField(max_length=35)
     descr = models.TextField(blank=True, null=True)
-    cat = models.ManyToManyField(Press, blank=True)
+    cat = models.ManyToManyField('equip.Press', blank=True)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)
     price = models.DecimalField(max_digits=8, decimal_places=2)

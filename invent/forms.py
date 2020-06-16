@@ -12,7 +12,7 @@ class PartCreateForm(forms.ModelForm):
         fields = ['partnum', 'cat', 'amount', 'unit', 'vendr', 'price',
                   'descr'
                   ]
-        labels = {'partnum': 'Part number', 'cat': 'Category', 'amount':
+        labels = {'partnum': 'Part number', 'cat': 'Equipment', 'amount':
                   'Amount', 'unit': 'Unit', 'vendr': 'Vendors',
                   'price': 'Price', 'descr': 'Description',
                   }

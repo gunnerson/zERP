@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from mtn.cm import get_shift
-
+from invent.models import Part
 
 class Press(models.Model):
     PRODUCTION = 'PR'
@@ -106,9 +106,11 @@ class Press(models.Model):
 
 class Upload(models.Model):
     """Uploaded files with press documentaiton"""
-    press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
+    press = models.ManyToManyField(Press, blank=True)
+    part = models.ManyToManyField(Part, blank=True)
     descr = models.CharField(max_length=200)
     file = models.FileField()
+    uhash = models.CharField(max_length=64, null=True)
 
     def __str__(self):
         return str(self.descr)

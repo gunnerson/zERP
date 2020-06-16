@@ -82,6 +82,11 @@ class PartDetailView(LoginRequiredMixin, DetailView):
     """View part from the inventory"""
     model = Part
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['uploads'] = self.object.upload_set.all()
+        return context
+
 
 class PartUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Edit part"""
