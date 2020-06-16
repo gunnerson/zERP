@@ -15,6 +15,7 @@ from mtn.cm import has_group, is_valid_param, get_url_kwargs, get_shift
 from equip.models import Press
 
 
+@login_required
 def upload_sched(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -26,6 +27,7 @@ def upload_sched(request):
     return render(request, 'prod/sched_upload.html', {'form': form})
 
 
+@login_required
 def generate_schedule(f):
     qs = Job.objects.all().only('name')
     iqs = JobInst.objects.all()
