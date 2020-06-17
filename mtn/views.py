@@ -282,8 +282,8 @@ def repair_toggle(request, pk, func):
 def create_pms(request):
     if has_group(request.user, 'maintenance'):
         presses = Press.objects.filter(group='PR')
-        presses.exclude(subgroup='OT')
-        presses.exclude(subgroup='PN')
+        presses = presses.exclude(subgroup='OT')
+        presses = presses.exclude(subgroup='PN')
         for press in presses:
             pms = Pm.objects.filter(local=press)
             if pms.exists() is False:
