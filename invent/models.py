@@ -16,8 +16,8 @@ class PartManager(models.Manager):
 
 class Part(models.Model):
     """List of inventory"""
-    partnum = models.CharField(max_length=35)
-    descr = models.TextField(blank=True, null=True)
+    partnum = models.CharField(blank=True, null=True, max_length=35)
+    descr = models.TextField(null=True)
     cat = models.ManyToManyField('equip.Press', blank=True)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)
@@ -39,12 +39,14 @@ class Part(models.Model):
 class UsedPart(models.Model):
     """Intermediary table for m2m between Part and Order classes"""
     part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
-    order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(
+        'mtn.Order', on_delete=models.CASCADE, null=True, blank=True)
+    pm = models.ForeignKey(
+        'mtn.Pm', on_delete=models.CASCADE, null=True, blank=True)
     amount_used = models.PositiveIntegerField()
-    marked_to_delete = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.part)
 
 
 class Vendor(models.Model):

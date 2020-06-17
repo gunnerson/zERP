@@ -17,9 +17,11 @@
       <li>
         <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link">Add part</a>
       </li>
-      <li>
-        <a href="{% url 'mtn:delete_part' order.id %}" role="button" class="side-menu-link">Delete parts</a>
-      </li>
+      {% if used_parts %}
+        <li>
+          <a href="{% url 'mtn:update_parts' order.id %}" role="button" class="side-menu-link">Update parts</a>
+        </li>
+      {% endif %}
       <li>
         <a href="{% url 'mtn:image' order.id %}" role="button" class="side-menu-link">Add image</a>
       </li>

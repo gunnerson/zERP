@@ -116,8 +116,6 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             dts_last += dt
             month -= 1
             i += 1
-        # Last PM date
-        last_pm = Press.last_pm(self)
         # Calculate repair costs
         cost_this_year = 0
         cost_last_year = 0
@@ -136,10 +134,12 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             cost_this_year += round(Order.cost_of_repair(order), 2)
         for order in last_year:
             cost_last_year += round(Order.cost_of_repair(order), 2)
+        next_pm = self.object.next_pm()
         context['uploads'] = uploads
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
-        context['last_pm'] = last_pm
+        context['next_pm_id'] = next_pm.id
+        context['next_pm_duedate'] = next_pm.due_date()
         context['cost_this_year'] = cost_this_year
         context['cost_last_year'] = cost_last_year
         return context

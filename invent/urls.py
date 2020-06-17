@@ -9,7 +9,6 @@ from invent.views import (
     VendorCreateView,
     VendorDetailView,
     VendorUpdateView,
-    UsedPartListView,
 )
 
 from equip.views import UploadCreateView
@@ -31,7 +30,4 @@ urlpatterns = [
          name='vendor'),
     path('inventory/vendor/<int:pk>/edit', VendorUpdateView.as_view(),
          name='edit_vendor'),
-    path('inventory/used_parts/', UsedPartListView.as_view(),
-         name='usedpartlist'),
-
 ]

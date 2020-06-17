@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.timezone import now
 from django.db.models import Q
+from django.utils import timezone
+from datetime import date
+
 from staff.models import Employee
 from equip.models import Press
 from invent.models import Part
@@ -12,7 +15,6 @@ class Order(models.Model):
     """Maintenance work orders"""
     REPAIR = 'RE'
     SETUP = 'ST'
-    PM = 'PM'
     NORMAL = 'NW'
     DAMAGE = 'DM'
     UNKNOWN = 'UN'
@@ -22,7 +24,6 @@ class Order(models.Model):
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
-        (PM, 'PM'),
     ]
     CAUSE_OF_REPAIR = [
         (NORMAL, 'Normal Wear'),
@@ -46,7 +47,7 @@ class Order(models.Model):
                                related_name='+',
                                )
     local = models.ForeignKey(Press,
-                              models.SET_NULL,
+                              on_delete=models.SET_NULL,
                               null=True,
                               )
     descr = models.TextField()
@@ -80,7 +81,7 @@ class Order(models.Model):
 
     def cost_of_repair(self):
         cost_of_repair = 0
-        used_parts = self.usedpart_set.filter(marked_to_delete=False)
+        used_parts = self.usedpart_set.all()
         for part in used_parts:
             cost_of_part = part.amount_used * part.part.price
             cost_of_repair += cost_of_part
@@ -111,3 +112,37 @@ class Downtime(models.Model):
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
     dttype = models.CharField(max_length=2, null=True)
+
+
+class Pm(models.Model):
+    """PMs"""
+    local = models.ForeignKey(Press,
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              )
+    pm_date = models.DateField(null=True, blank=True)
+    repby = models.ForeignKey(Employee,
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              blank=True,
+                              limit_choices_to={'role': "MT"},
+                              )
+    time_required = models.DurationField(null=True, blank=True)
+    periodic = models.DurationField(null=True, blank=True)
+    closed = models.BooleanField(default=False)
+    parts = models.ManyToManyField(Part, through='invent.UsedPart')
+    descr = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return str(f'{self.id:05}')
+
+    def get_absolute_url(self):
+        return reverse('equip:press', kwargs={'pk': self.local.id})
+
+    def due_date(self):
+        today = timezone.localtime(timezone.now()).date()
+        if self.pm_date < today:
+            return today
+        else:
+            return self.pm_date
+

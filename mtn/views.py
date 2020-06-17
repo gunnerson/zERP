@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
-from datetime import date, timedelta
+from datetime import timedelta
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
@@ -8,11 +8,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
 
-from .models import Order, Image, Downtime
+from .models import Order, Image, Downtime, Pm
 from equip.models import Press
 from invent.models import UsedPart
 from staff.models import Employee
-from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm
+from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm, PmForm
 from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, \
     is_empty_param
 
@@ -129,45 +129,6 @@ def load_locales(request):
                   {'locales': locales})
 
 
-@login_required
-def add_pm(request, pk):
-    if has_group(request.user, 'maintenance'):
-        press = Press.objects.get(id=pk)
-        orders = press.order_set.filter(
-            closed=True,
-            ordertype='PM'
-        )
-        if orders.exists():
-            last_pm = orders.last()
-            used_parts = UsedPart.objects.filter(order_id=last_pm.pk)
-            new_pm = last_pm
-            new_pm.pk = None
-            new_pm.owner = request.user
-            new_pm.date_added = timezone.now()
-            new_pm.repdate = None
-            new_pm.repby = None
-            new_pm.closed = False
-            new_pm.save()
-            for part in used_parts:
-                new_part = part
-                new_part.pk = None
-                new_part.order_id = new_pm.id
-                new_part.save()
-        else:
-            new_pm = Order(
-                owner=request.user,
-                # origin=Employee.objects.get(id=3),
-                local=press,
-                ordertype='PM',
-                cause='NW',
-                descr='List PM procedures here',
-            )
-            new_pm.save()
-    else:
-        raise Http404
-    return redirect('mtn:order-list')
-
-
 class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Edit a work order"""
     model = Order
@@ -231,8 +192,11 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         timereph = self.object.timerep
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
+        used_parts = self.object.usedpart_set.all()
+        context['used_parts'] = used_parts
         context['timereph'] = timereph
         return context
+
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -312,3 +276,64 @@ def repair_toggle(request, pk, func):
     order.status = new_status
     order.save(update_fields=['status'])
     return redirect('mtn:order-list')
+
+
+@login_required
+def create_pms(request):
+    if has_group(request.user, 'maintenance'):
+        presses = Press.objects.filter(group='PR')
+        presses.exclude(subgroup='OT')
+        presses.exclude(subgroup='PN')
+        for press in presses:
+            pms = Pm.objects.filter(local=press)
+            if pms.exists() is False:
+                Pm(
+                    local=press,
+                    date=timezone.now().date(),
+                    periodic=timedelta(days=180),
+                ).save()
+        return redirect('mtn:index')
+    else:
+        raise Http404
+
+
+class PmListView(LoginRequiredMixin, ListView):
+    """List of existing work orders"""
+    model = Pm
+
+    def get_queryset(self):
+        qs = Pm.objects.all().order_by('pm_date', 'local')
+        return qs
+
+
+class PmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Edit a pm order"""
+    model = Pm
+    form_class = PmForm
+    template_name_suffix = '_update_form'
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        time_required = self.object.time_required
+        if is_valid_param(time_required):
+            time_requiredh = time_required.seconds + \
+                time_required.microseconds / 1000000
+            self.object.time_required = timedelta(hours=time_requiredh)
+        self.object.save()
+        if self.object.closed:
+            Pm(
+                local=self.object.local,
+                pm_date=self.object.pm_date + self.object.periodic,
+                time_required=self.object.time_required,
+                periodic=self.object.periodic,
+                descr=self.object.descr,
+            ).save()
+        return redirect(self.get_success_url())
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['used_parts'] = self.object.usedpart_set.all()
+        return context

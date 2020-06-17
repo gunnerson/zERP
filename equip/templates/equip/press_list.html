@@ -22,6 +22,9 @@
     <li>
       <a href="{% url 'equip:load_map' %}" class="side-menu-link" role="button">Map View</a>
     </li>
+    <li>
+      <a href="{% url 'mtn:pm-list' %}" class="side-menu-link" role="button">PMs</a>
+    </li>
   </ul>
 
 {% endblock left-menu %}
@@ -98,14 +101,11 @@
     <table>
       {% for object in object_list %}
         <tr class="clickable-row row border justify-content-start" data-href="{% url 'equip:press' object.id %}" style="width:700px;">
-          <th class="col-6 border-right text-nowrap text-truncate align-self-center my-2">
+          <th class="col border-right text-nowrap text-truncate align-self-center my-2">
             {{ object.pname }}
           </th>
-          <th class="col-3 border-right text-nowrap text-truncate align-self-center">
+          <th class="col border-right text-nowrap text-truncate align-self-center">
             {{ object.get_group_display }}
-          </th>
-          <th class="col-3 align-self-center">
-            {{ object.id|press_status }}
           </th>
         </tr>
       {% endfor %}

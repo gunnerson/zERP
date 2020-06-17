@@ -8,6 +8,14 @@
     <li>
       <a href="{% url 'mtn:order' order.id %}" role="button" class="side-menu-link">Back</a>
     </li>
+    {% if used_parts %}
+      <li>
+        <a href="{% url 'mtn:update_parts' order.id %}" role="button" class="side-menu-link">Update parts</a>
+      </li>
+    {% endif %}
+    <li>
+      <a href="{% url 'mtn:image' order.id %}" role="button" class="side-menu-link">Add image</a>
+    </li>
   </ul>
 
 {% endblock left-menu %}
@@ -30,7 +38,6 @@
 
   <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
-<!--       <h5 style="color: red;">{{ form.errors.timerep }}</h5> -->
       <div class="row">
         <div class="col">
           {{ form.status|as_crispy_field }}
@@ -64,8 +71,16 @@
         {{ form.closed|as_crispy_field }}
       {% endif %}
     <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
+    <a href="{% url 'mtn:add_part' order.id %}" name="submit" role="button" class="btn btn-rahco">Add part</a>
     <br>
     <br>
   </form>
+
+  {% if used_parts %}
+    <b>Used Parts:</b>
+    {% for part in used_parts %}
+      <a href="{% url 'invent:part' part.part.id %}">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+    {% endfor %}
+  {% endif %}
 
 {% endblock content %}

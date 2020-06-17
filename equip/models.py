@@ -67,18 +67,14 @@ class Press(models.Model):
             dt += order.timerep.total_seconds() / 3600
         return dt
 
+    def next_pm(self):
+        """Next PM"""
+        return self.pm_set.get(closed=False)
+
     def last_pm(self):
-        """Last PM date"""
-        orders = self.object.order_set.filter(
-            closed=True,
-            ordertype='PM'
-        )
-        if orders.exists():
-            last_pm_order = orders.first()
-            last_pm_date = last_pm_order.repdate
-        else:
-            last_pm_date = 'Never'
-        return last_pm_date
+        """Last PM """
+        return self.pm_set.filter(closed=True).last()
+
 
     def status(self):
         """Get press status"""

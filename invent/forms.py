@@ -1,6 +1,8 @@
 from django import forms
 from .models import Part, Vendor
 
+from mtn.cm import is_empty_param
+
 
 class PartCreateForm(forms.ModelForm):
     amount = forms.IntegerField(min_value=0, initial=0)
@@ -30,6 +32,13 @@ class PartCreateForm(forms.ModelForm):
             }
             ),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if (is_empty_param(cleaned_data.get("partnum")) and
+                is_empty_param(cleaned_data.get("descr"))):
+            raise forms.ValidationError(
+                "Please fill-in either a part number or description!")
 
 
 class VendorCreateForm(forms.ModelForm):

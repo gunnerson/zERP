@@ -10,10 +10,7 @@ from equip.views import (
     MapData,
 )
 
-from mtn.views import (
-    OrderListView,
-    add_pm,
-)
+from mtn.views import OrderListView
 
 app_name = "equip"
 
@@ -22,8 +19,6 @@ urlpatterns = [
     path('equipment/map', load_map, name='load_map'),
     path('api/data/equipment/map', MapData.as_view(), name='map-data'),
     path('equipment/press/<int:pk>/', PressDetailView.as_view(), name='press'),
-    path('equipment/press/<int:pk>/add_pm/', add_pm,
-         name='add_pm'),
     path('equipment/press/<int:pk>/orders/', OrderListView.as_view(),
          name='press-orders'),
     path('equipment/press/<int:pk>/notes/', PressUpdateView.as_view(

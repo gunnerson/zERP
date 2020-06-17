@@ -225,4 +225,10 @@ tr:nth-child(odd) {
   padding-inline-start: 5px;
 }
 
-
+.inputtable {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: inherit;
+  text-align: center;
+}

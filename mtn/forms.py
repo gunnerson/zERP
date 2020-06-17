@@ -1,6 +1,7 @@
 from django import forms
+from tempus_dominus.widgets import DatePicker
 
-from .models import Order, Image
+from .models import Order, Image, Pm
 from staff.models import Employee
 from equip.models import Press
 from .cm import is_empty_param
@@ -59,12 +60,9 @@ class OrderUpdateForm(forms.ModelForm):
         super(OrderUpdateForm, self).__init__(*args, **kwargs)
         self.fields['origin'].disabled = True
         self.fields['local'].disabled = True
-        if (self.instance.ordertype == "ST" or
-                self.instance.ordertype == "PM"):
+        if self.instance.ordertype == "ST":
             self.fields['cause'].disabled = True
-        if self.instance.ordertype == "PM":
-            self.fields['ordertype'].disabled = True
-            self.fields['descr'].disabled = True
+
 
     def clean(self):
         cleaned_data = super().clean()
@@ -83,3 +81,36 @@ class ImageCreateForm(forms.ModelForm):
         model = Image
         fields = ['image']
         labels = {'image': '', }
+
+
+class PmForm(forms.ModelForm):
+    class Meta:
+        model = Pm
+        fields = ['local', 'pm_date', 'descr', 'closed', 'repby', 'time_required',
+                  'closed', ]
+        labels = {
+            'local': 'Location',
+            'pm_date': 'Date',
+            'descr': 'Description',
+            'repby': 'Performed by',
+            'time_required': 'Time required',
+            'closed': 'Closed',
+        }
+        widgets = {
+            'pm_date': DatePicker(),
+            'descrrep': forms.Textarea(attrs={'cols': 80}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(PmForm, self).__init__(*args, **kwargs)
+        self.fields['local'].disabled = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get("closed"):
+            if (is_empty_param(cleaned_data.get("repby")) or
+                is_empty_param(cleaned_data.get("time_required")) or
+                is_empty_param(cleaned_data.get("descr")) or
+                    is_empty_param(cleaned_data.get("pm_date"))):
+                cleaned_data.update({'closed': False})
+                raise forms.ValidationError("Please fill-in all fields!")

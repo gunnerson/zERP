@@ -1,0 +1,79 @@
+{% extends "mtn/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'mtn:pm-list' %}" role="button" class="side-menu-link">Back</a>
+    </li>
+    <li>
+      <a href="{% url 'mtn:update_pm_parts' pm.id %}" role="button" class="side-menu-link">Update parts</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:pm-list' %}">PM orders</a></li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Update PM order</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  {% for key,value in form.errors.items %}
+    <div class="col-3 alert alert-danger">
+      <strong style="font-size: 1.5rem;">{{ value|escape }}</strong>
+    </div>
+  {% endfor %}
+  {% if messages %}
+    <ul class="messages" style="color:red;">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+  <form action="{% url 'mtn:edit_pm' pm.id %}" method='post'>
+    {% csrf_token %}
+    <div class="row">
+      <div class="col">
+        {{ form.local|as_crispy_field }}
+      </div>
+      <div class="col">
+        {{ form.pm_date|as_crispy_field }}
+      </div>
+      <div class="col">
+        {{ form.repby|as_crispy_field }}
+      </div>
+      <div class="col">
+        {{ form.time_required|as_crispy_field }}
+      </div>
+    </div>
+    {{ form.descr|as_crispy_field }}
+    {% if pm.closed == False %}
+      {{ form.closed|as_crispy_field }}
+    {% endif %}
+    <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
+    <a href="{% url 'mtn:add_pm_part' pm.id %}" name="submit" role="button" class="btn btn-rahco">Add part</a>
+    <a href="{% url 'mtn:import_parts' pm.local.id %}" name="submit" role="button" class="btn btn-rahco">Import parts from last PM</a>
+    <br>
+    <br>
+  </form>
+
+  {% if used_parts %}
+    <b>Used Parts:</b>
+    {% for part in used_parts %}
+      <a href="{% url 'invent:part' part.part.id %}">{{ part.part.partnum }} (x{{ part.amount_used }}),&nbsp</a>
+    {% endfor %}
+  {% endif %}
+
+{% endblock content %}

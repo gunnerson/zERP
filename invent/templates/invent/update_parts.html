@@ -1,0 +1,55 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item active">Update parts</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Update parts</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  {% if messages %}
+    <ul class="messages" style="color:red;">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="POST" action=".">
+    {% csrf_token %}
+    <div class="container-fluid justify-content-start ml-1">
+      <table>
+        {% for object in object_list %}
+          <tr class="row border" style="width:500px;">
+            <th class="col border-right text-nowrap text-truncate">
+                {{ object.part.partnum }}
+            </th>
+            <th class="col-3" style="padding:0;">
+              <input type="text" name="{{ object.id }}" class="textinput textInput form-control inputtable" value="{{ object.amount_used }}">
+            </th>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-rahco">Update parts</button>
+  </form>
+
+{% endblock content %}

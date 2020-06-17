@@ -3,11 +3,14 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import Part, UsedPart, Vendor
 from .forms import PartCreateForm, VendorCreateForm
-from mtn.cm import has_group, is_valid_vendor, is_valid_param, get_url_kwargs
-from mtn.models import Order
+from mtn.cm import has_group, is_valid_vendor, is_valid_param, \
+    get_url_kwargs, is_empty_param
+from mtn.models import Order, Pm
+from equip.models import Press
 
 
 class PartListView(LoginRequiredMixin, ListView):
@@ -28,7 +31,10 @@ class PartListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Filter parts by part number, vendor and press
         if 'pk' in self.kwargs:
-            order = Order.objects.get(id=self.kwargs['pk'])
+            if '/order/' in self.request.META['HTTP_REFERER']:
+                order = Order.objects.get(id=self.kwargs['pk'])
+            else:
+                order = Pm.objects.get(id=self.kwargs['pk'])
         qs = Part.objects.all()
         request = self.request
         query = request.GET.get('query', None)
@@ -45,23 +51,65 @@ class PartListView(LoginRequiredMixin, ListView):
         # Check if enough in stock, add to work order and subtrack
         # from amount in stock
         order_id = self.kwargs['pk']
-        order = Order.objects.get(id=order_id)
+        if '/order/' in self.request.META['HTTP_REFERER']:
+            is_pm = False
+            order = Order.objects.get(id=order_id)
+        else:
+            is_pm = True
+            order = Pm.objects.get(id=order_id)
+        added_parts = order.parts.all()
         used_part_id = self.request.POST.get('used_part', None)
         used_part = Part.objects.get(id=used_part_id)
-        press = order.local
-        amount = self.request.POST.get('amount', None)
-        if int(amount) <= used_part.amount:
-            new_used_part = UsedPart(part=used_part, order=order,
-                                     amount_used=amount)
-            new_used_part.save()
-            used_part.amount -= int(amount)
-            used_part.cat.add(press)
-            used_part.save(update_fields=['amount'])
-            return redirect('mtn:order', pk=order_id)
-        else:
+        if used_part in added_parts:
             messages.add_message(request, messages.INFO,
-                                 'Not enough items in stock')
+                                 'Part has already been added')
             return redirect(request.META['HTTP_REFERER'])
+        else:
+            press = order.local
+            amount = self.request.POST.get('amount', None)
+            if int(amount) <= used_part.amount:
+                new_used_part = UsedPart(part=used_part, amount_used=amount)
+                if is_pm:
+                    new_used_part.pm = order
+                else:
+                    new_used_part.order = order
+                new_used_part.save()
+                used_part.amount -= int(amount)
+                used_part.cat.add(press)
+                used_part.save(update_fields=['amount'])
+                if is_pm:
+                    return redirect('mtn:edit_pm', pk=order_id)
+                else:
+                    return redirect('mtn:edit_order', pk=order_id)
+            else:
+                messages.add_message(request, messages.INFO,
+                                     'Not enough items in stock')
+                return redirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def import_parts(request, pk):
+    press = Press.objects.get(id=pk)
+    last_pm = press.last_pm()
+    cur_pm = press.pm_set.get(closed=False)
+    last_used_parts = UsedPart.objects.filter(pm=last_pm)
+    cur_used_parts = UsedPart.objects.filter(pm=cur_pm)
+    partlist = cur_used_parts.values_list('part_id', flat=True)
+    for used_part in last_used_parts:
+        if used_part.part.id not in partlist:
+            amount = used_part.amount_used
+            if amount <= used_part.part.amount:
+                new_part = used_part
+                new_part.pk = None
+                new_part.pm = cur_pm
+                used_part.part.amount -= amount
+                new_part.save()
+                used_part.part.save(update_fields=['amount'])
+            else:
+                messages.add_message(request, messages.INFO,
+                                     'Not enough items in stock for part: \
+                                {0}'.format(used_part.part))
+    return redirect(request.META['HTTP_REFERER'])
 
 
 class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -76,6 +124,12 @@ class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         else:
             test_func = False
         return test_func
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.partnum = str(f'{self.object.id:06}')
+        self.object.save(update_fields=['partnum'])
+        return redirect('invent:partlist')
 
 
 class PartDetailView(LoginRequiredMixin, DetailView):
@@ -103,39 +157,10 @@ class PartUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return test_func
 
 
-class UsedPartListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    """Delete marked parts from work orders"""
-    model = UsedPart
-
-    def test_func(self):
-        return self.request.user.is_superuser
-
-    def get_queryset(self):
-        qs = UsedPart.objects.all().order_by('-order')
-        check_marked = self.request.GET.get('check_marked')
-        if check_marked:
-            qs = qs.filter(marked_to_delete=check_marked)
-        return qs
-
-    def post(self, request, *args, **kwargs):
-        delete_confirm = self.request.POST.get('delete_confirm')
-        used_parts = UsedPart.objects.filter(marked_to_delete=True)
-        if delete_confirm:
-            # Return deleted to stock
-            for upart in used_parts:
-                part = upart.part
-                part.amount = upart.amount_used + part.amount
-                part.save(update_fields=['amount'])
-            UsedPart.objects.filter(marked_to_delete=True).delete()
-            messages.add_message(request, messages.INFO,
-                                 'Marked entries successfully deleted')
-        return redirect(request.META['HTTP_REFERER'])
-
-
 class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    """Mark used parts in a work order for deletion"""
+    """Update used parts"""
     model = UsedPart
-    template_name = 'invent/delete_part.html'
+    template_name = 'invent/update_parts.html'
 
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
@@ -149,17 +174,42 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         # Filter parts associated with requested
-        self.order = get_object_or_404(Order, id=self.kwargs['pk'])
-        return UsedPart.objects.filter(order=self.order)
+        if '/order/' in self.request.META['HTTP_REFERER']:
+            self.order = get_object_or_404(Order, id=self.kwargs['pk'])
+            return UsedPart.objects.filter(order=self.order)
+        else:
+            self.pm = get_object_or_404(Pm, id=self.kwargs['pk'])
+            return UsedPart.objects.filter(pm=self.pm)
 
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs['pk']
-        UsedPart.objects.filter(order_id=order_id).update(
-            marked_to_delete=False)
-        marked_parts = request.POST.getlist('marked_to_delete')
-        for part in marked_parts:
-            UsedPart.objects.filter(pk=part).update(marked_to_delete=True)
-        return redirect('mtn:order', pk=order_id)
+        for key, value in request.POST.items():
+            try:
+                value = int(value)
+                usedpart = UsedPart.objects.get(id=key)
+                amount_before = usedpart.amount_used
+                if value == 0:
+                    usedpart.delete()
+                elif amount_before != value:
+                    amount_in_stock = usedpart.part.amount
+                    if amount_in_stock >= value - amount_before:
+                        usedpart.part.amount += amount_before - value
+                        usedpart.amount_used = value
+                        usedpart.save(update_fields=['amount_used'])
+                        usedpart.part.save(update_fields=['amount'])
+                    else:
+                        messages.add_message(request, messages.INFO,
+                                             'Not enough items in stock for part: \
+                                {0}'.format(usedpart.part.partnum))
+                        return redirect(request.META['HTTP_REFERER'])
+            except UsedPart.DoesNotExist:
+                pass
+            except ValueError:
+                pass
+        if '/order/' in self.request.META['HTTP_REFERER']:
+            return redirect('mtn:order', pk=order_id)
+        else:
+            return redirect('mtn:edit_pm', pk=order_id)
 
 
 class VendorListView(LoginRequiredMixin, ListView):

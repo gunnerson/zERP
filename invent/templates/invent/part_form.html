@@ -27,6 +27,11 @@
 
 {% block content %}
 
+  {% for key,value in form.errors.items %}
+    <div class="col-5 alert alert-danger">
+      <strong style="font-size: 1.5rem;">{{ value|escape }}</strong>
+    </div>
+  {% endfor %}
   <form action="{% url 'invent:new_part' %}" method='post'>
   {% csrf_token %}
     <div class="row">

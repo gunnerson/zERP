@@ -1,0 +1,48 @@
+{% extends "mtn/base.html" %}
+
+{% load poll_extras %}
+
+<script>
+  {% block jquery %}
+
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+
+  {% endblock %}
+</script>
+
+{% block left-menu%}
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item active"> PM Orders</li>
+    </ol>
+  </div>
+  <h4 class="page-title">PM Orders</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+<div class="container-fluid justify-content-start ml-1" style="width:400px;">
+  <table>
+    {% for object in object_list %}
+      <tr class='clickable-row row border' data-href="{% url 'mtn:edit_pm' object.id %}">
+        <th class="col border-right">
+          {{ object.local }}
+        </th>
+        <th class="col border-right">
+          {{ object.due_date }}
+        </th>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock content %}
