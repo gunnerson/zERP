@@ -289,7 +289,7 @@ def create_pms(request):
             if pms.exists() is False:
                 Pm(
                     local=press,
-                    date=timezone.now().date(),
+                    pm_date=timezone.now().date(),
                     periodic=timedelta(days=180),
                 ).save()
         return redirect('mtn:index')
