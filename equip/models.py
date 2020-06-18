@@ -11,11 +11,13 @@ class Press(models.Model):
     GENERAL = 'GN'
     BUILDING = 'BD'
     LIFTING = 'LF'
+    TOOLING = 'TL'
     GROUPS = [
         (PRODUCTION, 'Production'),
         (GENERAL, 'General'),
         (BUILDING, 'Building'),
         (LIFTING, 'Lifting equipment'),
+        (TOOLING, 'Tooling'),
     ]
     CONVENTIONAL = 'CN'
     VACUUM = 'VC'

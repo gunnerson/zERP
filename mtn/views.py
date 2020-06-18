@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect
 from django.http import Http404
 from datetime import timedelta
@@ -10,7 +11,6 @@ from pathlib import Path
 
 from .models import Order, Image, Downtime, Pm
 from equip.models import Press
-from invent.models import UsedPart
 from staff.models import Employee
 from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm, PmForm
 from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, \
@@ -99,10 +99,17 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
-        # If order type isn't "repair" disable "cause" field
-        if (self.object.ordertype == "ST" or
-                self.object.ordertype == "PM"):
+        if self.object.ordertype == "ST":
             self.object.cause = "NW"
+        mold = form.cleaned_data.get('mold')
+        if is_valid_param(mold):
+            format_moldstr = re.sub(r'[\W_]+', '', mold).upper()
+            try:
+                press = Press.objects.get(pname=format_moldstr)
+            except Press.DoesNotExist:
+                press = Press(pname=format_moldstr, group='TL')
+                press.save()
+            self.object.local = press
         self.object.save()
         if self.object.status == 'DN':
             Downtime(order=self.object, start=timezone.now(),
@@ -196,7 +203,6 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['used_parts'] = used_parts
         context['timereph'] = timereph
         return context
-
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

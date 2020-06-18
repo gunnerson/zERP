@@ -5,17 +5,31 @@
 <script>
   {% block jquery %}
 
-    $("#groupSelect, #subgroupSelect").change(function () {
-      var endpoint = "{% url 'mtn:ajax_new_order' %}";
+    function localSetup() {
+      var mold = $("#id_mold").val();
       var group = $("#groupSelect").val();
-      var subgroup = $("#subgroupSelect").val();
-
-      if(group != "PR" ){
+      if (group == "TL" || mold != ""){
+          $("#localField").hide();
+          $("#moldField").show();
+          $("#groupSelect").val("TL");
+          group = "TL";
+        } else {
+          $("#localField").show();
+          $("#moldField").hide();
+      };
+      if(group != "PR"){
         $("#subgroupField").hide();
       } else {
         $("#subgroupField").show();
       };
+    };
 
+    localSetup();
+
+    $("#groupSelect, #subgroupSelect").change(function () {
+      var endpoint = "{% url 'mtn:ajax_new_order' %}";
+      var group = $("#groupSelect").val();
+      var subgroup = $("#subgroupSelect").val();
       $.ajax({
         url: endpoint,
         data: {
@@ -23,10 +37,10 @@
           'subgroup': subgroup,
         },
         success: function (data) {
+          localSetup();
           $("#id_local").html(data);
         }
       });
-
     });
 
   {% endblock %}
@@ -57,6 +71,19 @@
 
 {% block content %}
 
+  {% for key,value in form.errors.items %}
+    <div class="col-3 alert alert-danger">
+      <strong style="font-size: 1.5rem;">{{ value|escape }}</strong>
+    </div>
+  {% endfor %}
+  {% if messages %}
+    <ul class="messages" style="color:red;">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
   <form method='post' id="orderForm" novalidate>
     {% csrf_token %}
     <div class="container-fluid">
@@ -71,6 +98,7 @@
             <option value="GN">General</option>
             <option value="BD">Building</option>
             <option value="LF">Lifting equipment</option>
+            <option value="TL">Tooling</option>
           </select>
         </div>
         <div class="form-group col-sm" id="subgroupField">
@@ -84,8 +112,11 @@
             <option value="OT">Other</option>
           </select>
         </div>
-        <div class="col-sm">
+        <div class="col-sm" id="localField">
           {{ form.local|as_crispy_field }}
+        </div>
+        <div class="col-sm" id="moldField">
+          {{ form.mold|as_crispy_field }}
         </div>
         <div class="col-sm">
           {{ form.ordertype|as_crispy_field }}
@@ -98,3 +129,4 @@
   </form>
 
 {% endblock content %}
+

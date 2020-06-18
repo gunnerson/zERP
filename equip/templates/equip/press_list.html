@@ -54,42 +54,32 @@
         </div>
         <div class="">
           <div class="form-check mx-2">
-            {% if production_checked %}
-              <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}" checked>
-            {% else %}
-              <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}">
-            {% endif %}
+            <input type="checkbox" class="form-check-input" name="production" id="production" value="{{ production_checked }}" {% if production_checked %}checked{% endif %}>
             <label class="form-check-label" for="production">Production</label>
           </div>
         </div>
         <div class="">
           <div class="form-check mx-2">
-            {% if building_checked %}
-              <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}" checked>
-            {% else %}
-              <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}">
-            {% endif %}
+            <input type="checkbox" class="form-check-input" name="building" id="building" value="{{ building_checked }}" {% if building_checked %}checked{% endif %}>
             <label class="form-check-label" for="building">Building</label>
           </div>
         </div>
         <div class="">
           <div class="form-check mx-2">
-            {% if lifting_checked %}
-              <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}" checked>
-            {% else %}
-              <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}">
-            {% endif %}
+            <input type="checkbox" class="form-check-input" name="lifting" id="lifting" value="{{ lifting_checked }}" {% if lifting_checked %}checked{% endif %}>
             <label class="form-check-label" for="lifting">Lifting Equipment</label>
           </div>
         </div>
         <div class="">
           <div class="form-check mx-2">
-            {% if general_checked %}
-              <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}" checked>
-            {% else %}
-              <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}">
-            {% endif %}
+            <input type="checkbox" class="form-check-input" name="general" id="general" value="{{ general_checked }}" {% if general_checked %}checked{% endif %}>
             <label class="form-check-label" for="general">General</label>
+          </div>
+        </div>
+        <div class="">
+          <div class="form-check mx-2">
+            <input type="checkbox" class="form-check-input" name="tooling" id="tooling" value="{{ tooling_checked }}" {% if tooling_checked %}checked{% endif %}>
+            <label class="form-check-label" for="tooling">Tooling</label>
           </div>
         </div>
       </div>

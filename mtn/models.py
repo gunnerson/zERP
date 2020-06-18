@@ -49,6 +49,7 @@ class Order(models.Model):
     local = models.ForeignKey(Press,
                               on_delete=models.SET_NULL,
                               null=True,
+                              blank=True,
                               )
     descr = models.TextField()
     date_added = models.DateTimeField(default=now)

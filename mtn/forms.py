@@ -8,13 +8,18 @@ from .cm import is_empty_param
 
 
 class OrderCreateForm(forms.ModelForm):
+    mold = forms.CharField(required=False)
+
     class Meta:
         model = Order
         fields = ['origin', 'local', 'ordertype', 'descr', 'status', ]
-        labels = {'origin': 'Originator', 'local': 'Location',
-                  'ordertype': 'Type', 'descr': 'Description',
-                  'status': 'Priority',
-                  }
+        labels = {
+            'origin': 'Originator',
+            'local': 'Location',
+            'ordertype': 'Type',
+            'descr': 'Description',
+            'status': 'Priority',
+        }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
     def __init__(self, request=None, press_id=None, *args, **kwargs):
@@ -22,35 +27,47 @@ class OrderCreateForm(forms.ModelForm):
         if press_id is not None:
             press = Press.objects.get(id=press_id)
             self.fields['local'].initial = press
-        ordertype_choices = [('', '---------'), ('RE', 'Repair'),
-                             ('ST', 'Setup')]
         status_choices = [('', '---------'),
-                          ('DN', 'Priority 1: out of order'),
-                          ('SB', 'Priority 2: operational'), ]
+                          ('DN', 'Priority 1: out of order, in production'),
+                          ('SB', 'Priority 2: operational or not in production'), ]
         try:
-            origin_initial = Employee.objects.get(user=request.user)
+            self.fields['origin'].initial = Employee.objects.get(
+                user=request.user)
         except Employee.DoesNotExist:
-            origin_initial = None
-        if origin_initial is not None:
-            self.fields['origin'].initial = origin_initial
-        self.fields['ordertype'].choices = ordertype_choices
+            pass
         self.fields['status'].choices = status_choices
         self.fields['status'].initial = ''
-        self.fields['ordertype'].initial = ''
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cc_local = cleaned_data.get("local")
+        cc_mold = cleaned_data.get("mold")
+        if is_empty_param(cc_local) and is_empty_param(cc_mold):
+            msg = forms.ValidationError(
+                ('Select location!'),
+                code='invalid')
+            self.add_error('local', msg)
+            self.add_error('mold', msg)
 
 
 class OrderUpdateForm(forms.ModelForm):
-
     class Meta:
         model = Order
         fields = ['origin', 'local', 'ordertype', 'descr', 'closed',
                   'repby', 'cause', 'descrrep', 'timerep', 'status', ]
-        labels = {'origin': 'Originator', 'local': 'Location',
-                  'ordertype': 'Type', 'descr': 'Description',
-                  'repby': 'Repaired by',
-                  'cause': 'Cause of repair', 'descrrep':
-                  'Description of repair', 'timerep': 'Time of repair',
-                  'closed': 'Closed', 'status': 'Status', }
+        labels = {
+            'origin': 'Originator',
+            'local': 'Location',
+            'ordertype': 'Type',
+            'descr': 'Description',
+            'repby': 'Repaired by',
+            'mold': 'Mold',
+            'cause': 'Cause of repair',
+            'descrrep': 'Description of repair',
+            'timerep': 'Time of repair',
+            'closed': 'Closed',
+            'status': 'Status',
+        }
         widgets = {
             'descrrep': forms.Textarea(attrs={'cols': 80}),
         }
@@ -62,7 +79,6 @@ class OrderUpdateForm(forms.ModelForm):
         self.fields['local'].disabled = True
         if self.instance.ordertype == "ST":
             self.fields['cause'].disabled = True
-
 
     def clean(self):
         cleaned_data = super().clean()

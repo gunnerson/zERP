@@ -36,22 +36,26 @@ class PressListView(LoginRequiredMixin, ListView):
             building_checked = True
             lifting_checked = True
             general_checked = True
+            tooling_checked = True
         else:
             production_checked = self.request.GET.get('production', None)
             building_checked = self.request.GET.get('building', None)
             lifting_checked = self.request.GET.get('lifting', None)
             general_checked = self.request.GET.get('general', None)
+            tooling_checked = self.request.GET.get('tooling', None)
         if ((all_checked is None) and (production_checked is None)
             and (building_checked is None) and (lifting_checked is None)
-                and (general_checked is None)):
+                and (general_checked is None) and (tooling_checked is None)):
             production_checked = True
             building_checked = False
             lifting_checked = False
             general_checked = False
+            tooling_checked = False
         context['production_checked'] = production_checked
         context['building_checked'] = building_checked
         context['lifting_checked'] = lifting_checked
         context['general_checked'] = general_checked
+        context['tooling_checked'] = tooling_checked
         return context
 
     def get_queryset(self):
@@ -62,14 +66,16 @@ class PressListView(LoginRequiredMixin, ListView):
         check_building = request.GET.get('building', None)
         check_lifting = request.GET.get('lifting', None)
         check_general = request.GET.get('general', None)
+        check_tooling = request.GET.get('tooling', None)
         if ((check_all is None) and (check_production is None)
             and (check_building is None) and (check_lifting is None)
-                and (check_general is None)):
+                and (check_general is None) and (check_tooling is None)):
             check_all = False
             check_production = True
             check_building = False
             check_lifting = False
             check_general = False
+            check_tooling = False
         if check_production:
             check_production = 'PR'
         if check_building:
@@ -78,13 +84,16 @@ class PressListView(LoginRequiredMixin, ListView):
             check_lifting = 'LF'
         if check_general:
             check_general = 'GN'
+        if check_tooling:
+            check_tooling = 'TL'
         if check_all:
             qs = Press.objects.all()
         else:
             qs = Press.objects.filter(Q(group=check_production) |
                                       Q(group=check_building) |
                                       Q(group=check_lifting) |
-                                      Q(group=check_general)
+                                      Q(group=check_general) |
+                                      Q(group=check_tooling)
                                       ).distinct()
         return qs
 
