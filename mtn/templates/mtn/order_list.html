@@ -9,6 +9,19 @@
       document.getElementById('selectform').submit();
     });
 
+    $("#checkbox-container :radio").change(function() {
+      document.getElementById('selectform').submit();
+    });
+
+    $("#searchButton").click(function() {
+      if($("#collapseSearch").is(":visible")){
+        $("#query").val('');
+        document.getElementById('selectform').submit();
+      } else {
+        $("#collapseSearch").show("slow");
+      }
+    });
+
   {% endblock %}
 </script>
 
@@ -25,7 +38,7 @@
       </li>
     {% endif %}
     <li>
-        <a class="side-menu-link" role="button" id="searchButton">Search</a>
+      <a class="side-menu-link" role="button" id="searchButton">Search</a>
     </li>
   </ul>
 
@@ -62,7 +75,6 @@
 {% block content %}
 
   <form method="GET" action="" id="selectform">
-
     <div class="{{ search_exp }}" id="collapseSearch">
       <div class="form-row">
         <div class="form-group col-3 align-self-center">
@@ -81,14 +93,53 @@
       {% endif %}
       <hr />
     </div>
-
     <div class="container mx-0" id="checkbox-container">
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" name="closed" id="closed" {% if closed %}checked{% endif %}>
-        <label class="form-check-label" for="closed">Show closed</label>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline7" name="closed" class="custom-control-input" value="off" {% if closed == 'off' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline7">All</label>
       </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline8" name="closed" class="custom-control-input"  {% if closed != 'off' and closed != 'yes' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline8">Open</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline9" name="closed" class="custom-control-input" value="yes" {% if closed == 'yes' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline9">Closed</label>
+      </div>
+      <span class="ml-3 mr-4">|</span>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline6" name="ordertype" class="custom-control-input" {% if ordertype != 'repair' and ordertype != 'setup' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline6">All</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline4" name="ordertype" class="custom-control-input" value="repair" {% if ordertype == 'repair' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline4">Repair</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline5" name="ordertype" class="custom-control-input" value="setup" {% if ordertype == 'setup' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline5">Setup</label>
+      </div>
+      <span class="ml-3 mr-4">|</span>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline1" name="lead" class="custom-control-input" {% if lead != 'personal' and lead != 'personal2' and lead != 'unassigned' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline1">All</label>
+      </div>
+      {% if request.user|has_group:"maintenance" %}
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio" id="customRadioInline2" name="lead" class="custom-control-input" value="personal" {% if lead == 'personal' %}checked{% endif %}>
+          <label class="custom-control-label" for="customRadioInline2">Personal</label>
+        </div>
+         <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio" id="customRadioInline3" name="lead" class="custom-control-input" value="unassigned" {% if lead == 'unassigned' %}checked{% endif %}>
+          <label class="custom-control-label" for="customRadioInline3">Unassigned</label>
+       </div>
+      {% else %}
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio" id="customRadioInline10" name="lead" class="custom-control-input" value="personal2" {% if lead == 'personal2' %}checked{% endif %}>
+          <label class="custom-control-label" for="customRadioInline10">Personal</label>
+        </div>
+      {% endif %}
     </div>
-
   </form>
 
   <br>

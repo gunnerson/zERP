@@ -52,14 +52,30 @@ class OrderListView(LoginRequiredMixin, ListView):
         if 'pk' in self.kwargs:
             press = Press.objects.get(id=self.kwargs['pk'])
             qs = qs.filter(local=press)
-        closed = self.request.GET.get('closed', False)
-        if closed is False:
-            qs = qs.exclude(closed=True)
-        # Search orders
+        closed = self.request.GET.get('closed', None)
+        if closed == "off":
+            pass
+        elif closed == "yes":
+            qs = qs.filter(closed=True)
+        else:
+            qs = qs.filter(closed=False)
+        ordertype = self.request.GET.get('ordertype', None)
+        if ordertype == "repair":
+            qs = qs.filter(ordertype='RE')
+        if ordertype == "setup":
+            qs = qs.filter(ordertype='ST')
         query = self.request.GET.get('query', None)
         if is_valid_param(query):
             qs = dbsearch(qs, query, 'B', 'descr', 'descrrep')
             self.count = len(qs)
+        owner = self.request.GET.get('lead', None)
+        user = Employee.objects.get(user=self.request.user)
+        if owner == 'personal':
+            qs = qs.filter(repby=user)
+        elif owner == 'unassigned':
+            qs = qs.filter(repby=None)
+        elif owner == 'personal2':
+            qs = qs.filter(origin=user)
         return qs
 
 
