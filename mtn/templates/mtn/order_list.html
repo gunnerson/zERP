@@ -84,11 +84,7 @@
 
     <div class="container mx-0" id="checkbox-container">
       <div class="form-check">
-        {% if closed %}
-          <input type="checkbox" class="form-check-input" name="closed" id="closed" checked>
-        {% else %}
-          <input type="checkbox" class="form-check-input" name="closed" id="closed" >
-        {% endif %}
+        <input type="checkbox" class="form-check-input" name="closed" id="closed" {% if closed %}checked{% endif %}>
         <label class="form-check-label" for="closed">Show closed</label>
       </div>
     </div>

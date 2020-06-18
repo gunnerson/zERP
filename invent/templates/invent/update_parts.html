@@ -1,5 +1,13 @@
 {% extends "mtn/base.html" %}
 
+<script>
+  {% block jquery %}
+
+    $('[data-toggle="tooltip"]').tooltip()
+
+  {% endblock %}
+</script>
+
 {% block left-menu %}
 
   <ul>
@@ -39,7 +47,7 @@
         {% for object in object_list %}
           <tr class="row border" style="width:500px;">
             <th class="col border-right text-nowrap text-truncate">
-                {{ object.part.partnum }}
+                <span data-toggle="tooltip" data-placement="auto" title="{{ object.part.descr }}">{{ object.part.partnum }}</span>
             </th>
             <th class="col-3" style="padding:0;">
               <input type="text" name="{{ object.id }}" class="textinput textInput form-control inputtable" value="{{ object.amount_used }}">

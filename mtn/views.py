@@ -182,7 +182,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.cause = 'UN'
             self.object.status = 'SB'
         self.object.save()
-        return redirect(self.get_success_url())
+        return redirect('mtn:order-list')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

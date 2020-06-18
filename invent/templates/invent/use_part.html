@@ -11,6 +11,8 @@
       document.getElementById('selectform').submit();
     });
 
+    $('[data-toggle="tooltip"]').tooltip()
+
   {% endblock %}
 </script>
 
@@ -95,7 +97,7 @@
         {% for object in object_list %}
           <div class="form-check">
             <input class="form-check-input" type="radio" name="used_part" value={{ object.pk }} required>
-            <label class="form-check-label">
+            <label class="form-check-label" data-toggle="tooltip" data-placement="auto" title="{{ object.descr }}">
               {{ object.partnum }} (x{{ object.amount }})
             </label>
           </div>
