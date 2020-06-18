@@ -67,6 +67,7 @@ class Press(models.Model):
         )
         for order in orders:
             dt += order.timerep.total_seconds() / 3600
+            dt += order.timerepidle.total_seconds() / 3600
         return dt
 
     def next_pm(self):
