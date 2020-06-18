@@ -12,7 +12,7 @@ from .views import (
     create_pms,
     PmListView,
     PmUpdateView,
-
+    bulk_update,
 )
 from invent.views import PartListView, OrderPartsListView, import_parts
 
@@ -37,6 +37,7 @@ urlpatterns = [
          ImageCreateView.as_view(), name='image'),
     path('mwo/order-list/toggle/<int:pk>/<slug:func>/', repair_toggle,
          name='repair_toggle'),
+    path('mwo/order/bulk-update/', bulk_update, name='bulk-update'),
     path('mwo/pm/bulk-create/', create_pms, name='create-pms'),
     path('mwo/pm-list/', PmListView.as_view(), name='pm-list'),
     path('mwo/pm/<int:pk>/', PmUpdateView.as_view(), name='edit_pm'),

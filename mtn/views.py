@@ -333,3 +333,12 @@ class PmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super().get_context_data(*args, **kwargs)
         context['used_parts'] = self.object.usedpart_set.all()
         return context
+
+
+@login_required
+def bulk_update(request):
+    orders = Order.objects.all()
+    for order in orders:
+        order.timerepidle = timedelta()
+        order.save(update_fields=['timerepidle'])
+    return redirect('mtn:index')
