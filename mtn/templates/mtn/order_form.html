@@ -71,19 +71,6 @@
 
 {% block content %}
 
-  {% for key,value in form.errors.items %}
-    <div class="col-3 alert alert-danger">
-      <strong style="font-size: 1.5rem;">{{ value|escape }}</strong>
-    </div>
-  {% endfor %}
-  {% if messages %}
-    <ul class="messages" style="color:red;">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
-        {% endfor %}
-    </ul>
-  {% endif %}
-
   <form method='post' id="orderForm" novalidate>
     {% csrf_token %}
     <div class="container-fluid">

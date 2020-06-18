@@ -206,7 +206,7 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        dt_sessions = Downtime.objects.filter(order=self.object)
+        dt_sessions = Downtime.objects.filter(order=self.object, dttype='RE')
         if dt_sessions.exists():
             has_dt = True
         else:

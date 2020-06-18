@@ -43,11 +43,14 @@ class OrderCreateForm(forms.ModelForm):
         cc_local = cleaned_data.get("local")
         cc_mold = cleaned_data.get("mold")
         if is_empty_param(cc_local) and is_empty_param(cc_mold):
-            msg = forms.ValidationError(
+            msg1 = forms.ValidationError(
                 ('Select location!'),
                 code='invalid')
-            self.add_error('local', msg)
-            self.add_error('mold', msg)
+            msg2 = forms.ValidationError(
+                ('Fill-in mold number!'),
+                code='invalid')
+            self.add_error('local', msg1)
+            self.add_error('mold', msg2)
 
 
 class OrderUpdateForm(forms.ModelForm):
@@ -87,7 +90,7 @@ class OrderUpdateForm(forms.ModelForm):
         if cc_closed and is_empty_param(cc_timerep) and self.has_dt is False:
             cleaned_data.update({'closed': False})
             msg = forms.ValidationError(
-                ('No downtime sessions clocked. Please fill-in repair time field'),
+                ('No repair downtime sessions clocked. Please fill-in!'),
                 code='invalid')
             self.add_error('timerep', msg)
 
