@@ -337,8 +337,8 @@ class PmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 @login_required
 def bulk_update(request):
-    orders = Order.objects.all()
-    for order in orders:
-        order.timerepidle = timedelta()
-        order.save(update_fields=['timerepidle'])
+    # orders = Order.objects.all()
+    # for order in orders:
+    #     order.timerepidle = timedelta()
+    #     order.save(update_fields=['timerepidle'])
     return redirect('mtn:index')
