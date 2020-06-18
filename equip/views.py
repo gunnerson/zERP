@@ -16,7 +16,7 @@ from django.core import serializers
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload, Imprint
-from mtn.models import Order
+from mtn.models import Order, Pm
 from mtn.cm import has_group, get_shift
 from .forms import PressUpdateForm, UploadCreateForm
 from invent.models import Part
@@ -143,12 +143,15 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             cost_this_year += round(Order.cost_of_repair(order), 2)
         for order in last_year:
             cost_last_year += round(Order.cost_of_repair(order), 2)
-        next_pm = self.object.next_pm()
+        try:
+            next_pm = self.object.next_pm()
+            context['next_pm_id'] = next_pm.id
+            context['next_pm_duedate'] = next_pm.due_date()
+        except Pm.DoesNotExist:
+            pass
         context['uploads'] = uploads
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
-        context['next_pm_id'] = next_pm.id
-        context['next_pm_duedate'] = next_pm.due_date()
         context['cost_this_year'] = cost_this_year
         context['cost_last_year'] = cost_last_year
         return context

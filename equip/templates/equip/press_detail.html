@@ -86,20 +86,22 @@
   <div class="row">
 
     <div class="col-lg-4">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div class="header-title mb-3"><b>Next PM:</b></div>
-            <div class="chart-content-bg text-center">
-              <h4 class="font-weight-normal mb-0">
-                <a {% if request.user|has_group:"maintenance" %}href="{% url 'mtn:edit_pm' next_pm_id %}"{% else %}href=""{% endif %}>
-                  <span>{{ next_pm_duedate }}</span>
-                </a>
-              </h2>
+      {% if next_pm_id %}
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="header-title mb-3"><b>Next PM:</b></div>
+              <div class="chart-content-bg text-center">
+                <h4 class="font-weight-normal mb-0">
+                  <a {% if request.user|has_group:"maintenance" %}href="{% url 'mtn:edit_pm' next_pm_id %}"{% else %}href=""{% endif %}>
+                    <span>{{ next_pm_duedate }}</span>
+                  </a>
+                </h2>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endif %}
       <div class="col">
         <div class="card">
           <div class="card-body">
