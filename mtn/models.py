@@ -15,6 +15,7 @@ class Order(models.Model):
     """Maintenance work orders"""
     REPAIR = 'RE'
     SETUP = 'ST'
+    MOD = 'MD'
     NORMAL = 'NW'
     DAMAGE = 'DM'
     UNKNOWN = 'UN'
@@ -24,6 +25,7 @@ class Order(models.Model):
     ORDER_TYPE = [
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
+        (MOD, 'Mod'),
     ]
     CAUSE_OF_REPAIR = [
         (NORMAL, 'Normal Wear'),

@@ -108,7 +108,7 @@
       </div>
       <span class="ml-3 mr-4">|</span>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="customRadioInline6" name="ordertype" class="custom-control-input" {% if ordertype != 'repair' and ordertype != 'setup' %}checked{% endif %}>
+        <input type="radio" id="customRadioInline6" name="ordertype" class="custom-control-input" {% if ordertype != 'repair' and ordertype != 'setup' and ordertype != 'mod' %}checked{% endif %}>
         <label class="custom-control-label" for="customRadioInline6">All</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
@@ -118,6 +118,10 @@
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" id="customRadioInline5" name="ordertype" class="custom-control-input" value="setup" {% if ordertype == 'setup' %}checked{% endif %}>
         <label class="custom-control-label" for="customRadioInline5">Setup</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="customRadioInline11" name="ordertype" class="custom-control-input" value="mod" {% if ordertype == 'mod' %}checked{% endif %}>
+        <label class="custom-control-label" for="customRadioInline11">Mod</label>
       </div>
       <span class="ml-3 mr-4">|</span>
       <div class="custom-control custom-radio custom-control-inline">
@@ -180,8 +184,8 @@
               {% endif %}
               {% if order.ordertype == "ST" %}
                 <div class="badge badge-warning mb-3">Setup</div>
-              {% elif order.ordertype == "PM" %}
-                <div class="badge badge-info mb-3">PM</div>
+              {% elif order.ordertype == "MD" %}
+                <div class="badge badge-info mb-3">Mod</div>
               {% else %}
                 <div class="badge badge-danger mb-3">Repair</div>
               {% endif %}

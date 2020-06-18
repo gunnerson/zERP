@@ -80,7 +80,7 @@ class OrderUpdateForm(forms.ModelForm):
         super(OrderUpdateForm, self).__init__(*args, **kwargs)
         self.fields['origin'].disabled = True
         self.fields['local'].disabled = True
-        if self.instance.ordertype == "ST":
+        if self.instance.ordertype in ("ST", "MD"):
             self.fields['cause'].disabled = True
 
     def clean(self):

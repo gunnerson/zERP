@@ -62,8 +62,10 @@ class OrderListView(LoginRequiredMixin, ListView):
         ordertype = self.request.GET.get('ordertype', None)
         if ordertype == "repair":
             qs = qs.filter(ordertype='RE')
-        if ordertype == "setup":
+        elif ordertype == "setup":
             qs = qs.filter(ordertype='ST')
+        elif ordertype == "mod":
+            qs = qs.filter(ordertype='MD')
         query = self.request.GET.get('query', None)
         if is_valid_param(query):
             qs = dbsearch(qs, query, 'B', 'descr', 'descrrep')
@@ -115,7 +117,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
-        if self.object.ordertype == "ST":
+        if self.object.ordertype in ("ST", "MD"):
             self.object.cause = "NW"
         mold = form.cleaned_data.get('mold')
         if is_valid_param(mold):
