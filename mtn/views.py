@@ -71,7 +71,10 @@ class OrderListView(LoginRequiredMixin, ListView):
             qs = dbsearch(qs, query, 'B', 'descr', 'descrrep')
             self.count = len(qs)
         owner = self.request.GET.get('lead', None)
-        user = Employee.objects.get(user=self.request.user)
+        try:
+            user = Employee.objects.get(user=self.request.user)
+        except Employee.DoesNotExist:
+            user = None
         if owner == 'personal':
             qs = qs.filter(repby=user)
         elif owner == 'unassigned':

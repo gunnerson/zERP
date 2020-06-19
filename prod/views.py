@@ -28,7 +28,6 @@ def upload_sched(request):
     return render(request, 'prod/sched_upload.html', {'form': form})
 
 
-@login_required
 def generate_schedule(f):
     qs = Job.objects.all().only('name')
     iqs = JobInst.objects.all()
