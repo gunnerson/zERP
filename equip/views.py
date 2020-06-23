@@ -114,18 +114,6 @@ class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['uploads'] = uploads
         return context
 
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     # Delete uploads
-    #     marked_uploads = request.POST.getlist('marked_upload', None)
-    #     if marked_uploads is not None:
-    #         uploads = Upload.objects.filter(press=self.object)
-    #         for upload_id in marked_uploads:
-    #             upload = uploads.get(id=upload_id)
-    #             upload.file.delete(save=True)
-    #             upload.delete()
-    #     return super(PressUpdateView, self).post(request, *args, **kwargs)
-
     def test_func(self):
         return has_group(self.request.user, 'maintenance')
 
@@ -240,17 +228,6 @@ class MapData(RetrieveAPIView):
     """Get data for floor map"""
 
     def get(self, request, *args, **kwargs):
-        # Generate imprints from existing SVG
-        # imprint_array = json.loads(request.GET['imprintArray'])
-        # for imprint in imprint_array:
-        #     press = Press.objects.get(id=imprint.get('press_id'))
-        #     Imprint(
-        #         press=press,
-        #         x=int(imprint.get('x')),
-        #         y=int(imprint.get('y')),
-        #         width=int(imprint.get('width')),
-        #         height=int(imprint.get('height'))
-        #     ).save()
         imps = Imprint.objects.all()
         imps_json = serializers.serialize('json', imps)
         id_list = imps.values_list('press', flat=True)
@@ -273,3 +250,4 @@ class MapData(RetrieveAPIView):
             "pressDict": press_dict,
         }
         return Response(data)
+
