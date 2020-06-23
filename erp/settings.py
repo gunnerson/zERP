@@ -14,6 +14,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+print('>>>>>>>>>>>>>>>>>>>> Settings loaded')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -156,6 +157,7 @@ CSRF_COOKIE_SECURE = False
 
 # Heroku settings
 if os.getcwd() == '/app':
+    print('>>>>>>>>>>>>>>>>>>>> Heroku settings loaded')
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost')
@@ -168,7 +170,6 @@ if os.getcwd() == '/app':
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     # STATIC_ROOT = 'staticfiles'
     STATIC_ROOT = 'staticfiles'
-    MEDIA_ROOT = 'mediafiles'
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'static'),
     )
