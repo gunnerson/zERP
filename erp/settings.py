@@ -142,9 +142,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# STATICFILES_DIRS = [os.environ.get('DJANGO_STATICFILES_DIRS'), ]
-# STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
-# MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
+STATICFILES_DIRS = [os.environ.get('DJANGO_STATICFILES_DIRS'), ]
+STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
+MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
 
 # My settings
 LOGIN_URL = '/users/login/'
