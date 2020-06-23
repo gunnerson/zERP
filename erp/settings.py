@@ -156,7 +156,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CSRF_COOKIE_SECURE = False
 
 # Heroku settings
-if os.getcwd() == '/app' or os.getcwd() == '/tmp':
+if os.getcwd() == '/app' or os.getcwd()[:4] == '/tmp':
     print('>>>>>>>>>>>>>>>>>>>> Heroku settings loaded')
     import dj_database_url
     DATABASES = {
