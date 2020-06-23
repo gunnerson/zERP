@@ -142,9 +142,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [os.environ.get('DJANGO_STATICFILES_DIRS'), ]
-STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
-MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
+# STATICFILES_DIRS = [os.environ.get('DJANGO_STATICFILES_DIRS'), ]
+# STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
+# MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
 
 # My settings
 LOGIN_URL = '/users/login/'
@@ -166,7 +166,9 @@ if os.getcwd() == '/app':
     ALLOWED_HOSTS = ['*']
     # Static asset configuration
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # STATIC_ROOT = 'staticfiles'
+    STATIC_ROOT = 'staticfiles'
+    MEDIA_ROOT = 'mediafiles'
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'static'),
     )
