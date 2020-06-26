@@ -258,6 +258,11 @@ class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 @login_required
 def repair_toggle(request, pk, func):
     order = Order.objects.get(id=pk)
+    pending_session = Downtime.objects.filter(order=order).last()
+    if pending_session is not None:
+        if is_empty_param(pending_session.end):
+            pending_session.end = timezone.now()
+            pending_session.save(update_fields=['end'])
     if func == 'start':
         new_status = 'RE'
         if order.repby is None:
@@ -271,26 +276,11 @@ def repair_toggle(request, pk, func):
         Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     elif func == 'stop':
         new_status = 'DN'
-        pending_session = Downtime.objects.filter(order=order).last()
-        if pending_session is not None:
-            if is_empty_param(pending_session.end):
-                pending_session.end = timezone.now()
-                pending_session.save(update_fields=['end'])
         Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     elif func == 'ready':
         new_status = 'SB'
-        pending_session = Downtime.objects.filter(order=order).last()
-        if pending_session is not None:
-            if is_empty_param(pending_session.end):
-                pending_session.end = timezone.now()
-                pending_session.save(update_fields=['end'])
     else:
         new_status = 'AP'
-        pending_session = Downtime.objects.filter(order=order).last()
-        if pending_session is not None:
-            if is_empty_param(pending_session.end):
-                pending_session.end = timezone.now()
-                pending_session.save(update_fields=['end'])
         Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     order.status = new_status
     order.save(update_fields=['status'])
@@ -384,10 +374,10 @@ def Dt(request, pk):
         else:
             formset = DtFormSet(request.POST)
             if formset.is_valid():
+                formset.save()
                 for dt_session in dt_list:
                     if dt_session.end == dt_session.start:
                         dt_session.delete()
-                formset.save()
                 return redirect('mtn:edit_order', pk=pk)
             else:
                 context = {
