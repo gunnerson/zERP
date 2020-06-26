@@ -8,11 +8,13 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
+from django.forms import modelformset_factory
 
 from .models import Order, Image, Downtime, Pm
 from equip.models import Press
 from staff.models import Employee
-from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm, PmForm
+from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm, PmForm, \
+    DowntimeForm
 from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, \
     is_empty_param
 
@@ -363,3 +365,35 @@ def bulk_update(request):
     #     order.timerepidle = timedelta()
     #     order.save(update_fields=['timerepidle'])
     return redirect('mtn:index')
+
+
+@login_required
+def Dt(request, pk):
+    if has_group(request.user, 'maintenance'):
+        order = Order.objects.get(id=pk)
+        dt_list = Downtime.objects.filter(order=order)
+        DtFormSet = modelformset_factory(Downtime, form=DowntimeForm, fields=(
+            'dttype', 'start', 'end'), extra=0)
+        if request.method != 'POST':
+            formset = DtFormSet(queryset=Downtime.objects.filter(order=order))
+            context = {
+                'formset': formset,
+                'order_id': pk,
+            }
+            return render(request, 'mtn/downtime_list.html', context)
+        else:
+            formset = DtFormSet(request.POST)
+            if formset.is_valid():
+                for dt_session in dt_list:
+                    if dt_session.end == dt_session.start:
+                        dt_session.delete()
+                formset.save()
+                return redirect('mtn:edit_order', pk=pk)
+            else:
+                context = {
+                    'formset': formset,
+                    'order_id': pk,
+                }
+                return render(request, 'mtn/downtime_list.html', context)
+    else:
+        raise Http404

@@ -111,10 +111,18 @@ class Image(models.Model):
 
 class Downtime(models.Model):
     """Downtime sessions"""
+    REPAIR = 'RE'
+    PARTS = 'AP'
+    DOWN = 'DN'
+    DT_TYPE = [
+        (REPAIR, 'Maintenance'),
+        (PARTS, 'Awaiting Parts'),
+        (DOWN, 'Out of Order'),
+    ]
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
-    dttype = models.CharField(max_length=2, null=True)
+    dttype = models.CharField(max_length=2, null=True, choices=DT_TYPE,)
 
 
 class Pm(models.Model):

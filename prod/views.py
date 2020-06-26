@@ -162,7 +162,6 @@ class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                     request, messages.INFO, 'Pick date and shift')
                 return redirect(request.META['HTTP_REFERER'])
         else:
-            print(formset.errors)
             context = {
                 'formset': formset,
             }

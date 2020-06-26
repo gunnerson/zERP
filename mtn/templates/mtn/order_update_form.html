@@ -2,6 +2,14 @@
 
 {% load crispy_forms_tags %}
 
+<script>
+  {% block jquery %}
+
+    document.getElementById('id_timerep').setAttribute('value', {{ timereph }});
+
+  {% endblock %}
+</script>
+
 {% block left-menu %}
 
   <ul>
@@ -15,6 +23,9 @@
     {% endif %}
     <li>
       <a href="{% url 'mtn:image' order.id %}" role="button" class="side-menu-link">Add image</a>
+    </li>
+    <li>
+      <a href="{% url 'mtn:dt' order.id %}" role="button" class="side-menu-link">Downtime</a>
     </li>
   </ul>
 
@@ -71,7 +82,7 @@
         {{ form.closed|as_crispy_field }}
       {% endif %}
     <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
-    <a href="{% url 'mtn:add_part' order.id %}" name="submit" role="button" class="btn btn-rahco">Add part</a>
+    <a href="{% url 'mtn:add_part' order.id %}" name="submit" role="button" class="btn btn-rahco">Save and Add Part</a>
     <br>
     <br>
   </form>

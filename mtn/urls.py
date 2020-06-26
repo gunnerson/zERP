@@ -13,6 +13,7 @@ from .views import (
     PmListView,
     PmUpdateView,
     bulk_update,
+    Dt,
 )
 from invent.views import PartListView, OrderPartsListView, import_parts
 
@@ -22,6 +23,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('mwo/order-list/', OrderListView.as_view(), name='order-list'),
     path('mwo/order/<int:pk>/', OrderDetailView.as_view(), name='order'),
+    path('mwo/order/<int:pk>/dt/', Dt, name='dt'),
     path('mwo/order/create/<int:pk>/', OrderCreateView.as_view(),
          name='new_order'),
     path('mwo/order/create/', OrderCreateView.as_view(), name='new_order'),

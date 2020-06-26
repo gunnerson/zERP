@@ -1,0 +1,51 @@
+{% extends "mtn/base.html" %}
+
+{% block left-menu%}
+
+  <ul>
+    <li>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order-list' %}">Work orders</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'mtn:order' order_id %}">Order</a></li>
+        <li class="breadcrumb-item active">Downtime</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Downtime sessions</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div class="row">
+      <div style="width:134px!important;">Category</div>
+      <div class="col-2">Start time</div>
+      <div class="col-2">End time</div>
+    </div>
+    {% for form in formset %}
+      {{ form.id }}
+      <div class="row prsch" >
+        <div style="width:134px!important; padding-top:2px;">{{ form.dttype }}</div>
+        <div class="col-2 px-0">{{ form.start }}{{ form.start.errors }}</div>
+        <div class="col-2 px-0">{{ form.end }}{{ form.end.errors }}</div>
+      </div>
+    {% endfor %}
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
+  </form>
+
+{% endblock content %}
+
+

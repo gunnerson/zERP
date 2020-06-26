@@ -1,10 +1,10 @@
 from django import forms
 from tempus_dominus.widgets import DatePicker
 
-from .models import Order, Image, Pm
+from .models import Order, Image, Pm, Downtime
 from staff.models import Employee
 from equip.models import Press
-from .cm import is_empty_param
+from .cm import is_empty_param, is_valid_param
 
 
 class OrderCreateForm(forms.ModelForm):
@@ -133,3 +133,23 @@ class PmForm(forms.ModelForm):
                     is_empty_param(cleaned_data.get("pm_date"))):
                 cleaned_data.update({'closed': False})
                 raise forms.ValidationError("Please fill-in all fields!")
+
+
+class DowntimeForm(forms.ModelForm):
+    class Meta:
+        model = Downtime
+        fields = ['dttype', 'start', 'end']
+
+    def __init__(self, *args, **kwargs):
+        super(DowntimeForm, self).__init__(*args, **kwargs)
+        self.fields['end'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cc_start = cleaned_data.get("start")
+        cc_end = cleaned_data.get("end")
+        if is_valid_param(cc_end) and cc_end < cc_start:
+            msg = forms.ValidationError(
+                ('End time must exceed start time!'),
+                code='invalid')
+            self.add_error('end', msg)
