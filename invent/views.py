@@ -126,10 +126,10 @@ class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return test_func
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
+        self.object = form.save()
         if is_empty_param(self.object.partnum):
             self.object.partnum = str(f'{self.object.id:06}')
-        self.object.save()
+            self.object.save(update_fields=['partnum'])
         return redirect('invent:partlist')
 
 

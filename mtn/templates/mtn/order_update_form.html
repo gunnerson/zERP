@@ -51,9 +51,6 @@
     {% csrf_token %}
       <div class="row">
         <div class="col">
-          {{ form.status|as_crispy_field }}
-        </div>
-        <div class="col">
           {{ form.origin|as_crispy_field }}
         </div>
         <div class="col">
