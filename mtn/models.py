@@ -78,6 +78,7 @@ class Order(models.Model):
         max_length=2,
         choices=ORDER_STATUS,
         default='SB',
+        blank=True,
     )
     closed = models.BooleanField(default=False)
     parts = models.ManyToManyField(Part, through='invent.UsedPart')

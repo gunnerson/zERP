@@ -57,7 +57,7 @@ class OrderUpdateForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['origin', 'local', 'ordertype', 'descr', 'closed',
-                  'repby', 'cause', 'descrrep', 'timerep', 'status', ]
+                  'repby', 'cause', 'descrrep', 'timerep', ]
         labels = {
             'origin': 'Originator',
             'local': 'Location',
@@ -69,7 +69,6 @@ class OrderUpdateForm(forms.ModelForm):
             'descrrep': 'Description of repair',
             'timerep': 'Time of repair',
             'closed': 'Closed',
-            'status': 'Status',
         }
         widgets = {
             'descrrep': forms.Textarea(attrs={'cols': 80}),
