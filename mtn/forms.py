@@ -42,6 +42,7 @@ class OrderCreateForm(forms.ModelForm):
         cleaned_data = super().clean()
         cc_local = cleaned_data.get("local")
         cc_mold = cleaned_data.get("mold")
+        cc_status = cleaned_data.get("status")
         if is_empty_param(cc_local) and is_empty_param(cc_mold):
             msg1 = forms.ValidationError(
                 ('Select location!'),
@@ -51,6 +52,11 @@ class OrderCreateForm(forms.ModelForm):
                 code='invalid')
             self.add_error('local', msg1)
             self.add_error('mold', msg2)
+        if is_empty_param(cc_status):
+            msg = forms.ValidationError(
+                ('Select priority!'),
+                code='invalid')
+            self.add_error('status', msg)
 
 
 class OrderUpdateForm(forms.ModelForm):
