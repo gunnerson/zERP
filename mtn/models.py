@@ -157,4 +157,3 @@ class Pm(models.Model):
             return today
         else:
             return self.pm_date
-
