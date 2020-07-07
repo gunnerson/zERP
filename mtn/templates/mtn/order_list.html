@@ -214,6 +214,9 @@
                   <b>Lead:</b> {{ order.repby }}
                 </span>
               </p>
+              {% if order.descrrep %}
+                <b>Repair: </b><span class="text-muted font-13 mb-3">{{ order.descrrep|truncatewords:18 }}</span>
+              {% endif %}
             </div> <!-- end card-body-->
           </div> <!-- end card-->
         </a>
