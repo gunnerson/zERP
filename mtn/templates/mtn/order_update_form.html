@@ -5,11 +5,9 @@
 <script>
   {% block jquery %}
 
-    document.getElementById('id_timerep').setAttribute('value', {{ timereph }});
-
-    $("#addpartBtn").click(function() {
-      document.getElementById('orderUpdateForm').submit();
-    });
+    if( '{{ timereph }}' != 'None' ) {
+      document.getElementById('id_timerep').setAttribute('value', {{ timereph }});
+    };
 
   {% endblock %}
 </script>
@@ -21,7 +19,7 @@
       <a href="{% url 'mtn:order' order.id %}" role="button" class="side-menu-link">Back</a>
     </li>
     <li>
-      <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link" id="addpartBtn">Add Part</a>
+      <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link">Add Part</a>
     </li>
     {% if used_parts %}
       <li>
@@ -67,7 +65,7 @@
     </ul>
   {% endif %}
 
-  <form action="{% url 'mtn:edit_order' order.id %}" method='post' id="orderUpdateForm">
+  <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
     {% csrf_token %}
       <div class="row">
         <div class="col">
