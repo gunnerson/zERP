@@ -7,6 +7,10 @@
 
     document.getElementById('id_timerep').setAttribute('value', {{ timereph }});
 
+    $("#addpartBtn").click(function() {
+      document.getElementById('orderUpdateForm').submit();
+    });
+
   {% endblock %}
 </script>
 
@@ -15,6 +19,9 @@
   <ul>
     <li>
       <a href="{% url 'mtn:order' order.id %}" role="button" class="side-menu-link">Back</a>
+    </li>
+    <li>
+      <a href="{% url 'mtn:add_part' order.id %}" role="button" class="side-menu-link" id="addpartBtn">Add Part</a>
     </li>
     {% if used_parts %}
       <li>
@@ -60,7 +67,7 @@
     </ul>
   {% endif %}
 
-  <form action="{% url 'mtn:edit_order' order.id %}" method='post'>
+  <form action="{% url 'mtn:edit_order' order.id %}" method='post' id="orderUpdateForm">
     {% csrf_token %}
       <div class="row">
         <div class="col">
@@ -92,7 +99,6 @@
         {{ form.closed|as_crispy_field }}
       {% endif %}
     <button name="submit" role="button" class="btn btn-rahco">Save Changes</button>
-    <a href="{% url 'mtn:add_part' order.id %}" name="submit" role="button" class="btn btn-rahco">Save and Add Part</a>
     <br>
     <br>
   </form>
