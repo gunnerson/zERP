@@ -87,6 +87,20 @@ ul {
   background-color: #164979;
 }
 
+.btn-pnclk {
+  color: white;
+  background-color: green;
+  width: 200px;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+}
+
+.btn-pnclk:hover {
+  color: white;
+  background-color: green;
+}
+
 .clickable-row:hover {
   color: #336699;
   text-decoration: inherit;

@@ -1,0 +1,49 @@
+{% extends "mtn/base.html" %}
+
+<script>
+  {% block jquery %}
+
+    $("#mainNavBar").hide();
+    $("#sidebarBlock").hide();
+    $("#pagetitleBlock").hide();
+    document.getElementsByClassName("content-page")[0].style.marginLeft = "10px";
+
+  {% endblock %}
+</script>
+
+{% block content %}
+
+  <form method="GET" action=".">
+    {% if session_status == 'punched_out' %}
+      <button name="command" role="button" type="submit" class="btn btn-pnclk" value="start">Punch In</button>
+    {% endif %}
+    {% if session_status == 'punched_in' %}
+      <button name="command" role="button" type="submit" class="btn btn-pnclk" value="lunchin">Start Lunch</button>
+    {% endif %}
+    {% if session_status == 'lunch_in' %}
+      <button name="command" role="button" type="submit" class="btn btn-pnclk" value="lunchout">End Lunch</button>
+    {% endif %}
+    {% if session_status == 'lunch_out' or session_status == 'punched_in' %}
+      <button name="command" role="button" type="submit" class="btn btn-pnclk" value="end">Punch Out</button>
+    {% endif %}
+  </form>
+  <br />
+  <a href="{% url 'pnclk:index' %}" role="button" class="btn btn-pnclk">Sign Out</a>
+
+  <br />
+  <br />
+  <div class="row" style="font-weight:bold;">
+    <div class="col-2">Punch In</div>
+    <div class="col-2">Lunch Start</div>
+    <div class="col-2">Lunch End</div>
+    <div class="col-2">Punch Out</div>
+  </div>
+  {% for record in records %}
+    <div class="row prsch" >
+      <div class="col-2">{{ record.start }}</div>
+      <div class="col-2">{{ record.lunchin }}</div>
+      <div class="col-2">{{ record.lunchout }}</div>
+      <div class="col-2">{{ record.end }}</div>
+    </div>
+  {% endfor %}
+{% endblock content %}

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'invent',
     'prod',
     'bugs',
+    'pnclk',
 ]
 
 MIDDLEWARE = [

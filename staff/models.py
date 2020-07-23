@@ -23,6 +23,7 @@ class Employee(models.Model):
                              null=True,
                              blank=True,
                              )
+    employee_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         if self.last_name is not None:

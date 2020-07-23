@@ -1,0 +1,57 @@
+{% extends "mtn/base.html" %}
+
+<script>
+  {% block jquery %}
+
+    $("#mainNavBar").hide();
+    $("#sidebarBlock").hide();
+    $("#pagetitleBlock").hide();
+    document.getElementsByClassName("content-page")[0].style.marginLeft = "10px";
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const errorMsgElement = document.getElementById('span#ErrorMsg');
+    const constraints = {
+      audio:false,
+      video:{
+        width:480,height:480
+      }};
+    async function init() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        handleSuccess(stream);
+      }
+      catch(e) {
+        errorMsgElement.innerHTML = `navigator.getUserMedia.error:${e.toString()}`;
+      };
+    };
+    function handleSuccess(stream) {
+      window.stream = stream;
+      video.srcObject = stream;
+    };
+    init();
+    var context = canvas.getContext('2d');
+    var snapshot = context.drawImage(video, 0, 0, 480, 480);
+
+  {% endblock %}
+</script>
+
+{% block content %}
+
+  <div class = "video-wrap">
+    <video id = "video" playsinline autoplay></video>
+  </div>
+  <div style="display:none">
+    <canvas id = "canvas" width = "640" height = "480"></canvas>
+  </div>
+
+  <br />
+  <form method="POST" action=".">
+    {% csrf_token %}
+    <input class="form-conrol py-2 border" style="border-radius:5px; width:20rem; text-align:center; " placeholder=" ID" name="employee_id" value="" autofocus>
+    <br />
+    <br />
+    <button role="button" type="submit" class="btn btn-pnclk">Sign In</button>
+  </form>
+
+{% endblock content %}
