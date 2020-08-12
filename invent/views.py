@@ -192,6 +192,7 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 amount_before = usedpart.amount_used
                 if value == 0:
                     usedpart.part.amount += amount_before
+                    usedpart.part.save(update_fields=['amount'])
                     usedpart.delete()
                 elif amount_before != value:
                     if usedpart.part.amount >= value - amount_before:
