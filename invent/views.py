@@ -178,10 +178,10 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         # Filter parts associated with requested
         if '/order/' in self.request.META['HTTP_REFERER']:
             self.order = get_object_or_404(Order, id=self.kwargs['pk'])
-            return UsedPart.objects.filter(order=self.order)
+            return self.order.usedpart_set.all()
         else:
             self.pm = get_object_or_404(Pm, id=self.kwargs['pk'])
-            return UsedPart.objects.filter(pm=self.pm)
+            return self.pm.usedpart_set.all()
 
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs['pk']
@@ -191,10 +191,10 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 usedpart = UsedPart.objects.get(id=key)
                 amount_before = usedpart.amount_used
                 if value == 0:
+                    usedpart.part.amount += amount_before
                     usedpart.delete()
                 elif amount_before != value:
-                    amount_in_stock = usedpart.part.amount
-                    if amount_in_stock >= value - amount_before:
+                    if usedpart.part.amount >= value - amount_before:
                         usedpart.part.amount += amount_before - value
                         usedpart.amount_used = value
                         usedpart.save(update_fields=['amount_used'])
