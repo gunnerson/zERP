@@ -41,6 +41,7 @@ def AddRecord(request, pk):
                 session_status = 'lunch_out'
             if is_valid_param(current_session.end):
                 session_status = 'punched_out'
+            context['records'] = records
         except Record.DoesNotExist:
             session_status = 'punched_out'
         command = request.GET.get('command')
@@ -60,10 +61,7 @@ def AddRecord(request, pk):
                 current_session.end = timezone.now()
                 current_session.save(update_fields=['end'])
             return redirect('pnclk:index')
-        context = {
-                    'session_status': session_status,
-                    'records': records,
-                }
+        context['session_status'] = session_status
         return render(request, 'pnclk/record.html', context)
     else:
         raise Http404
