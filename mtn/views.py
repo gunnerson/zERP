@@ -311,7 +311,7 @@ class PmListView(LoginRequiredMixin, ListView):
     model = Pm
 
     def get_queryset(self):
-        qs = Pm.objects.all().order_by('pm_date', 'local')
+        qs = Pm.objects.all().order_by('pm_date', 'local').filter(closed=False)
         return qs
 
 
