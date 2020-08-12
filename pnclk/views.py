@@ -29,6 +29,7 @@ def GetID(request):
 @login_required
 def AddRecord(request, pk):
     if has_group(request.user, 'utility'):
+        context = {}
         employee = Employee.objects.get(id=pk)
         try:
             records = Record.objects.filter(employee=employee)
