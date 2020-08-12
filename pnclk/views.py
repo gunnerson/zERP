@@ -33,13 +33,16 @@ def AddRecord(request, pk):
         try:
             records = Record.objects.filter(employee=employee)
             current_session = records.last()
-            if is_valid_param(current_session.start):
-                session_status = 'punched_in'
-            if is_valid_param(current_session.lunchin):
-                session_status = 'lunch_in'
-            if is_valid_param(current_session.lunchout):
-                session_status = 'lunch_out'
-            if is_valid_param(current_session.end):
+            if current_session is not None:
+                if is_valid_param(current_session.start):
+                    session_status = 'punched_in'
+                if is_valid_param(current_session.lunchin):
+                    session_status = 'lunch_in'
+                if is_valid_param(current_session.lunchout):
+                    session_status = 'lunch_out'
+                if is_valid_param(current_session.end):
+                    session_status = 'punched_out'
+            else:
                 session_status = 'punched_out'
             context['records'] = records
         except Record.DoesNotExist:
