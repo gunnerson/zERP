@@ -38,12 +38,14 @@
     <div class="col-2">Lunch End</div>
     <div class="col-2">Punch Out</div>
   </div>
-  {% for record in records %}
-    <div class="row prsch" >
-      <div class="col-2">{{ record.start }}</div>
-      <div class="col-2">{{ record.lunchin }}</div>
-      <div class="col-2">{{ record.lunchout }}</div>
-      <div class="col-2">{{ record.end }}</div>
-    </div>
-  {% endfor %}
+  {% if records %}
+    {% for record in records %}
+      <div class="row prsch" >
+        <div class="col-2">{{ record.start }}</div>
+        <div class="col-2">{{ record.lunchin }}</div>
+        <div class="col-2">{{ record.lunchout }}</div>
+        <div class="col-2">{{ record.end }}</div>
+      </div>
+    {% endfor %}
+  {% endif %}
 {% endblock content %}
