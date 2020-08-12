@@ -92,23 +92,24 @@ def import_parts(request, pk):
     press = Press.objects.get(id=pk)
     last_pm = press.last_pm()
     cur_pm = press.pm_set.get(closed=False)
-    last_used_parts = UsedPart.objects.filter(pm=last_pm)
-    cur_used_parts = UsedPart.objects.filter(pm=cur_pm)
+    cur_used_parts = cur_pm.usedpart_set.all()
     partlist = cur_used_parts.values_list('part_id', flat=True)
-    for used_part in last_used_parts:
-        if used_part.part.id not in partlist:
-            amount = used_part.amount_used
-            if amount <= used_part.part.amount:
-                new_part = used_part
-                new_part.pk = None
-                new_part.pm = cur_pm
-                used_part.part.amount -= amount
-                new_part.save()
-                used_part.part.save(update_fields=['amount'])
-            else:
-                messages.add_message(request, messages.INFO,
-                                     'Not enough items in stock for part: \
-                                {0}'.format(used_part.part))
+    if last_pm is not None:
+        last_used_parts = last_pm.usedpart_set.all()
+        for used_part in last_used_parts:
+            if used_part.part.id not in partlist:
+                amount = used_part.amount_used
+                if amount <= used_part.part.amount:
+                    new_part = used_part
+                    new_part.pk = None
+                    new_part.pm = cur_pm
+                    used_part.part.amount -= amount
+                    new_part.save()
+                    used_part.part.save(update_fields=['amount'])
+                else:
+                    messages.add_message(request, messages.INFO,
+                                         'Not enough items in stock for part: \
+                                    {0}'.format(used_part.part))
     return redirect(request.META['HTTP_REFERER'])
 
 

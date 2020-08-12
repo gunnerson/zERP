@@ -336,7 +336,6 @@ class PmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             Pm(
                 local=self.object.local,
                 pm_date=self.object.pm_date + self.object.periodic,
-                time_required=self.object.time_required,
                 periodic=self.object.periodic,
                 descr=self.object.descr,
             ).save()
