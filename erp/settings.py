@@ -34,8 +34,6 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
-        # Custom handler which we will use with logger 'django'.
-        # We want errors/warnings to be logged when DEBUG=False
         'console_on_not_debug': {
             'level': 'WARNING',
             'filters': ['require_debug_false'],
