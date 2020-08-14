@@ -30,7 +30,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'WARNING',
+            'level': 'INFO',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
@@ -40,7 +40,7 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
         'django.server': {
-            'level': 'WARNING',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'django.server',
         },
@@ -53,11 +53,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console', 'mail_admins', 'console_on_not_debug'],
-            'level': 'WARNING',
+            'level': 'INFO',
         },
         'django.server': {
             'handlers': ['django.server'],
-            'level': 'WARNING',
+            'level': 'INFO',
             'propagate': False,
         },
     }
