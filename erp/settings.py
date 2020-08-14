@@ -40,7 +40,7 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
         'django.server': {
-            'level': 'INFO',
+            'level': 'WARNING',
             'class': 'logging.StreamHandler',
             'formatter': 'django.server',
         },
