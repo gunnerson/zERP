@@ -204,6 +204,11 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if is_empty_param(self.object.cause):
                 self.object.cause = 'UN'
             self.object.status = 'SB'
+            if is_empty_param(self.object.repby):
+                try:
+                    self.object.repby = Employee.objects.get(user=self.request.user)
+                except Employee.DoesNotExist:
+                    pass
         self.object.save()
         return redirect('mtn:order-list')
 
@@ -267,12 +272,10 @@ def repair_toggle(request, pk, func):
         new_status = 'RE'
         if order.repby is None:
             try:
-                repby_initial = Employee.objects.get(user=request.user)
-            except Employee.DoesNotExist:
-                repby_initial = None
-            if repby_initial is not None:
-                order.repby = repby_initial
+                order.repby = Employee.objects.get(user=request.user)
                 order.save(update_fields=['repby'])
+            except Employee.DoesNotExist:
+                pass
         Downtime(order=order, start=timezone.now(), dttype=new_status).save()
     elif func == 'stop':
         new_status = 'DN'
