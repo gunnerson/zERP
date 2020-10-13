@@ -16,7 +16,7 @@ from django.core import serializers
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload, Imprint
-from mtn.models import Order, Pm
+from mtn.models import Order, Pm, Image
 from mtn.cm import has_group, get_shift, is_valid_param, get_url_kwargs
 from .forms import PressUpdateForm, UploadCreateForm
 from invent.models import Part
@@ -94,7 +94,9 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             context['next_pm_duedate'] = next_pm.due_date()
         except Pm.DoesNotExist:
             pass
+        images = Image.objects.filter(press=self.object.id)
         context['uploads'] = uploads
+        context['images'] = images
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
         context['cost_this_year'] = cost_this_year

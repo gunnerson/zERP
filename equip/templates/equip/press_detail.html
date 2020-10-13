@@ -151,6 +151,25 @@
           </div>
         </div>
       </div>
+      {% if images %}
+        <div class="card">
+          <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <div class="card-header repair">
+              <b>Show images</b>
+            </div>
+          </a>
+          <div class="collapse" id="collapseExample">
+            <div class="card-body">
+              {% for image in images %}
+              <p>
+              <a href="{{ MEDIA_URL }}{{ image }}">
+                <img src="{{ MEDIA_URL }}{{ image }}">
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <div class="col-lg-8">

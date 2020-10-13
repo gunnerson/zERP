@@ -104,6 +104,7 @@ class Order(models.Model):
 class Image(models.Model):
     """Uploaded images related to a work order"""
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
     image = models.ImageField()
 
     def __str__(self):

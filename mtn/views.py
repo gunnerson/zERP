@@ -251,6 +251,7 @@ class ImageCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         self.object = form.save(commit=False)
         file_ext = Path(self.object.image.name).suffixes
         self.object.order = order
+        self.object.press = order.local
         self.object.image.name = 'mtn/{0}/{1}{2}'.format(
             order.id, date, file_ext)
         self.object.save()
