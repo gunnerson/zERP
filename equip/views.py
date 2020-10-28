@@ -279,7 +279,7 @@ class PmListView(LoginRequiredMixin, ListView):
 def pm_clock(request):
     qs = Pmproc.objects.all()
     for proc in qs:
-        proc.hours += 5
+        proc.hours += 8
         proc.save(update_fields=['hours'])
     try:
         return redirect(request.META['HTTP_REFERER'])
