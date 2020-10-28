@@ -340,7 +340,7 @@ class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return redirect('equip:calendar')
 
 
-class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class PmschedDetailView(LoginRequiredMixin, DetailView):
     model = Pmsched
 
     # def test_func(self):
