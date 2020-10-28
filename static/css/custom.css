@@ -250,7 +250,7 @@ tr:nth-child(odd) {
 .calendar {
   width: 98%;
   margin: auto;
-  font-size: 13px;
+  font-size: 18px;
 }
 
 .calendar tr, .calendar td {
@@ -260,7 +260,7 @@ tr:nth-child(odd) {
 .calendar th {
   padding: 10px;
   text-align: center;
-  font-size: 18px;
+  font-size: 1rem;
 }
 
 .calendar td {
