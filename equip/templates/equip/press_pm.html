@@ -56,7 +56,7 @@
           <tr class="row border justify-content-start" style="width:700px;">
         {% endif %}
           <th class="col border-right text-nowrap text-truncate align-self-center my-2">
-            {{ object.descr }}
+            {{ object.descr }} {% if object.pm_part %}<a href="{% url 'invent:part' object.pm_part.id %}">{{ object.pm_part.partnum }}</a>{% endif %}
           </th>
           <th class="col border-right text-nowrap text-truncate align-self-center">
             {{ object.hours_left }}
