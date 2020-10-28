@@ -59,9 +59,11 @@
       <li>
         <a href="{% url 'equip:notes' press.id %}" class="side-menu-link" role="button">Manage</a>
       </li>
-      <li>
-        <a href="{% url 'equip:press-pm' press.id %}" class="side-menu-link" role="button">PM</a>
-      </li>
+      {% if press.pmed %}
+        <li>
+          <a href="{% url 'equip:press-pm' press.id %}" class="side-menu-link" role="button">PM</a>
+        </li>
+      {% endif %}
       <li>
         <a href="{% url 'equip:upload' press.id %}" class="side-menu-link" role="button">Upload</a>
       </li>
@@ -87,18 +89,27 @@
 
   <div class="row">
 
-    <div class="col-lg-4">
-      {% if next_pm_id %}
+    <div class="col-lg">
+      {% if press.pmed %}
         <div class="col">
           <div class="card">
             <div class="card-body">
-              <div class="header-title mb-3"><b>Next PM:</b></div>
-              <div class="chart-content-bg text-center">
-                <h4 class="font-weight-normal mb-0">
-                  <a {% if request.user|has_group:"maintenance" %}href="{% url 'mtn:edit_pm' next_pm_id %}"{% else %}href=""{% endif %}>
-                    <span>{{ next_pm_duedate }}</span>
-                  </a>
-                </h2>
+              <div class="header-title mb-3"><b>PM:</b></div>
+              <div class="chart-content-bg text-start">
+                <div class="container justify-content-start">
+                  <table>
+                    {% for object in pmprocs %}
+                      <tr class="row border justify-content-start">
+                        <th class="col border-right text-nowrap text-truncate align-self-center">
+                          {{ object.descr }}
+                        </th>
+                        <th class="col border-right text-nowrap text-truncate align-self-center">
+                          {{ object.hours_left }}
+                        </th>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -136,7 +147,7 @@
           </div>
         </div>
       </div>
-       <div class="col">
+      <div class="col">
         <div class="card">
           <div class="card-body">
             <div class="header-title mb-3"><b>Uploads:</b></div>
@@ -156,7 +167,7 @@
       </div>
     </div>
 
-    <div class="col-lg-8">
+    <div class="col-lg-7">
       <div class="card">
         <div class="card-body">
           <h4 class="header-title mb-3">Downtime</h4>

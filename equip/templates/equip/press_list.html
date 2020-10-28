@@ -22,9 +22,6 @@
       <a href="{% url 'equip:load_map' %}" class="side-menu-link" role="button">Map View</a>
     </li>
     <li>
-      <a href="{% url 'mtn:pm-list' %}" class="side-menu-link" role="button">PMs</a>
-    </li>
-    <li>
       <a href="{% url 'equip:calendar' %}" class="side-menu-link" role="button">PM Schedule</a>
     </li>
   </ul>
@@ -70,6 +67,10 @@
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" name="grp" id="tooling" class="custom-control-input" value="TL" {% if grp == 'TL' %}checked{% endif %}>
         <label class="custom-control-label" for="tooling">Tooling</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" name="grp" id="pm" class="custom-control-input" value="PM" {% if grp == 'PM' %}checked{% endif %}>
+        <label class="custom-control-label" for="pm">PM</label>
       </div>
     </div>
   </form>

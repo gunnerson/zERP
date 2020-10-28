@@ -129,34 +129,34 @@ class Downtime(models.Model):
     dttype = models.CharField(max_length=2, null=True, choices=DT_TYPE,)
 
 
-class Pm(models.Model):
-    """PMs"""
-    local = models.ForeignKey(Press,
-                              on_delete=models.SET_NULL,
-                              null=True,
-                              )
-    pm_date = models.DateField(null=True, blank=True)
-    repby = models.ForeignKey(Employee,
-                              on_delete=models.SET_NULL,
-                              null=True,
-                              blank=True,
-                              limit_choices_to={'role': "MT"},
-                              )
-    time_required = models.DurationField(null=True, blank=True)
-    periodic = models.DurationField(null=True, blank=True)
-    closed = models.BooleanField(default=False)
-    parts = models.ManyToManyField(Part, through='invent.UsedPart')
-    descr = models.TextField(null=True, blank=True)
+# class Pm(models.Model):
+#     """PMs"""
+#     local = models.ForeignKey(Press,
+#                               on_delete=models.SET_NULL,
+#                               null=True,
+#                               )
+#     pm_date = models.DateField(null=True, blank=True)
+#     repby = models.ForeignKey(Employee,
+#                               on_delete=models.SET_NULL,
+#                               null=True,
+#                               blank=True,
+#                               limit_choices_to={'role': "MT"},
+#                               )
+#     time_required = models.DurationField(null=True, blank=True)
+#     periodic = models.DurationField(null=True, blank=True)
+#     closed = models.BooleanField(default=False)
+#     parts = models.ManyToManyField(Part, through='invent.UsedPart')
+#     descr = models.TextField(null=True, blank=True)
 
-    def __str__(self):
-        return str(f'{self.id:05}')
+#     def __str__(self):
+#         return str(f'{self.id:05}')
 
-    def get_absolute_url(self):
-        return reverse('equip:press', kwargs={'pk': self.local.id})
+#     def get_absolute_url(self):
+#         return reverse('equip:press', kwargs={'pk': self.local.id})
 
-    def due_date(self):
-        today = timezone.localtime(timezone.now()).date()
-        if self.pm_date < today:
-            return today
-        else:
-            return self.pm_date
+#     def due_date(self):
+#         today = timezone.localtime(timezone.now()).date()
+#         if self.pm_date < today:
+#             return today
+#         else:
+#             return self.pm_date

@@ -20,10 +20,11 @@ from django.utils.safestring import mark_safe
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload, Imprint, Pmproc, Pmsched
-from mtn.models import Order, Pm, Image
+from mtn.models import Order, Image
 from mtn.cm import has_group, get_shift, is_valid_param, get_url_kwargs
-from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm
-from invent.models import Part
+from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
+    PmprocCreateForm
+from invent.models import Part, UsedPart
 from .utils import Calendar
 
 
@@ -44,7 +45,10 @@ class PressListView(LoginRequiredMixin, ListView):
         if group == 'on' or group is None:
             pass
         else:
-            qs = qs.filter(group=group)
+            if group == 'PM':
+                qs = qs.filter(pmed=True)
+            else:
+                qs = qs.filter(group=group)
         return qs
 
 
@@ -93,13 +97,9 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             cost_this_year += round(Order.cost_of_repair(order), 2)
         for order in last_year:
             cost_last_year += round(Order.cost_of_repair(order), 2)
-        try:
-            next_pm = self.object.next_pm()
-            context['next_pm_id'] = next_pm.id
-            context['next_pm_duedate'] = next_pm.due_date()
-        except Pm.DoesNotExist:
-            pass
         images = Image.objects.filter(press=self.object.id)
+        pmprocs = Pmproc.objects.filter(local=self.object.id)
+        context['pmprocs'] = pmprocs
         context['uploads'] = uploads
         context['images'] = images
         context['dts_total'] = dts_total
@@ -287,6 +287,31 @@ def pm_clock(request):
         return HttpResponse('Operation successful...')
 
 
+class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Schedule a PM"""
+    model = Pmproc
+    form_class = PmprocCreateForm
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press_id = self.kwargs['pk']
+        context['press_id'] = press_id
+        context['press'] = Press.objects.get(id=press_id)
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        press_id = self.kwargs['pk']
+        press = Press.objects.get(id=press_id)
+        self.object.local = press
+        self.object.hours = 0
+        self.object.save()
+        return redirect('equip:press-pm', pk=press_id)
+
+
 class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Schedule a PM"""
     model = Pmsched
@@ -334,10 +359,23 @@ class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         for proc in self.object.procs.all():
             marked = self.request.GET.get('resid_{0}'.format(proc.id), None)
             if marked:
-                proc.hours = 0
-                proc.save(update_fields=['hours'])
                 if proc.pm_part is not None:
-                    pass
+                    if proc.pm_part.amount >= proc.pm_part_amount:
+                        UsedPart(
+                            part=proc.pm_part,
+                            pm=self.object,
+                            amount_used=proc.pm_part_amount
+                        ).save()
+                        proc.pm_part.amount -= proc.pm_part_amount
+                        proc.pm_part.save(update_fields=['amount'])
+                        proc.hours = 0
+                        proc.save(update_fields=['hours'])
+                    else:
+                        messages.add_message(request, messages.INFO,
+                                             'Not enough items "{0}" in stock'.format(proc.pm_part))
+                else:
+                    proc.hours = 0
+                    proc.save(update_fields=['hours'])
         return self.render_to_response(context)
 
 # @login_required
@@ -373,7 +411,6 @@ class CalendarView(LoginRequiredMixin, ListView):
         return context
 
 
-@login_required
 def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split('-'))
@@ -381,7 +418,6 @@ def get_date(req_day):
     return datetime.today()
 
 
-@login_required
 def prev_month(d):
     first = d.replace(day=1)
     prev_month = first - timedelta(days=1)
@@ -389,7 +425,6 @@ def prev_month(d):
     return month
 
 
-@login_required
 def next_month(d):
     days_in_month = calendar.monthrange(d.year, d.month)[1]
     last = d.replace(day=days_in_month)

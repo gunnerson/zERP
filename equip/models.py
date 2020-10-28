@@ -73,14 +73,6 @@ class Press(models.Model):
             dt += order.timerepidle.total_seconds() / 3600
         return dt
 
-    def next_pm(self):
-        """Next PM"""
-        return self.pm_set.get(closed=False)
-
-    def last_pm(self):
-        """Last PM """
-        return self.pm_set.filter(closed=True).last()
-
     def status(self):
         """Get press status"""
         last_order = self.order_set.filter(closed=False).first()
@@ -131,14 +123,18 @@ class Imprint(models.Model):
 
 class Pmproc(models.Model):
     """PM procedure"""
-    local = models.ManyToManyField(Press, blank=True)
+    local = models.ForeignKey(Press, on_delete=models.SET_NULL,
+                              null=True,
+                              blank=True,
+                              )
     freq = models.PositiveIntegerField(null=True)
     pm_part = models.ForeignKey(Part,
                                 on_delete=models.SET_NULL,
                                 null=True,
+                                blank=True,
                                 )
-    pm_part_amount = models.PositiveIntegerField(null=True)
-    descr = models.TextField(null=True)
+    pm_part_amount = models.PositiveIntegerField(null=True, blank=True)
+    descr = models.CharField(max_length=200, null=True)
     hours = models.PositiveIntegerField(null=True)
 
     def hours_left(self):

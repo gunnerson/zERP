@@ -9,6 +9,12 @@
     <li>
       <a href="{% url 'equip:pmsched' press_id %}" class="side-menu-link" role="button">Schedule</a>
     </li>
+    <li>
+      <a href="{% url 'equip:add-pm' press_id %}" class="side-menu-link" role="button">Add PM</a>
+    </li>
+    <li>
+      <a href="{% url 'equip:calendar' %}" class="side-menu-link" role="button">Calendar</a>
+    </li>
   </ul>
 
 {% endblock left-menu %}

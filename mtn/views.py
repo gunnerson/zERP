@@ -10,10 +10,10 @@ from django.contrib.auth.decorators import login_required
 from pathlib import Path
 from django.forms import modelformset_factory
 
-from .models import Order, Image, Downtime, Pm
+from .models import Order, Image, Downtime
 from equip.models import Press
 from staff.models import Employee
-from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm, PmForm, \
+from .forms import OrderCreateForm, OrderUpdateForm, ImageCreateForm, \
     DowntimeForm
 from .cm import dbsearch, has_group, is_valid_param, get_url_kwargs, \
     is_empty_param
@@ -206,7 +206,8 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.object.status = 'SB'
             if is_empty_param(self.object.repby):
                 try:
-                    self.object.repby = Employee.objects.get(user=self.request.user)
+                    self.object.repby = Employee.objects.get(
+                        user=self.request.user)
                 except Employee.DoesNotExist:
                     pass
         self.object.save()
@@ -291,64 +292,64 @@ def repair_toggle(request, pk, func):
     return redirect('mtn:order-list')
 
 
-@login_required
-def create_pms(request):
-    if has_group(request.user, 'maintenance'):
-        presses = Press.objects.filter(group='PR')
-        presses = presses.exclude(subgroup='OT')
-        presses = presses.exclude(subgroup='PN')
-        for press in presses:
-            pms = Pm.objects.filter(local=press)
-            if pms.exists() is False:
-                Pm(
-                    local=press,
-                    pm_date=timezone.now().date(),
-                    periodic=timedelta(days=180),
-                ).save()
-        return redirect('mtn:index')
-    else:
-        raise Http404
+# @login_required
+# def create_pms(request):
+#     if has_group(request.user, 'maintenance'):
+#         presses = Press.objects.filter(group='PR')
+#         presses = presses.exclude(subgroup='OT')
+#         presses = presses.exclude(subgroup='PN')
+#         for press in presses:
+#             pms = Pm.objects.filter(local=press)
+#             if pms.exists() is False:
+#                 Pm(
+#                     local=press,
+#                     pm_date=timezone.now().date(),
+#                     periodic=timedelta(days=180),
+#                 ).save()
+#         return redirect('mtn:index')
+#     else:
+#         raise Http404
 
 
-class PmListView(LoginRequiredMixin, ListView):
-    """List of existing work orders"""
-    model = Pm
+# class PmListView(LoginRequiredMixin, ListView):
+#     """List of existing work orders"""
+#     model = Pm
 
-    def get_queryset(self):
-        qs = Pm.objects.all().order_by('pm_date', 'local').filter(closed=False)
-        return qs
+#     def get_queryset(self):
+#         qs = Pm.objects.all().order_by('pm_date', 'local').filter(closed=False)
+#         return qs
 
 
-class PmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Edit a pm order"""
-    model = Pm
-    form_class = PmForm
-    template_name_suffix = '_update_form'
+# class PmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     """Edit a pm order"""
+#     model = Pm
+#     form_class = PmForm
+#     template_name_suffix = '_update_form'
 
-    def test_func(self):
-        return has_group(self.request.user, 'maintenance')
+#     def test_func(self):
+#         return has_group(self.request.user, 'maintenance')
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        time_required = self.object.time_required
-        if is_valid_param(time_required):
-            time_requiredh = time_required.seconds + \
-                time_required.microseconds / 1000000
-            self.object.time_required = timedelta(hours=time_requiredh)
-        self.object.save()
-        if self.object.closed:
-            Pm(
-                local=self.object.local,
-                pm_date=timezone.now().date() + self.object.periodic,
-                periodic=self.object.periodic,
-                descr=self.object.descr,
-            ).save()
-        return redirect(self.get_success_url())
+#     def form_valid(self, form):
+#         self.object = form.save(commit=False)
+#         time_required = self.object.time_required
+#         if is_valid_param(time_required):
+#             time_requiredh = time_required.seconds + \
+#                 time_required.microseconds / 1000000
+#             self.object.time_required = timedelta(hours=time_requiredh)
+#         self.object.save()
+#         if self.object.closed:
+#             Pm(
+#                 local=self.object.local,
+#                 pm_date=timezone.now().date() + self.object.periodic,
+#                 periodic=self.object.periodic,
+#                 descr=self.object.descr,
+#             ).save()
+#         return redirect(self.get_success_url())
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['used_parts'] = self.object.usedpart_set.all()
-        return context
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(*args, **kwargs)
+#         context['used_parts'] = self.object.usedpart_set.all()
+#         return context
 
 
 @login_required

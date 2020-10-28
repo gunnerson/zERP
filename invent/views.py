@@ -9,7 +9,7 @@ from .models import Part, UsedPart, Vendor
 from .forms import PartCreateForm, VendorCreateForm
 from mtn.cm import has_group, is_valid_vendor, is_valid_param, \
     get_url_kwargs, is_empty_param
-from mtn.models import Order, Pm
+from mtn.models import Order
 from equip.models import Press
 
 
@@ -31,10 +31,7 @@ class PartListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Filter parts by part number, vendor and press
         if 'pk' in self.kwargs:
-            if '/order/' in self.request.META['HTTP_REFERER']:
-                order = Order.objects.get(id=self.kwargs['pk'])
-            else:
-                order = Pm.objects.get(id=self.kwargs['pk'])
+            order = Order.objects.get(id=self.kwargs['pk'])
         qs = Part.objects.all()
         request = self.request
         query = request.GET.get('query', None)
@@ -51,12 +48,7 @@ class PartListView(LoginRequiredMixin, ListView):
         # Check if enough in stock, add to work order and subtrack
         # from amount in stock
         order_id = self.kwargs['pk']
-        if '/order/' in self.request.META['HTTP_REFERER']:
-            is_pm = False
-            order = Order.objects.get(id=order_id)
-        else:
-            is_pm = True
-            order = Pm.objects.get(id=order_id)
+        order = Order.objects.get(id=order_id)
         added_parts = order.parts.all()
         used_part_id = self.request.POST.get('used_part', None)
         used_part = Part.objects.get(id=used_part_id)
@@ -69,48 +61,42 @@ class PartListView(LoginRequiredMixin, ListView):
             amount = self.request.POST.get('amount', None)
             if int(amount) <= used_part.amount:
                 new_used_part = UsedPart(part=used_part, amount_used=amount)
-                if is_pm:
-                    new_used_part.pm = order
-                else:
-                    new_used_part.order = order
+                new_used_part.order = order
                 new_used_part.save()
                 used_part.amount -= int(amount)
                 used_part.cat.add(press)
                 used_part.save(update_fields=['amount'])
-                if is_pm:
-                    return redirect('mtn:edit_pm', pk=order_id)
-                else:
-                    return redirect('mtn:edit_order', pk=order_id)
+                return redirect('mtn:edit_order', pk=order_id)
             else:
                 messages.add_message(request, messages.INFO,
                                      'Not enough items in stock')
                 return redirect(request.META['HTTP_REFERER'])
 
 
-@login_required
-def import_parts(request, pk):
-    press = Press.objects.get(id=pk)
-    last_pm = press.last_pm()
-    cur_pm = press.pm_set.get(closed=False)
-    cur_used_parts = cur_pm.usedpart_set.all()
-    partlist = cur_used_parts.values_list('part_id', flat=True)
-    if last_pm is not None:
-        last_used_parts = last_pm.usedpart_set.all()
-        for used_part in last_used_parts:
-            if used_part.part.id not in partlist:
-                amount = used_part.amount_used
-                if amount <= used_part.part.amount:
-                    new_part = used_part
-                    new_part.pk = None
-                    new_part.pm = cur_pm
-                    used_part.part.amount -= amount
-                    new_part.save()
-                    used_part.part.save(update_fields=['amount'])
-                else:
-                    messages.add_message(request, messages.INFO,
-                                         'Not enough items in stock for part: \
-                                    {0}'.format(used_part.part))
-    return redirect(request.META['HTTP_REFERER'])
+# @login_required
+# def import_parts(request, pk):
+#     press = Press.objects.get(id=pk)
+#     last_pm = press.last_pm()
+#     cur_pm = press.pm_set.get(closed=False)
+#     cur_used_parts = cur_pm.usedpart_set.all()
+#     partlist = cur_used_parts.values_list('part_id', flat=True)
+#     if last_pm is not None:
+#         last_used_parts = last_pm.usedpart_set.all()
+#         for used_part in last_used_parts:
+#             if used_part.part.id not in partlist:
+#                 amount = used_part.amount_used
+#                 if amount <= used_part.part.amount:
+#                     new_part = used_part
+#                     new_part.pk = None
+#                     new_part.pm = cur_pm
+#                     used_part.part.amount -= amount
+#                     new_part.save()
+#                     used_part.part.save(update_fields=['amount'])
+#                 else:
+#                     messages.add_message(request, messages.INFO,
+#                                          'Not enough items in stock for part: \
+#                                     {0}'.format(used_part.part))
+#     return redirect(request.META['HTTP_REFERER'])
 
 
 class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -176,12 +162,9 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         # Filter parts associated with requested
-        if '/order/' in self.request.META['HTTP_REFERER']:
-            self.order = get_object_or_404(Order, id=self.kwargs['pk'])
-            return self.order.usedpart_set.all()
-        else:
-            self.pm = get_object_or_404(Pm, id=self.kwargs['pk'])
-            return self.pm.usedpart_set.all()
+        self.order = get_object_or_404(Order, id=self.kwargs['pk'])
+        return self.order.usedpart_set.all()
+
 
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs['pk']
@@ -209,10 +192,7 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 pass
             except ValueError:
                 pass
-        if '/order/' in self.request.META['HTTP_REFERER']:
-            return redirect('mtn:order', pk=order_id)
-        else:
-            return redirect('mtn:edit_pm', pk=order_id)
+        return redirect('mtn:order', pk=order_id)
 
 
 class VendorListView(LoginRequiredMixin, ListView):

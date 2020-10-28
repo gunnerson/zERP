@@ -1,5 +1,5 @@
 from django import forms
-from .models import Press, Upload, Pmsched
+from .models import Press, Upload, Pmsched, Pmproc
 from tempus_dominus.widgets import DatePicker
 
 
@@ -39,11 +39,22 @@ class UploadCreateForm(forms.ModelForm):
 
 
 class PmschedCreateForm(forms.ModelForm):
-    # date = forms.DateField(widget=DatePicker())
     class Meta:
         model = Pmsched
         fields = ['date']
         labels = {'date': 'Date', }
         widgets = {
             'date': DatePicker(),
+        }
+
+
+class PmprocCreateForm(forms.ModelForm):
+    class Meta:
+        model = Pmproc
+        fields = ['descr', 'freq', 'pm_part', 'pm_part_amount']
+        labels = {
+            'descr': 'Description',
+            'freq': 'Frequency',
+            'pm_part': 'Part',
+            'pm_part_amount': 'Amount',
         }

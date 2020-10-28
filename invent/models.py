@@ -17,7 +17,7 @@ class PartManager(models.Manager):
 class Part(models.Model):
     """List of inventory"""
     partnum = models.CharField(blank=True, null=True, max_length=35)
-    descr = models.TextField(null=True)
+    descr = models.TextField(null=True, blank=True)
     cat = models.ManyToManyField('equip.Press', blank=True)
     amount = models.PositiveIntegerField()
     unit = models.CharField(max_length=5)

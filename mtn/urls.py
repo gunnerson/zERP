@@ -9,13 +9,10 @@ from .views import (
     ImageCreateView,
     load_locales,
     repair_toggle,
-    create_pms,
-    PmListView,
-    PmUpdateView,
     bulk_update,
     Dt,
 )
-from invent.views import PartListView, OrderPartsListView, import_parts
+from invent.views import PartListView, OrderPartsListView
 
 app_name = "mtn"
 
@@ -40,13 +37,13 @@ urlpatterns = [
     path('mwo/order-list/toggle/<int:pk>/<slug:func>/', repair_toggle,
          name='repair_toggle'),
     path('mwo/order/bulk-update/', bulk_update, name='bulk-update'),
-    path('mwo/pm/bulk-create/', create_pms, name='create-pms'),
-    path('mwo/pm-list/', PmListView.as_view(), name='pm-list'),
-    path('mwo/pm/<int:pk>/', PmUpdateView.as_view(), name='edit_pm'),
-    path('mwo/pm/<int:pk>/add_part/',
-         PartListView.as_view(template_name='invent/use_part.html'),
-         name='add_pm_part'),
-    path('mwo/pm/<int:pk>/import-parts/', import_parts, name='import_parts'),
-    path('mwo/pm/<int:pk>/update-parts/', OrderPartsListView.as_view(),
-         name='update_pm_parts'),
+    # path('mwo/pm/bulk-create/', create_pms, name='create-pms'),
+    # path('mwo/pm-list/', PmListView.as_view(), name='pm-list'),
+    # path('mwo/pm/<int:pk>/', PmUpdateView.as_view(), name='edit_pm'),
+    # path('mwo/pm/<int:pk>/add_part/',
+    #      PartListView.as_view(template_name='invent/use_part.html'),
+    #      name='add_pm_part'),
+    # path('mwo/pm/<int:pk>/import-parts/', import_parts, name='import_parts'),
+    # path('mwo/pm/<int:pk>/update-parts/', OrderPartsListView.as_view(),
+    #      name='update_pm_parts'),
 ]
