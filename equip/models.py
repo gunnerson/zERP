@@ -82,6 +82,14 @@ class Press(models.Model):
             status = 'Ready'
         return status
 
+    def last_pm(self):
+        last_pm = self.pmsched_set.first()
+        if last_pm is not None:
+            last_pm_date = last_pm.date
+        else:
+            last_pm_date = 'Unknown'
+        return last_pm_date
+
     def job(self, shift=None):
         """Get press status"""
         from prod.models import JobInst

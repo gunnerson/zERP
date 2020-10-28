@@ -97,8 +97,8 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             cost_this_year += round(Order.cost_of_repair(order), 2)
         for order in last_year:
             cost_last_year += round(Order.cost_of_repair(order), 2)
-        images = Image.objects.filter(press=self.object.id)
-        pmprocs = Pmproc.objects.filter(local=self.object.id)
+        images = self.object.image_set.all()
+        pmprocs = self.object.pmproc_set.all()
         context['pmprocs'] = pmprocs
         context['uploads'] = uploads
         context['images'] = images
