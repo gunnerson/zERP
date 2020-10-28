@@ -340,11 +340,11 @@ class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return redirect('equip:calendar')
 
 
-class PmschedDetailView(LoginRequiredMixin, DetailView):
+class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Pmsched
 
-    # def test_func(self):
-    #     return has_group(self.request.user, 'maintenance')
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
