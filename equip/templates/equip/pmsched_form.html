@@ -1,0 +1,55 @@
+{% extends "mtn/base.html" %}
+
+<script>
+  {% block jquery %}
+
+    $(function () {
+        $('#id_date').datetimepicker({
+            format: 'L'
+        });
+    });
+
+  {% endblock %}
+</script>
+
+{% block left-menu %}
+
+ <ul>
+  <li>
+    <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+  </li>
+</ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
+        <li class="breadcrumb-item active">Schedule PM</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Schedule PM for {{ press }}</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+    <form enctype="multipart/form-data" action="{% url 'equip:pmsched' press_id %}" method='post'>
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="col-sm-3">
+          <div class="form-group">
+            {{ form }}
+          </div>
+      </div>
+    </div>
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Schedule</button>
+  </form>
+
+{% endblock content %}

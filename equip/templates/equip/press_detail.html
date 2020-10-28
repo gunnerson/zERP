@@ -60,6 +60,9 @@
         <a href="{% url 'equip:notes' press.id %}" class="side-menu-link" role="button">Manage</a>
       </li>
       <li>
+        <a href="{% url 'equip:press-pm' press.id %}" class="side-menu-link" role="button">PM</a>
+      </li>
+      <li>
         <a href="{% url 'equip:upload' press.id %}" class="side-menu-link" role="button">Upload</a>
       </li>
     {% endif %}

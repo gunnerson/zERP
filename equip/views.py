@@ -1,25 +1,30 @@
 import calendar
 import json
 import hashlib
+from datetime import datetime, date
 from django.shortcuts import redirect, render
+from django.http import HttpResponse
 from django.utils import timezone
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from pathlib import Path
 from django.contrib import messages
 from django.db.models import Q
 from django.core import serializers
+from django.utils.safestring import mark_safe
 # from rest_framework import authentication, permissions
 
-from .models import Press, Upload, Imprint
+from .models import Press, Upload, Imprint, Pmproc, Pmsched
 from mtn.models import Order, Pm, Image
 from mtn.cm import has_group, get_shift, is_valid_param, get_url_kwargs
-from .forms import PressUpdateForm, UploadCreateForm
+from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm
 from invent.models import Part
+from .utils import Calendar
 
 
 class PressListView(LoginRequiredMixin, ListView):
@@ -253,3 +258,141 @@ class MapData(RetrieveAPIView):
         }
         return Response(data)
 
+
+class PmListView(LoginRequiredMixin, ListView):
+    model = Pmproc
+    template_name = 'equip/press_pm.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press_id = self.kwargs['pk']
+        context['press_id'] = press_id
+        return context
+
+    def get_queryset(self):
+        press_id = self.kwargs['pk']
+        qs = Pmproc.objects.filter(local=press_id)
+        return qs
+
+
+@login_required
+def pm_clock(request):
+    qs = Pmproc.objects.all()
+    for proc in qs:
+        proc.hours += 5
+        proc.save(update_fields=['hours'])
+    try:
+        return redirect(request.META['HTTP_REFERER'])
+    except KeyError:
+        return HttpResponse('Operation successful...')
+
+
+class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Schedule a PM"""
+    model = Pmsched
+    form_class = PmschedCreateForm
+
+    def test_func(self):
+        return (has_group(self.request.user, 'maintenance') or
+                has_group(self.request.user, 'supervisor'))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press_id = self.kwargs['pk']
+        context['press_id'] = press_id
+        context['press'] = Press.objects.get(id=press_id)
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        press_id = self.kwargs['pk']
+        press = Press.objects.get(id=press_id)
+        self.object.local = press
+        self.object.save()
+        procs = Pmproc.objects.filter(local=press)
+        for proc in procs:
+            self.object.procs.add(proc)
+        return redirect('equip:calendar')
+
+
+class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Pmsched
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press_id = self.object.local.id
+        context['press_id'] = press_id
+        context['press'] = Press.objects.get(id=press_id)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        for proc in self.object.procs.all():
+            marked = self.request.GET.get('resid_{0}'.format(proc.id), None)
+            if marked:
+                proc.hours = 0
+                proc.save(update_fields=['hours'])
+                if proc.pm_part is not None:
+                    pass
+        return self.render_to_response(context)
+
+# @login_required
+# def pm_sched(request, press_id, date):
+#     Pmsched(
+#             local=Press.objects.get(id=press_id),
+#             date=date,
+#         ).save()
+#     try:
+#         return redirect(request.META['HTTP_REFERER'])
+#     except KeyError:
+#         return HttpResponse('Operation successful...')
+
+
+class CalendarView(LoginRequiredMixin, ListView):
+    model = Pmsched
+    template_name = 'equip/calendar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # use today's date for the calendar
+        d = get_date(self.request.GET.get('month', None))
+
+        # Instantiate our calendar class with today's year and date
+        cal = Calendar(d.year, d.month)
+
+        # Call the formatmonth method, which returns our calendar as a table
+        html_cal = cal.formatmonth(withyear=True)
+        context['calendar'] = mark_safe(html_cal)
+        context['prev_month'] = prev_month(d)
+        context['next_month'] = next_month(d)
+        return context
+
+
+@login_required
+def get_date(req_day):
+    if req_day:
+        year, month = (int(x) for x in req_day.split('-'))
+        return date(year, month, day=1)
+    return datetime.today()
+
+
+@login_required
+def prev_month(d):
+    first = d.replace(day=1)
+    prev_month = first - timedelta(days=1)
+    month = 'month=' + str(prev_month.year) + '-' + str(prev_month.month)
+    return month
+
+
+@login_required
+def next_month(d):
+    days_in_month = calendar.monthrange(d.year, d.month)[1]
+    last = d.replace(day=days_in_month)
+    next_month = last + timedelta(days=1)
+    month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
+    return month

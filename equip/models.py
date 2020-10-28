@@ -6,6 +6,7 @@ from django.utils import timezone
 from mtn.cm import get_shift
 from invent.models import Part
 
+
 class Press(models.Model):
     PRODUCTION = 'PR'
     GENERAL = 'GN'
@@ -32,6 +33,7 @@ class Press(models.Model):
         (OTHER, 'Other'),
     ]
     pname = models.CharField(max_length=40)
+    altname = models.CharField(max_length=40, null=True, blank=True)
     group = models.CharField(
         max_length=2,
         choices=GROUPS,
@@ -42,6 +44,7 @@ class Press(models.Model):
         null=True,
         blank=True,
     )
+    pmed = models.BooleanField(default=False)
     contacts = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 
@@ -77,7 +80,6 @@ class Press(models.Model):
     def last_pm(self):
         """Last PM """
         return self.pm_set.filter(closed=True).last()
-
 
     def status(self):
         """Get press status"""
@@ -125,3 +127,49 @@ class Imprint(models.Model):
 
     def __str__(self):
         return str(self.press.pname)
+
+
+class Pmproc(models.Model):
+    """PM procedure"""
+    local = models.ManyToManyField(Press, blank=True)
+    freq = models.PositiveIntegerField(null=True)
+    pm_part = models.ForeignKey(Part,
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                )
+    pm_part_amount = models.PositiveIntegerField(null=True)
+    descr = models.TextField(null=True)
+    hours = models.PositiveIntegerField(null=True)
+
+    def hours_left(self):
+        hours_left = self.freq - self.hours
+        if hours_left >= 0:
+            return hours_left
+        else:
+            return 0
+
+    def in_stock(self):
+        if self.pm_part is not None:
+            if self.pm_part_amount <= self.pm_part.amount:
+                return "In Stock"
+            else:
+                return "Out of Stock"
+        else:
+            return "In Stock"
+
+
+class Pmsched(models.Model):
+    """Scheduled PM"""
+    date = models.DateField(null=True)
+    local = models.ForeignKey(Press, on_delete=models.SET_NULL,
+                              null=True,
+                              blank=True,
+                              )
+    procs = models.ManyToManyField(Pmproc, blank=True)
+
+    def __str__(self):
+        return str(self.local)
+        # return u", ".join([a.pname for a in self.local.all()])
+
+    def get_absolute_url(self):
+        return reverse('equip:pm-detail', kwargs={'pk': self.pk})

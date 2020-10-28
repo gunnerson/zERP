@@ -8,6 +8,11 @@ from equip.views import (
     UploadCreateView,
     load_map,
     MapData,
+    PmListView,
+    pm_clock,
+    PmschedCreateView,
+    CalendarView,
+    PmschedDetailView,
 )
 
 from mtn.views import OrderListView
@@ -21,6 +26,8 @@ urlpatterns = [
     path('equipment/press/<int:pk>/', PressDetailView.as_view(), name='press'),
     path('equipment/press/<int:pk>/orders/', OrderListView.as_view(),
          name='press-orders'),
+    path('equipment/press/<int:pk>/pm/', PmListView.as_view(),
+         name='press-pm'),
     path('equipment/press/<int:pk>/notes/', PressUpdateView.as_view(
         template_name='equip/press_update_form.html'),
         name='notes'),
@@ -31,4 +38,8 @@ urlpatterns = [
     #     name='delete-upload'),
     path('api/data/equipment/press/<int:pk>/',
          DowntimeChartData.as_view(), name='chart-data'),
+    path('pm_clock/', pm_clock, name='pm-clock'),
+    path('equipment/press/<int:pk>/schedule-pm/', PmschedCreateView.as_view(), name='pmsched'),
+    path('equipment/pm/<int:pk>/', PmschedDetailView.as_view(), name='pm-detail'),
+    path('calendar/', CalendarView.as_view(), name='calendar'),
 ]

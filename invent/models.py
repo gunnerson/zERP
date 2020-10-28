@@ -39,10 +39,10 @@ class Part(models.Model):
 class UsedPart(models.Model):
     """Intermediary table for m2m between Part and Order classes"""
     part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
-    order = models.ForeignKey(
-        'mtn.Order', on_delete=models.CASCADE, null=True, blank=True)
-    pm = models.ForeignKey(
-        'mtn.Pm', on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE,
+                              null=True, blank=True)
+    pm = models.ForeignKey('equip.Pmsched', on_delete=models.CASCADE,
+                           null=True, blank=True)
     amount_used = models.PositiveIntegerField()
 
     def __str__(self):

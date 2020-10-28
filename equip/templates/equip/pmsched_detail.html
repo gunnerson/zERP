@@ -1,0 +1,57 @@
+{% extends "mtn/base.html" %}
+
+
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:press' press_id %}">Item</a></li>
+        <li class="breadcrumb-item active">Pm</li>
+    </ol>
+  </div>
+  <h4 class="page-title">PM for {{ press }}</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <form method="GET" action="" id="selectform">
+    <div class="container-fluid justify-content-start ml-1 mt-4">
+      <table>
+        {% for proc in pmsched.procs.all %}
+          <tr class="row border" style="width:700px;">
+            <th class="col border-right text-nowrap text-truncate">
+                {{ proc.descr }} <a href="{% url 'invent:part' proc.pm_part.id %}">{{ proc.pm_part.partnum }}</a>
+            </th>
+            <th class="col-2 border-right">
+              {{ proc.hours_left }}
+            </th>
+            <th class="col-1">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" name="resid_{{ proc.id }}">
+              </div>
+            </th>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Reset selected</button>
+  </form>
+
+{% endblock content %}
+
+
+

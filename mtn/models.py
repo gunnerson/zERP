@@ -16,6 +16,7 @@ class Order(models.Model):
     REPAIR = 'RE'
     SETUP = 'ST'
     MOD = 'MD'
+    PM = 'PM'
     NORMAL = 'NW'
     DAMAGE = 'DM'
     UNKNOWN = 'UN'
@@ -26,6 +27,7 @@ class Order(models.Model):
         (REPAIR, 'Repair'),
         (SETUP, 'Setup'),
         (MOD, 'Mod'),
+        (PM, 'PM'),
     ]
     CAUSE_OF_REPAIR = [
         (NORMAL, 'Normal Wear'),

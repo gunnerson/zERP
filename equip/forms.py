@@ -1,5 +1,6 @@
 from django import forms
-from .models import Press, Upload
+from .models import Press, Upload, Pmsched
+from tempus_dominus.widgets import DatePicker
 
 
 class PressUpdateForm(forms.ModelForm):
@@ -34,4 +35,15 @@ class UploadCreateForm(forms.ModelForm):
                 'placeholder': 'Give a unique file description',
             }
             ),
+        }
+
+
+class PmschedCreateForm(forms.ModelForm):
+    # date = forms.DateField(widget=DatePicker())
+    class Meta:
+        model = Pmsched
+        fields = ['date']
+        labels = {'date': 'Date', }
+        widgets = {
+            'date': DatePicker(),
         }
