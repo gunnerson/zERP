@@ -55,7 +55,7 @@
     <li>
       <a href="{% url 'equip:press-orders' press.id %}?closed=on" class="side-menu-link" role="button">Orders</a>
     </li>
-    {% if request.user|has_group:"maintenance" %}
+    {% if request.user|has_group:"maintenance" or request.user|has_group:"supervisor" %}
       <li>
         <a href="{% url 'equip:notes' press.id %}" class="side-menu-link" role="button">Manage</a>
       </li>
