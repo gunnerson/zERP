@@ -55,18 +55,21 @@
     <li>
       <a href="{% url 'equip:press-orders' press.id %}?closed=on" class="side-menu-link" role="button">Orders</a>
     </li>
-    {% if request.user|has_group:"maintenance" or request.user|has_group:"supervisor" %}
+
+    {% if request.user|has_group:"maintenance" %}
       <li>
         <a href="{% url 'equip:notes' press.id %}" class="side-menu-link" role="button">Manage</a>
       </li>
+      <li>
+        <a href="{% url 'equip:upload' press.id %}" class="side-menu-link" role="button">Upload</a>
+      </li>
+    {% endif %}
+    {% if request.user|has_group:"supervisor" or request.user|has_group:"maintenance" %}
       {% if press.pmed %}
         <li>
           <a href="{% url 'equip:press-pm' press.id %}" class="side-menu-link" role="button">PM</a>
         </li>
       {% endif %}
-      <li>
-        <a href="{% url 'equip:upload' press.id %}" class="side-menu-link" role="button">Upload</a>
-      </li>
     {% endif %}
   </ul>
 
