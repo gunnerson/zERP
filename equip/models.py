@@ -152,6 +152,11 @@ class Pmproc(models.Model):
         else:
             return 0
 
+    def get_admin_url(self):
+        info = (self._meta.app_label, self._meta.model_name)
+        admin_url = reverse('admin:%s_%s_change' % info, args=(self.pk,))
+        return admin_url
+
     def in_stock(self):
         if self.pm_part is not None:
             if self.pm_part_amount <= self.pm_part.amount:

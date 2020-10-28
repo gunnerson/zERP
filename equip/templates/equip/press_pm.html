@@ -1,4 +1,15 @@
 {% extends "mtn/base.html" %}
+{% load mtn_extras %}
+
+<script>
+  {% block jquery %}
+
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+
+  {% endblock %}
+</script>
 
 {% block left-menu %}
 
@@ -39,7 +50,11 @@
   <div class="container justify-content-start ml-1">
     <table>
       {% for object in object_list %}
-        <tr class="clickable-row row border justify-content-start" data-href="{% url 'equip:press' object.id %}" style="width:700px;">
+        {% if user.is_superuser %}
+          <tr class="clickable-row row border justify-content-start" data-href={{object.get_admin_url}} style="width:700px;">
+        {% else %}
+          <tr class="row border justify-content-start" style="width:700px;">
+        {% endif %}
           <th class="col border-right text-nowrap text-truncate align-self-center my-2">
             {{ object.descr }}
           </th>
