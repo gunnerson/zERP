@@ -91,6 +91,16 @@ class Press(models.Model):
             last_pm_date = 'Unknown'
         return last_pm_date
 
+    def pm_due(self):
+        procs = self.pmproc_set.all()
+        pm_due = False
+        i = 0
+        while pm_due == False and i < procs.count():
+            if procs[i].hours >= procs[i].freq:
+                pm_due = True
+            i += 1
+        return pm_due
+
     def pm_prior(self):
         today = timezone.now().date()
         if self.last_pm() != 'Unknown':

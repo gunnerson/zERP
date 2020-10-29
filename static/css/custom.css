@@ -33,6 +33,7 @@ svg rect:hover {
 svg .ready {
   fill: green;
 }
+
 svg .production {
   fill: purple!important;
 }
@@ -45,6 +46,10 @@ svg .maintenance {
 }
 svg .awaiting_parts {
   fill: blue!important;
+}
+
+svg .pmdue {
+  fill: black!important;
 }
 
 svg tspan {

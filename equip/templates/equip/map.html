@@ -40,10 +40,12 @@
             txt.setAttribute('x', x + width / 2 - size / 2);
             if (value.pmd != null) {
               a.setAttribute('title', value.name + '\nStatus: ' + value.status + '\nPM: ' + value.pmd);
+              rect.classList.add('pmdue');
             } else {
               a.setAttribute('title', value.name + '\nStatus: ' + value.status);
             };
             if (value.job != null) {
+              rect.classList.remove('pmdue');
               rect.classList.add('production');
             } else {
               rect.classList.add('ready');
