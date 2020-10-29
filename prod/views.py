@@ -1,7 +1,7 @@
 import xlrd
 from django.shortcuts import render, redirect
 from django.views import View
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 from django.utils import timezone
 from django.forms import formset_factory
 from django.views.generic import ListView
@@ -39,7 +39,6 @@ def generate_schedule(f):
     datexl1 = db_sheet.cell(0, 2).value
     xldate1 = xlrd.xldate_as_datetime(datexl1, 0)
     date1 = xldate1.date()
-    print('>>>>>>>>>>', datexl2, xldate2, date2, datexl1, xldate1, date1,)
     for row_idx in range(2, db_sheet.nrows):
         press_id = str(db_sheet.cell(row_idx, 0).value)
         fsj = db_sheet.cell(row_idx, 2).value
@@ -52,7 +51,6 @@ def generate_schedule(f):
                 press = None
         elif press_id[0] == 'I':
             press_name = 'Inj ' + press_id[3]
-            print(press_name)
             try:
                 press = pqs.get(pname=press_name)
             except Press.DoesNotExist:
@@ -63,11 +61,19 @@ def generate_schedule(f):
                     jobinst = iqs.get(press=press, shift=1, date=date1)
                 except JobInst.DoesNotExist:
                     JobInst(press=press, shift=1, date=date1).save()
+                    procs = press.pmproc_set.all()
+                    for proc in procs:
+                        proh.hours += 8
+                        proc.save(update_fields=['hours'])
             if is_valid_param(ssj):
                 try:
                     jobinst = iqs.get(press=press, shift=2, date=date2)
                 except JobInst.DoesNotExist:
                     JobInst(press=press, shift=2, date=date2).save()
+                    procs = press.pmproc_set.all()
+                    for proc in procs:
+                        proh.hours += 8
+                        proc.save(update_fields=['hours'])
 
 
 # def generate_schedule(f):
@@ -217,10 +223,12 @@ class JobInstListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update(get_url_kwargs(self.request))
-        try:
-            del context['dateinput']
-        except KeyError:
-            pass
+        dateinput = self.request.GET.get('dateinput', date.today())
+        # try:
+        #     del context['dateinput']
+        # except KeyError:
+        #     pass
+        context['dateinput'] = dateinput
         context['shift'] = get_shift()
         return context
 

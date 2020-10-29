@@ -6,7 +6,8 @@
 
   $(function () {
     $('#datetimepicker').datetimepicker({
-      format: 'L'
+      format: 'L',
+      useCurrent: True,
     });
   });
 
@@ -48,33 +49,14 @@
         <label>Date:</label>
         <input type="text" class="form-control datetimepicker-input" id="datetimepicker" name="dateinput" data-toggle="datetimepicker" data-target="#datetimepicker" value="{{ dateinput }}" />
       </div>
-      {% if shiftinput is not None and shiftinput != '' %}
-        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-          <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1" {% if shiftinput == "1" %}checked="checked"{% endif %}>
-          <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
-        </div>
-        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-          <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="0" {% if shiftinput == "0" %}checked="checked"{% endif %}>
-          <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
-        </div>
-        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-          <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="2" {% if shiftinput == "2" %}checked="checked"{% endif %}>
-          <label class="custom-control-label" for="customRadioInline3">3rd Shift</label>
-        </div>
-      {% else %}
-        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-          <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1" {% if shift == 1 %}checked="checked"{% endif %}>
-          <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
-        </div>
-        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-          <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="0" {% if shift == 0 %}checked="checked"{% endif %}>
-          <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
-        </div>
-        <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-          <input type="radio" id="customRadioInline3" name="shiftinput" class="custom-control-input" value="2" {% if shift == 2 %}checked="checked"{% endif %}>
-          <label class="custom-control-label" for="customRadioInline3">3rd Shift</label>
-        </div>
-      {% endif %}
+      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+        <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1" {% if shiftinput == "1" %}checked="checked"{% endif %}>
+        <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
+        <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="2" {% if shiftinput == "2" %}checked="checked"{% endif %}>
+        <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
+      </div>
       <div class="col align-self-center mt-4 ml-3">
         <button name="submit" role="button" class="btn btn-rahco px-3">Filter</button>
       </div>
@@ -84,21 +66,10 @@
 
   <div class="container justify-content-center ml-1">
     <table>
-      <div class="row align-self-start">
-        <div class="col-1 pl-2">Press</div>
-        <div class="col-2" style="padding-left: 5rem!important;">Job</div>
-        <div class="col-9" style="padding-left: 4rem!important;">Comment</div>
-      </div>
       {% for object in object_list %}
-        <tr class="clickable-row row border justify-content-start" data-href="" style="width:500px;">
-          <th class="col-4 border-right align-self-center my-2">
+        <tr class="row border justify-content-start" data-href="" style="width:500px;">
+          <th class="col-4 align-self-center my-2">
             {{ object.press }}
-          </th>
-          <th class="col-4 border-right align-self-center">
-            {{ object.job }}
-          </th>
-          <th class="col-4 align-self-center">
-            {{ object.get_shift_display }}
           </th>
         </tr>
       {% endfor %}
