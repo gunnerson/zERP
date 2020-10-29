@@ -63,7 +63,7 @@ def generate_schedule(f):
                     JobInst(press=press, shift=1, date=date1).save()
                     procs = press.pmproc_set.all()
                     for proc in procs:
-                        proh.hours += 8
+                        proc.hours += 8
                         proc.save(update_fields=['hours'])
             if is_valid_param(ssj):
                 try:
@@ -72,7 +72,7 @@ def generate_schedule(f):
                     JobInst(press=press, shift=2, date=date2).save()
                     procs = press.pmproc_set.all()
                     for proc in procs:
-                        proh.hours += 8
+                        proc.hours += 8
                         proc.save(update_fields=['hours'])
 
 
