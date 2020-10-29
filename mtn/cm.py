@@ -78,12 +78,12 @@ def get_url_kwargs(request):
 
 def get_shift():
     now = timezone.localtime(timezone.now()).hour
-    if now in range(8, 16):
+    if now in range(7, 15):
         shift = 1
-    elif now in range(0, 8):
-        shift = 3
-    elif now in range(16, 24):
+    elif now in range(15, 23):
         shift = 2
+    else:
+        shift = None
     return shift
 
     # if(!!window.performance && window.performance.navigation.type == 2)

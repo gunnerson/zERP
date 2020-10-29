@@ -250,9 +250,7 @@ class MapData(RetrieveAPIView):
                 {'short_name': press.pname.split(' ')[-1]})
             job = press.job(shift=shift)
             if job is not None:
-                if (job.start_time() < timezone.localtime(timezone.now()) and
-                        job.end_time() >= timezone.localtime(timezone.now())):
-                    press_dict[press.pk].update({'job': str(job)})
+                press_dict[press.pk].update({'job': 'Production'})
         data = {
             "impsDict": imps_json,
             "pressDict": press_dict,
@@ -335,9 +333,6 @@ class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         press = Press.objects.get(id=press_id)
         self.object.local = press
         self.object.save()
-        procs = Pmproc.objects.filter(local=press)
-        for proc in procs:
-            self.object.procs.add(proc)
         return redirect('equip:calendar')
 
 
@@ -350,14 +345,20 @@ class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         press_id = self.object.local.id
+        press = Press.objects.get(id=press_id)
+        procs = press.pmproc_set.all()
         context['press_id'] = press_id
-        context['press'] = Press.objects.get(id=press_id)
+        context['press'] = press
+        context['procs'] = procs
         return context
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
-        for proc in self.object.procs.all():
+        press_id = self.object.local.id
+        press = Press.objects.get(id=press_id)
+        procs = press.pmproc_set.all()
+        for proc in procs:
             marked = self.request.GET.get('resid_{0}'.format(proc.id), None)
             if marked:
                 if proc.pm_part is not None:

@@ -2,6 +2,7 @@ import os
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from datetime import date
 
 from mtn.cm import get_shift
 from invent.models import Part
@@ -94,13 +95,10 @@ class Press(models.Model):
         """Get press status"""
         from prod.models import JobInst
         if shift is None:
-            try:
-                return self.jobinst_set.first()
-            except JobInst.DoesNotExist:
-                return None
+            return None
         else:
             try:
-                return self.jobinst_set.filter(shift=shift).first()
+                return self.jobinst_set.get(shift=shift, date=date.today())
             except JobInst.DoesNotExist:
                 return None
 
@@ -174,7 +172,6 @@ class Pmsched(models.Model):
                               null=True,
                               blank=True,
                               )
-    procs = models.ManyToManyField(Pmproc, blank=True)
 
     def __str__(self):
         return str(self.local)

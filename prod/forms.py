@@ -1,8 +1,6 @@
 from django import forms
 from tempus_dominus.widgets import DatePicker
 
-from .models import Job
-
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()

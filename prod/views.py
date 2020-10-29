@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .models import Job, JobInst
+from .models import JobInst
 from .forms import UploadFileForm, JobInstForm
 from mtn.cm import has_group, is_valid_param, get_url_kwargs, get_shift
 from equip.models import Press
@@ -29,65 +29,107 @@ def upload_sched(request):
 
 
 def generate_schedule(f):
-    qs = Job.objects.all().only('name')
     iqs = JobInst.objects.all()
     pqs = Press.objects.all().filter(group='PR').only('pname')
     book = xlrd.open_workbook(file_contents=f.read())
-    db_sheet = book.sheet_by_index(4)
-    for row_idx in range(0, db_sheet.nrows):
-        for col_idx in range(1, 2):
-            job = db_sheet.cell(row_idx, 1).value
-            rate = db_sheet.cell(row_idx, 2).value
+    db_sheet = book.sheet_by_index(5)
+    datexl2 = db_sheet.cell(0, 1).value
+    xldate2 = xlrd.xldate_as_datetime(datexl2, 0)
+    date2 = xldate2.date()
+    datexl1 = db_sheet.cell(0, 2).value
+    xldate1 = xlrd.xldate_as_datetime(datexl1, 0)
+    date1 = xldate1.date()
+    print('>>>>>>>>>>', datexl2, xldate2, date2, datexl1, xldate1, date1,)
+    for row_idx in range(2, db_sheet.nrows):
+        press_id = str(db_sheet.cell(row_idx, 0).value)
+        fsj = db_sheet.cell(row_idx, 2).value
+        ssj = db_sheet.cell(row_idx, 1).value
+        if press_id[0].isdigit():
+            press_name = 'Press ' + f'{int(press_id[:-2]):02}'
             try:
-                qs.get(name=job)
-            except Job.DoesNotExist:
-                Job(name=job, rate=rate).save()
-    for sheet_idx in range(0, 3):
-        daily_sheet = book.sheet_by_index(sheet_idx)
-        datexl = daily_sheet.cell(1, 6).value
-        xldate = xlrd.xldate_as_datetime(datexl, 0)
-        date = xldate.date()
-        for row_idx in range(3, daily_sheet.nrows - 2):
-            press_id = str(daily_sheet.cell(row_idx, 0).value)
-            job_name = daily_sheet.cell(row_idx, 1).value
-            if press_id[0].isdigit():
-                press_name = 'Press ' + f'{int(press_id[:-2]):02}'
+                press = pqs.get(pname=press_name)
+            except Press.DoesNotExist:
+                press = None
+        elif press_id[0] == 'I':
+            press_name = 'Inj ' + press_id[3]
+            print(press_name)
+            try:
+                press = pqs.get(pname=press_name)
+            except Press.DoesNotExist:
+                press = None
+        if is_valid_param(press):
+            if is_valid_param(fsj):
                 try:
-                    press = pqs.get(pname=press_name)
-                except Press.DoesNotExist:
-                    press = None
-            elif press_id[0] == 'I':
+                    jobinst = iqs.get(press=press, shift=1, date=date1)
+                except JobInst.DoesNotExist:
+                    JobInst(press=press, shift=1, date=date1).save()
+            if is_valid_param(ssj):
                 try:
-                    press = pqs.get(pname=press_id)
-                except Press.DoesNotExist:
-                    press = None
-            if is_valid_param(press):
-                if is_valid_param(job_name):
-                    try:
-                        job = qs.get(name=job_name)
-                    except Job.DoesNotExist:
-                        job = Job(name=job_name, rate=db_sheet.cell(
-                            row_idx, 2).value).save()
-                    if is_valid_param(job):
-                        jobinst = iqs.filter(
-                            press=press, job=job, shift=sheet_idx).last()
-                        if jobinst is not None:
-                            jobinst.date = date
-                            jobinst.save(update_fields=['date'])
-                        else:
-                            JobInst(press=press, job=job, shift=sheet_idx,
-                                    date=date).save()
-                else:
-                    try:
-                        job = press.job(shift=sheet_idx)
-                        if job.date == date:
-                            job.date = None
-                            job.shift = None
-                            job.save(update_fields=['date', 'shift'])
-                    except JobInst.DoesNotExist:
-                        pass
-                    except AttributeError:
-                        pass
+                    jobinst = iqs.get(press=press, shift=2, date=date2)
+                except JobInst.DoesNotExist:
+                    JobInst(press=press, shift=2, date=date2).save()
+
+
+# def generate_schedule(f):
+#     qs = Job.objects.all().only('name')
+#     iqs = JobInst.objects.all()
+#     pqs = Press.objects.all().filter(group='PR').only('pname')
+#     book = xlrd.open_workbook(file_contents=f.read())
+#     db_sheet = book.sheet_by_index(4)
+#     for row_idx in range(0, db_sheet.nrows):
+#         for col_idx in range(1, 2):
+#             job = db_sheet.cell(row_idx, 1).value
+#             rate = db_sheet.cell(row_idx, 2).value
+#             try:
+#                 qs.get(name=job)
+#             except Job.DoesNotExist:
+#                 Job(name=job, rate=rate).save()
+#     for sheet_idx in range(0, 3):
+#         daily_sheet = book.sheet_by_index(sheet_idx)
+#         datexl = daily_sheet.cell(1, 6).value
+#         xldate = xlrd.xldate_as_datetime(datexl, 0)
+#         date = xldate.date()
+#         for row_idx in range(3, daily_sheet.nrows - 2):
+#             press_id = str(daily_sheet.cell(row_idx, 0).value)
+#             job_name = daily_sheet.cell(row_idx, 1).value
+#             if press_id[0].isdigit():
+#                 press_name = 'Press ' + f'{int(press_id[:-2]):02}'
+#                 try:
+#                     press = pqs.get(pname=press_name)
+#                 except Press.DoesNotExist:
+#                     press = None
+#             elif press_id[0] == 'I':
+#                 try:
+#                     press = pqs.get(pname=press_id)
+#                 except Press.DoesNotExist:
+#                     press = None
+#             if is_valid_param(press):
+#                 if is_valid_param(job_name):
+#                     try:
+#                         job = qs.get(name=job_name)
+#                     except Job.DoesNotExist:
+#                         job = Job(name=job_name, rate=db_sheet.cell(
+#                             row_idx, 2).value).save()
+#                     if is_valid_param(job):
+#                         jobinst = iqs.filter(
+#                             press=press, job=job, shift=sheet_idx).last()
+#                         if jobinst is not None:
+#                             jobinst.date = date
+#                             jobinst.save(update_fields=['date'])
+#                         else:
+#                             JobInst(press=press, job=job, shift=sheet_idx,
+#                                     date=date).save()
+#                 else:
+#                     try:
+#                         job = press.job(shift=sheet_idx)
+#                         if job.date == date:
+#                             job.date = None
+#                             job.shift = None
+#                             job.save(update_fields=['date', 'shift'])
+#                     except JobInst.DoesNotExist:
+#                         pass
+#                     except AttributeError:
+#                         pass
 
 
 class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -103,12 +145,7 @@ class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         formset = self.JobInstFormSet()
         i = 0
         for press in self.press_list:
-            job = press.job()
-            if job is not None:
-                formset[i].initial = {
-                    'press': press.pname, 'job': press.job().job.name}
-            else:
-                formset[i].initial = {'press': press.pname}
+            formset[i].initial = {'press': press.pname}
             i += 1
         context = {
             'formset': formset,
