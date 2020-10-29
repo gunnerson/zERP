@@ -9,6 +9,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from .models import JobInst
 from .forms import UploadFileForm, JobInstForm
@@ -26,6 +27,13 @@ def upload_sched(request):
     else:
         form = UploadFileForm()
     return render(request, 'prod/sched_upload.html', {'form': form})
+
+
+@login_required
+def auto_upload_sched(request):
+    f = open('/mnt/rprod/PRODUCTION/Daily Production Report/Daily 2020/Oct Daily 2020.xlsx', 'rb')
+    generate_schedule(f)
+    return HttpResponse('Operation successful...')
 
 
 def generate_schedule(f):
