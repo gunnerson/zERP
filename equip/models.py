@@ -91,6 +91,14 @@ class Press(models.Model):
             last_pm_date = 'Unknown'
         return last_pm_date
 
+    def pm_prior(self):
+        today = timezone.now().date()
+        if self.last_pm() != 'Unknown':
+            pm_prior = today - self.last_pm()
+            return int(pm_prior.days)
+        else:
+            return 0
+
     def job(self, shift=None):
         """Get press status"""
         from prod.models import JobInst
@@ -179,3 +187,4 @@ class Pmsched(models.Model):
 
     def get_absolute_url(self):
         return reverse('equip:pm-detail', kwargs={'pk': self.pk})
+

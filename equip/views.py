@@ -246,6 +246,9 @@ class MapData(RetrieveAPIView):
             press_dict[press.pk] = {}
             press_dict[press.pk].update({'status': press.status()})
             press_dict[press.pk].update({'name': press.pname})
+            pm_prior = press.pm_prior()
+            if pm_prior > 0:
+                press_dict[press.pk].update({'pmd': pm_prior})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
             job = press.job(shift=shift)
