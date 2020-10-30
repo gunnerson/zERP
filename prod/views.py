@@ -125,8 +125,16 @@ class JobInstListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update(get_url_kwargs(self.request))
-        context['today'] = timezone.now().date()
-        context['tomorrow'] = timezone.now().date() + timedelta(days=1)
+        today = timezone.now().date()
+        todayd = today.weekday()
+        if todayd == 4:
+            tomorrow = today + timedelta(days=3)
+        elif todayd == 5:
+            tomorrow = today + timedelta(days=2)
+        else:
+            tomorrow = today + timedelta(days=1)
+        context['today'] = today
+        context['tomorrow'] = tomorrow
         return context
 
     def get_queryset(self):
