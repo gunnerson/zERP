@@ -6,7 +6,6 @@ from equip.models import Press
 
 
 class JobInst(models.Model):
-    """Production schedule"""
     press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
     date = models.DateField(null=True, blank=True)
     shift = models.IntegerField(null=True, blank=True,

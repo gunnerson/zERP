@@ -125,18 +125,7 @@ class Press(models.Model):
             except JobInst.DoesNotExist:
                 return None
 
-    # def is_up(self, date=None, shift=None):
-    #     """Get press status"""
-    #     from prod.models import JobInst
-    #     try:
-    #         self.jobinst_set.get(shift=shift, date=date)
-    #         return True
-    #     except JobInst.DoesNotExist:
-    #         return False
-
-
 class Upload(models.Model):
-    """Uploaded files with press documentaiton"""
     press = models.ManyToManyField(Press, blank=True)
     part = models.ManyToManyField(Part, blank=True)
     descr = models.CharField(max_length=200)
@@ -148,7 +137,6 @@ class Upload(models.Model):
 
 
 class Imprint(models.Model):
-    """Press drawing"""
     press = models.ForeignKey(Press, on_delete=models.CASCADE, null=True)
     x = models.IntegerField()
     y = models.IntegerField()
@@ -160,7 +148,6 @@ class Imprint(models.Model):
 
 
 class Pmproc(models.Model):
-    """PM procedure"""
     local = models.ForeignKey(Press, on_delete=models.SET_NULL,
                               null=True,
                               blank=True,
@@ -198,7 +185,6 @@ class Pmproc(models.Model):
 
 
 class Pmsched(models.Model):
-    """Scheduled PM"""
     date = models.DateField(null=True)
     local = models.ForeignKey(Press, on_delete=models.SET_NULL,
                               null=True,

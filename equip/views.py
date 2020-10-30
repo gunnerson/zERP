@@ -31,7 +31,6 @@ from prod.models import JobInst
 
 
 class PressListView(LoginRequiredMixin, ListView):
-    """List of equipment"""
     model = Press
     # paginate_by = 20
 
@@ -55,14 +54,11 @@ class PressListView(LoginRequiredMixin, ListView):
 
 
 class PressDetailView(LoginRequiredMixin, DetailView):
-    """View part from the inventory"""
     model = Press
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        # Get list of uploads
         uploads = self.object.upload_set.all()
-        # Calculate downtime per year
         today = timezone.now()
         month = today.month
         year = today.year
@@ -81,7 +77,6 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             dts_last += dt
             month -= 1
             i += 1
-        # Calculate repair costs
         cost_this_year = 0
         cost_last_year = 0
         start_date = today - timedelta(days=365)
@@ -112,7 +107,6 @@ class PressDetailView(LoginRequiredMixin, DetailView):
 
 
 class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Add notes"""
     model = Press
     form_class = PressUpdateForm
 
@@ -128,7 +122,6 @@ class PressUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Upload a file"""
     model = Upload
     form_class = UploadCreateForm
 
@@ -143,7 +136,6 @@ class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        # Check that upload description is unique and save
         self.object = form.save(commit=False)
         pk = self.kwargs['pk']
         if 'equipment' in self.request.META['HTTP_REFERER']:
@@ -156,7 +148,6 @@ class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             appname = 'invent'
             part = Part.objects.get(id=pk)
             uploads = part.upload_set.all()
-        # Calculate file hash
         file = self.request.FILES['file']
         BLOCK_SIZE = 65536
         file_hash = hashlib.sha256()
@@ -197,7 +188,6 @@ class UploadCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 class DowntimeChartData(RetrieveAPIView):
-    """Get data for downtime chart"""
     # authentication_classes = []
     # permission_classes = []
     lookup_field = 'pk'
@@ -234,7 +224,6 @@ def load_map(request):
 
 
 class MapData(RetrieveAPIView):
-    """Get data for floor map"""
 
     def get(self, request, *args, **kwargs):
         imps = Imprint.objects.all()
@@ -285,7 +274,6 @@ class PmListView(LoginRequiredMixin, ListView):
 
 
 class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Schedule a PM"""
     model = Pmproc
     form_class = PmprocCreateForm
 
@@ -310,7 +298,6 @@ class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Schedule a PM"""
     model = Pmsched
     form_class = PmschedCreateForm
 
@@ -378,17 +365,6 @@ class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
                     proc.save(update_fields=['hours'])
         return self.render_to_response(context)
 
-# @login_required
-# def pm_sched(request, press_id, date):
-#     Pmsched(
-#             local=Press.objects.get(id=press_id),
-#             date=date,
-#         ).save()
-#     try:
-#         return redirect(request.META['HTTP_REFERER'])
-#     except KeyError:
-#         return HttpResponse('Operation successful...')
-
 
 class CalendarView(LoginRequiredMixin, ListView):
     model = Pmsched
@@ -396,14 +372,8 @@ class CalendarView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # use today's date for the calendar
         d = get_date(self.request.GET.get('month', None))
-
-        # Instantiate our calendar class with today's year and date
         cal = Calendar(d.year, d.month)
-
-        # Call the formatmonth method, which returns our calendar as a table
         html_cal = cal.formatmonth(withyear=True)
         context['calendar'] = mark_safe(html_cal)
         context['prev_month'] = prev_month(d)

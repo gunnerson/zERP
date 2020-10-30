@@ -118,7 +118,6 @@ def generate_schedule(f):
 
 
 class JobInstListView(LoginRequiredMixin, ListView):
-    """List of scheduled jobs"""
     model = Press
     # paginate_by = 20
     template_name = 'prod/jobinst_list.html'

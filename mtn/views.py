@@ -292,25 +292,6 @@ def repair_toggle(request, pk, func):
     return redirect('mtn:order-list')
 
 
-# @login_required
-# def create_pms(request):
-#     if has_group(request.user, 'maintenance'):
-#         presses = Press.objects.filter(group='PR')
-#         presses = presses.exclude(subgroup='OT')
-#         presses = presses.exclude(subgroup='PN')
-#         for press in presses:
-#             pms = Pm.objects.filter(local=press)
-#             if pms.exists() is False:
-#                 Pm(
-#                     local=press,
-#                     pm_date=timezone.now().date(),
-#                     periodic=timedelta(days=180),
-#                 ).save()
-#         return redirect('mtn:index')
-#     else:
-#         raise Http404
-
-
 # class PmListView(LoginRequiredMixin, ListView):
 #     """List of existing work orders"""
 #     model = Pm

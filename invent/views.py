@@ -14,8 +14,6 @@ from equip.models import Press
 
 
 class PartListView(LoginRequiredMixin, ListView):
-    """List of all parts in the inventory and list of parts to add
-    to an existing work order"""
     model = Part
     paginate_by = 50
     count = 0
@@ -29,7 +27,6 @@ class PartListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        # Filter parts by part number, vendor and press
         if 'pk' in self.kwargs:
             order = Order.objects.get(id=self.kwargs['pk'])
         qs = Part.objects.all()
@@ -45,8 +42,6 @@ class PartListView(LoginRequiredMixin, ListView):
         return qs
 
     def post(self, request, *args, **kwargs):
-        # Check if enough in stock, add to work order and subtrack
-        # from amount in stock
         order_id = self.kwargs['pk']
         order = Order.objects.get(id=order_id)
         added_parts = order.parts.all()
@@ -100,7 +95,6 @@ class PartListView(LoginRequiredMixin, ListView):
 
 
 class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Add new part to inventory"""
     model = Part
     form_class = PartCreateForm
 
@@ -121,7 +115,6 @@ class PartCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 class PartDetailView(LoginRequiredMixin, DetailView):
-    """View part from the inventory"""
     model = Part
 
     def get_context_data(self, *args, **kwargs):
@@ -131,7 +124,6 @@ class PartDetailView(LoginRequiredMixin, DetailView):
 
 
 class PartUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Edit part"""
     model = Part
     form_class = PartCreateForm
     template_name = 'invent/part_update_form.html'
@@ -146,7 +138,6 @@ class PartUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    """Update used parts"""
     model = UsedPart
     template_name = 'invent/update_parts.html'
 
@@ -196,13 +187,11 @@ class OrderPartsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 
 class VendorListView(LoginRequiredMixin, ListView):
-    """List Vendors"""
     model = Vendor
     paginate_by = 50
 
 
 class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Add new vendor"""
     model = Vendor
     form_class = VendorCreateForm
 
@@ -216,12 +205,10 @@ class VendorCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 class VendorDetailView(LoginRequiredMixin, DetailView):
-    """View vendor"""
     model = Vendor
 
 
 class VendorUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Add new vendor"""
     model = Vendor
     form_class = VendorCreateForm
     template_name = 'invent/vendor_update_form.html'

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 class Employee(models.Model):
-    """List of company personnel"""
     OPERATOR = 'OP'
     SUPERVISOR = 'SV'
     MAINTENANCE = 'MT'

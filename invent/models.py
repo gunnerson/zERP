@@ -15,7 +15,6 @@ class PartManager(models.Manager):
 
 
 class Part(models.Model):
-    """List of inventory"""
     partnum = models.CharField(blank=True, null=True, max_length=35)
     descr = models.TextField(null=True, blank=True)
     cat = models.ManyToManyField('equip.Press', blank=True)
@@ -37,7 +36,6 @@ class Part(models.Model):
 
 
 class UsedPart(models.Model):
-    """Intermediary table for m2m between Part and Order classes"""
     part = models.ForeignKey(Part, on_delete=models.CASCADE, null=True)
     order = models.ForeignKey('mtn.Order', on_delete=models.CASCADE,
                               null=True, blank=True)
@@ -50,7 +48,6 @@ class UsedPart(models.Model):
 
 
 class Vendor(models.Model):
-    """List of Vendors"""
     name = models.CharField(max_length=50)
     addr1 = models.CharField(max_length=95, blank=True, null=True)
     addr2 = models.CharField(max_length=20, blank=True, null=True)
