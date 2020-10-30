@@ -53,8 +53,6 @@ class Press(models.Model):
                                   null=True,
                                   blank=True,)
     primary = models.BooleanField(default=True)
-    clocked1 = models.BooleanField(default=False)
-    clocked2 = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'presses'
