@@ -41,7 +41,7 @@ def auto_upload_sched(request):
         for fmonth in fmonths:
             fname = '/mnt/rprod/PRODUCTION/Daily Production Report/Daily {0}/{1} Daily {2}.xlsx'.format(fyear,fmonth,fyear)
             if os.path.exists(fname):
-                f = open('/mnt/rprod/PRODUCTION/Daily Production Report/Daily 2020/Oct Daily 2020.xlsx', 'rb')
+                f = open(fname, 'rb')
                 success = True
                 generate_schedule(f)
     return HttpResponse('Operation successful...')
