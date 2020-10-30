@@ -93,7 +93,7 @@ class Press(models.Model):
         if last_pm is not None:
             last_pm_date = last_pm.date
         else:
-            last_pm_date = timezone.now().date()
+            last_pm_date = "Unknown"
         return last_pm_date
 
     def pm_due(self):
