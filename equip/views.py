@@ -27,6 +27,7 @@ from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
     PmprocCreateForm
 from invent.models import Part, UsedPart
 from .utils import Calendar
+from prod.models import JobInst
 
 
 class PressListView(LoginRequiredMixin, ListView):
@@ -248,12 +249,14 @@ class MapData(RetrieveAPIView):
             press_dict[press.pk].update({'name': press.pname})
             pm_prior = press.pm_prior()
             if pm_prior > 0 and press.pm_due():
-                press_dict[press.pk].update({'pmd': pm_prior})
-                # try:
-                #     job = press.press.job(shift=shift)
-                #     press_dict[press.pk].update({'pmd': pm_prior})
-                # except Press.DoesNotExist:
-                #     pass
+                # press_dict[press.pk].update({'pmd': pm_prior})
+                job = None
+                try:
+                    job = press.press.job(shift=shift)
+                except (JobInst.DoesNotExist, Press.DoesNotExist):
+                    pass
+                if job is None:
+                    press_dict[press.pk].update({'pmd': pm_prior})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
             job = press.job(shift=shift)
