@@ -119,90 +119,21 @@ def generate_schedule(f):
 
 class JobInstListView(LoginRequiredMixin, ListView):
     """List of scheduled jobs"""
-    model = JobInst
-    # count = 0
+    model = Press
     # paginate_by = 20
+    template_name = 'prod/jobinst_list.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update(get_url_kwargs(self.request))
-        dateinput = self.request.GET.get('dateinput', date.today())
-        context['dateinput'] = dateinput
-        context['shift'] = get_shift()
+        context['today'] = timezone.now().date()
+        context['tomorrow'] = timezone.now().date() + timedelta(days=1)
         return context
 
-    # def get_queryset(self):
-    #     qs = JobInst.objects.all().order_by('press')
-    #     dateinput = self.request.GET.get('dateinput', None)
-    #     shiftinput = self.request.GET.get('shiftinput', get_shift())
-    #     if is_valid_param(dateinput):
-    #         dt = datetime.strptime(dateinput, '%m/%d/%Y')
-    #     else:
-    #         dt = timezone.localtime(timezone.now()).date()
-    #     qs = qs.filter(date=dt, shift=shiftinput)
-    #     return qs
-
-
-# def generate_schedule(f):
-#     qs = Job.objects.all().only('name')
-#     iqs = JobInst.objects.all()
-#     pqs = Press.objects.all().filter(group='PR').only('pname')
-#     book = xlrd.open_workbook(file_contents=f.read())
-#     db_sheet = book.sheet_by_index(4)
-#     for row_idx in range(0, db_sheet.nrows):
-#         for col_idx in range(1, 2):
-#             job = db_sheet.cell(row_idx, 1).value
-#             rate = db_sheet.cell(row_idx, 2).value
-#             try:
-#                 qs.get(name=job)
-#             except Job.DoesNotExist:
-#                 Job(name=job, rate=rate).save()
-#     for sheet_idx in range(0, 3):
-#         daily_sheet = book.sheet_by_index(sheet_idx)
-#         datexl = daily_sheet.cell(1, 6).value
-#         xldate = xlrd.xldate_as_datetime(datexl, 0)
-#         date = xldate.date()
-#         for row_idx in range(3, daily_sheet.nrows - 2):
-#             press_id = str(daily_sheet.cell(row_idx, 0).value)
-#             job_name = daily_sheet.cell(row_idx, 1).value
-#             if press_id[0].isdigit():
-#                 press_name = 'Press ' + f'{int(press_id[:-2]):02}'
-#                 try:
-#                     press = pqs.get(pname=press_name)
-#                 except Press.DoesNotExist:
-#                     press = None
-#             elif press_id[0] == 'I':
-#                 try:
-#                     press = pqs.get(pname=press_id)
-#                 except Press.DoesNotExist:
-#                     press = None
-#             if is_valid_param(press):
-#                 if is_valid_param(job_name):
-#                     try:
-#                         job = qs.get(name=job_name)
-#                     except Job.DoesNotExist:
-#                         job = Job(name=job_name, rate=db_sheet.cell(
-#                             row_idx, 2).value).save()
-#                     if is_valid_param(job):
-#                         jobinst = iqs.filter(
-#                             press=press, job=job, shift=sheet_idx).last()
-#                         if jobinst is not None:
-#                             jobinst.date = date
-#                             jobinst.save(update_fields=['date'])
-#                         else:
-#                             JobInst(press=press, job=job, shift=sheet_idx,
-#                                     date=date).save()
-#                 else:
-#                     try:
-#                         job = press.job(shift=sheet_idx)
-#                         if job.date == date:
-#                             job.date = None
-#                             job.shift = None
-#                             job.save(update_fields=['date', 'shift'])
-#                     except JobInst.DoesNotExist:
-#                         pass
-#                     except AttributeError:
-#                         pass
+    def get_queryset(self):
+        now = timezone.now().date()
+        qs = Press.objects.exclude(jobinst__isnull=True)
+        return qs
 
 
 # class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

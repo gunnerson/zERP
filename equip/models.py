@@ -125,6 +125,15 @@ class Press(models.Model):
             except JobInst.DoesNotExist:
                 return None
 
+    # def is_up(self, date=None, shift=None):
+    #     """Get press status"""
+    #     from prod.models import JobInst
+    #     try:
+    #         self.jobinst_set.get(shift=shift, date=date)
+    #         return True
+    #     except JobInst.DoesNotExist:
+    #         return False
+
 
 class Upload(models.Model):
     """Uploaded files with press documentaiton"""

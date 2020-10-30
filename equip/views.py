@@ -249,7 +249,6 @@ class MapData(RetrieveAPIView):
             press_dict[press.pk].update({'name': press.pname})
             pm_prior = press.pm_prior()
             if pm_prior > 0 and press.pm_due():
-                # press_dict[press.pk].update({'pmd': pm_prior})
                 job = None
                 try:
                     job = press.press.job(shift=shift)

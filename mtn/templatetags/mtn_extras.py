@@ -1,6 +1,7 @@
 from django import template
 
 from equip.models import Press
+from prod.models import JobInst
 
 register = template.Library()
 
@@ -21,6 +22,21 @@ def press_status(press_id):
         press_status = 'Ready'
     return press_status
 
+@register.filter
+def press_is_up1(press, date):
+    try:
+        press.jobinst_set.get(press=press, shift=1, date=date)
+        return True
+    except JobInst.DoesNotExist:
+        return False
+
+@register.filter
+def press_is_up2(press, date):
+    try:
+        press.jobinst_set.get(press=press, shift=2, date=date)
+        return True
+    except JobInst.DoesNotExist:
+        return False
 
 # @register.filter()
 # def smooth_timedelta(timedeltaobj):

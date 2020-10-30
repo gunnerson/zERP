@@ -1,19 +1,6 @@
 {% extends "mtn/base.html" %}
 {% load mtn_extras %}
 
-<script>
-  {% block jquery %}
-
-  $(function () {
-    $('#datetimepicker').datetimepicker({
-      format: 'L',
-      useCurrent: True,
-    });
-  });
-
-  {% endblock %}
-</script>
-
 {% block left-menu %}
 
   {% if request.user|has_group:"manager" %}
@@ -40,33 +27,37 @@
 
 {% block content %}
 
-  <form method="GET" action="" id="filterform">
-    <div class="row">
-      <div class="col-3 mr-3">
-        <label>Date:</label>
-        <input type="text" class="form-control datetimepicker-input" id="datetimepicker" name="dateinput" data-toggle="datetimepicker" data-target="#datetimepicker" value="{{ dateinput }}" />
-      </div>
-      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-        <input type="radio" id="customRadioInline1" name="shiftinput" class="custom-control-input" value="1" {% if shiftinput == "1" %}checked="checked"{% endif %}>
-        <label class="custom-control-label" for="customRadioInline1">1st Shift</label>
-      </div>
-      <div class="custom-control custom-radio custom-control-inline align-self-center mt-4">
-        <input type="radio" id="customRadioInline2" name="shiftinput" class="custom-control-input" value="2" {% if shiftinput == "2" %}checked="checked"{% endif %}>
-        <label class="custom-control-label" for="customRadioInline2">2nd Shift</label>
-      </div>
-      <div class="col align-self-center mt-4 ml-3">
-        <button name="submit" role="button" class="btn btn-rahco px-3">Filter</button>
-      </div>
-    </div>
-  </form>
-  <br>
-
   <div class="container justify-content-center ml-1">
     <table>
+      <tr class="row border">
+        <th class="col-3 border-right align-self-center my-2">
+          Press
+        </th>
+        <th class="col-3 border-right align-self-center my-2">
+          {{ today }} - 1st shift
+        </th>
+        <th class="col-3 border-right align-self-center my-2">
+          {{ today }} - 2nd shift
+        </th>
+        <th class="col-3 align-self-center my-2">
+          {{ tomorrow }} - 1st shift
+        </th>
+      </tr>
       {% for object in object_list %}
-        <tr class="row border justify-content-start" data-href="" style="width:500px;">
-          <th class="col-4 align-self-center my-2">
-            {{ object.press }}
+        <tr class="row border">
+          <th class="col-3 border-right align-self-center">
+            <a href="{% url 'equip:press' object.id %}">
+              {{ object }}
+            </a>
+          </th>
+          <th class="col-3 border-right align-self-center {% if object|press_is_up1:today %} prsched {% endif %}">
+            <p class="prschedtb">Not scheduled</p>
+          </th>
+          <th class="col-3 border-right align-self-center {% if object|press_is_up2:today %} prsched {% endif %}">
+            <p class="prschedtb">Not scheduled</p>
+          </th>
+          <th class="col-3 align-self-center {% if object|press_is_up1:tomorrow %} prsched {% endif %}">
+            <p class="prschedtb">Not scheduled</p>
           </th>
         </tr>
       {% endfor %}

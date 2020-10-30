@@ -301,3 +301,12 @@ tr:nth-child(odd) {
 .clearfix {
   margin: 15px;
 }
+
+.prsched {
+  background-color:#585757 !important;
+}
+
+.prschedtb {
+  text-align:center;
+  margin-bottom: 0rem;
+}
