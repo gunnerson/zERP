@@ -297,6 +297,7 @@ class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         press_id = self.kwargs['pk']
         press = Press.objects.get(id=press_id)
         self.object.local = press
+        self.object.hours = self.object.freq
         self.object.save()
         return redirect('equip:press-pm', pk=press_id)
 

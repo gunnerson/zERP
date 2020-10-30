@@ -64,35 +64,60 @@ def generate_schedule(f):
         ssj = db_sheet.cell(row_idx, 1).value
         if press_id[0].isdigit():
             press_name = 'Press ' + f'{int(press_id[:-2]):02}'
-            try:
-                press = pqs.get(pname=press_name)
-            except Press.DoesNotExist:
-                press = None
         elif press_id[0] == 'I':
             press_name = 'Inj ' + press_id[3]
-            try:
-                press = pqs.get(pname=press_name)
-            except Press.DoesNotExist:
-                press = None
-        if is_valid_param(press):
+        try:
+            press = pqs.get(pname=press_name)
             if is_valid_param(fsj):
                 try:
                     jobinst = iqs.get(press=press, shift=1, date=date1)
                 except JobInst.DoesNotExist:
                     JobInst(press=press, shift=1, date=date1).save()
-                    procs = press.pmproc_set.all()
-                    for proc in procs:
-                        proc.hours += 8
-                        proc.save(update_fields=['hours'])
+                    press.clocked1 = True
+                    press.save(update_fields=['clocked1'])
             if is_valid_param(ssj):
                 try:
                     jobinst = iqs.get(press=press, shift=2, date=date2)
                 except JobInst.DoesNotExist:
                     JobInst(press=press, shift=2, date=date2).save()
-                    procs = press.pmproc_set.all()
+                    press.clocked2 = True
+                    press.save(update_fields=['clocked2'])
+        except Press.DoesNotExist:
+            pass
+    for press in pqs:
+        if press.clocked1:
+            if press.primary:
+                procs = press.pmproc_set.all()
+                for proc in procs:
+                    proc.hours += 8
+                    proc.save(update_fields=['hours'])
+            else:
+                if press.press.clocked1:
+                    pass
+                else:
+                    procs = press.press.pmproc_set.all()
                     for proc in procs:
                         proc.hours += 8
                         proc.save(update_fields=['hours'])
+        if press.clocked2:
+            if press.primary:
+                procs = press.pmproc_set.all()
+                for proc in procs:
+                    proc.hours += 8
+                    proc.save(update_fields=['hours'])
+            else:
+                if press.press.clocked2:
+                    pass
+                else:
+                    procs = press.press.pmproc_set.all()
+                    for proc in procs:
+                        proc.hours += 8
+                        proc.save(update_fields=['hours'])
+    for press in pqs:
+        press.clocked1 = False
+        press.clocked2 = False
+        press.save(update_fields=['clocked1', 'clocked2'])
+
 
 
 class JobInstListView(LoginRequiredMixin, ListView):

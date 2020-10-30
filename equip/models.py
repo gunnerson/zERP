@@ -49,9 +49,12 @@ class Press(models.Model):
     contacts = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     joined = models.OneToOneField('self',
-                               on_delete=models.CASCADE,
-                               null=True,
-                               blank=True,)
+                                  on_delete=models.CASCADE,
+                                  null=True,
+                                  blank=True,)
+    primary = models.BooleanField(default=True)
+    clocked1 = models.BooleanField(default=False)
+    clocked2 = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'presses'
