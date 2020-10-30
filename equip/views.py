@@ -277,18 +277,6 @@ class PmListView(LoginRequiredMixin, ListView):
         return qs
 
 
-@login_required
-def pm_clock(request):
-    qs = Pmproc.objects.all()
-    for proc in qs:
-        proc.hours += 8
-        proc.save(update_fields=['hours'])
-    try:
-        return redirect(request.META['HTTP_REFERER'])
-    except KeyError:
-        return HttpResponse('Operation successful...')
-
-
 class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Schedule a PM"""
     model = Pmproc
@@ -309,7 +297,6 @@ class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         press_id = self.kwargs['pk']
         press = Press.objects.get(id=press_id)
         self.object.local = press
-        self.object.hours = 0
         self.object.save()
         return redirect('equip:press-pm', pk=press_id)
 

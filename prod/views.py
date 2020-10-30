@@ -1,4 +1,5 @@
 import xlrd
+import os
 from django.shortcuts import render, redirect
 from django.views import View
 from datetime import timedelta, datetime, date
@@ -31,8 +32,18 @@ def upload_sched(request):
 
 @login_required
 def auto_upload_sched(request):
-    f = open('/mnt/rprod/PRODUCTION/Daily Production Report/Daily 2020/Oct Daily 2020.xlsx', 'rb')
-    generate_schedule(f)
+    now = timezone.now().date()
+    fyear = now.year
+    smonth = now.strftime('%b')
+    fmonths = (smonth, smonth.upper())
+    success = False
+    while success == False:
+        for fmonth in fmonths:
+            fname = '/mnt/rprod/PRODUCTION/Daily Production Report/Daily {0}/{1} Daily {2}.xlsx'.format(fyear,fmonth,fyear)
+            if os.path.exists(fname):
+                f = open('/mnt/rprod/PRODUCTION/Daily Production Report/Daily 2020/Oct Daily 2020.xlsx', 'rb')
+                success = True
+                generate_schedule(f)
     return HttpResponse('Operation successful...')
 
 
@@ -82,6 +93,32 @@ def generate_schedule(f):
                     for proc in procs:
                         proc.hours += 8
                         proc.save(update_fields=['hours'])
+
+
+class JobInstListView(LoginRequiredMixin, ListView):
+    """List of scheduled jobs"""
+    model = JobInst
+    # count = 0
+    # paginate_by = 20
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update(get_url_kwargs(self.request))
+        dateinput = self.request.GET.get('dateinput', date.today())
+        context['dateinput'] = dateinput
+        context['shift'] = get_shift()
+        return context
+
+    # def get_queryset(self):
+    #     qs = JobInst.objects.all().order_by('press')
+    #     dateinput = self.request.GET.get('dateinput', None)
+    #     shiftinput = self.request.GET.get('shiftinput', get_shift())
+    #     if is_valid_param(dateinput):
+    #         dt = datetime.strptime(dateinput, '%m/%d/%Y')
+    #     else:
+    #         dt = timezone.localtime(timezone.now()).date()
+    #     qs = qs.filter(date=dt, shift=shiftinput)
+    #     return qs
 
 
 # def generate_schedule(f):
@@ -146,107 +183,77 @@ def generate_schedule(f):
 #                         pass
 
 
-class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+# class ScheduleView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
-    model = JobInst
-    form_class = JobInstForm
-    template_name = "prod/schedule.html"
-    press_list = Press.objects.filter(group='PR')
-    press_list = press_list.exclude(subgroup='OT')
-    JobInstFormSet = formset_factory(JobInstForm, extra=len(press_list))
+#     model = JobInst
+#     form_class = JobInstForm
+#     template_name = "prod/schedule.html"
+#     press_list = Press.objects.filter(group='PR')
+#     press_list = press_list.exclude(subgroup='OT')
+#     JobInstFormSet = formset_factory(JobInstForm, extra=len(press_list))
 
-    def get(self, request, *args, **kwargs):
-        formset = self.JobInstFormSet()
-        i = 0
-        for press in self.press_list:
-            formset[i].initial = {'press': press.pname}
-            i += 1
-        context = {
-            'formset': formset,
-        }
-        return render(request, self.template_name, context)
+#     def get(self, request, *args, **kwargs):
+#         formset = self.JobInstFormSet()
+#         i = 0
+#         for press in self.press_list:
+#             formset[i].initial = {'press': press.pname}
+#             i += 1
+#         context = {
+#             'formset': formset,
+#         }
+#         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        formset = self.JobInstFormSet(self.request.POST)
-        jqs = Job.objects.all()
-        iqs = JobInst.objects.all()
-        if formset.is_valid():
-            date = request.POST.get("dateinput")
-            shift = int(request.POST.get("shiftinput"))
-            try:
-                dt = datetime.strptime(date, '%m/%d/%Y').date()
-            except ValueError:
-                dt = None
-            if dt is not None and shift is not None:
-                for jobinst in formset:
-                    data = jobinst.cleaned_data
-                    press = self.press_list.get(pname=data['press'])
-                    job = jqs.get(name=data['job'])
-                    if is_valid_param(press):
-                        if is_valid_param(data['job']):
-                            jobinst = iqs.filter(
-                                press=press, job=job).last()
-                            if jobinst is not None:
-                                if jobinst.shift == shift:
-                                    jobinst.date = dt
-                                    jobinst.save(update_fields=['date'])
-                                elif jobinst.shift is None:
-                                    jobinst.date = dt
-                                    jobinst.shift = shift
-                                    jobinst.save(update_fields=['date', 'shift'])
-                                else:
-                                    JobInst(press=press, job=job, shift=shift,
-                                        date=dt).save()
-                            else:
-                                JobInst(press=press, job=job, shift=shift,
-                                        date=dt).save()
-                        else:
-                            job = press.job(shift=shift)
-                            if job is not None:
-                                if job.date == dt:
-                                    job.date = None
-                                    job.shift = None
-                                    job.save(update_fields=['date', 'shift'])
-                return redirect('prod:prod_sched')
-            else:
-                messages.add_message(
-                    request, messages.INFO, 'Pick date and shift')
-                return redirect(request.META['HTTP_REFERER'])
-        else:
-            context = {
-                'formset': formset,
-            }
-            return render(request, self.template_name, context)
+#     def post(self, request, *args, **kwargs):
+#         formset = self.JobInstFormSet(self.request.POST)
+#         jqs = Job.objects.all()
+#         iqs = JobInst.objects.all()
+#         if formset.is_valid():
+#             date = request.POST.get("dateinput")
+#             shift = int(request.POST.get("shiftinput"))
+#             try:
+#                 dt = datetime.strptime(date, '%m/%d/%Y').date()
+#             except ValueError:
+#                 dt = None
+#             if dt is not None and shift is not None:
+#                 for jobinst in formset:
+#                     data = jobinst.cleaned_data
+#                     press = self.press_list.get(pname=data['press'])
+#                     job = jqs.get(name=data['job'])
+#                     if is_valid_param(press):
+#                         if is_valid_param(data['job']):
+#                             jobinst = iqs.filter(
+#                                 press=press, job=job).last()
+#                             if jobinst is not None:
+#                                 if jobinst.shift == shift:
+#                                     jobinst.date = dt
+#                                     jobinst.save(update_fields=['date'])
+#                                 elif jobinst.shift is None:
+#                                     jobinst.date = dt
+#                                     jobinst.shift = shift
+#                                     jobinst.save(update_fields=['date', 'shift'])
+#                                 else:
+#                                     JobInst(press=press, job=job, shift=shift,
+#                                         date=dt).save()
+#                             else:
+#                                 JobInst(press=press, job=job, shift=shift,
+#                                         date=dt).save()
+#                         else:
+#                             job = press.job(shift=shift)
+#                             if job is not None:
+#                                 if job.date == dt:
+#                                     job.date = None
+#                                     job.shift = None
+#                                     job.save(update_fields=['date', 'shift'])
+#                 return redirect('prod:prod_sched')
+#             else:
+#                 messages.add_message(
+#                     request, messages.INFO, 'Pick date and shift')
+#                 return redirect(request.META['HTTP_REFERER'])
+#         else:
+#             context = {
+#                 'formset': formset,
+#             }
+#             return render(request, self.template_name, context)
 
-    def test_func(self):
-        return has_group(self.request.user, 'manager')
-
-
-class JobInstListView(LoginRequiredMixin, ListView):
-    """List of scheduled jobs"""
-    model = JobInst
-    # count = 0
-    # paginate_by = 20
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context.update(get_url_kwargs(self.request))
-        dateinput = self.request.GET.get('dateinput', date.today())
-        # try:
-        #     del context['dateinput']
-        # except KeyError:
-        #     pass
-        context['dateinput'] = dateinput
-        context['shift'] = get_shift()
-        return context
-
-    def get_queryset(self):
-        qs = JobInst.objects.all().order_by('press')
-        dateinput = self.request.GET.get('dateinput', None)
-        shiftinput = self.request.GET.get('shiftinput', get_shift())
-        if is_valid_param(dateinput):
-            dt = datetime.strptime(dateinput, '%m/%d/%Y')
-        else:
-            dt = timezone.localtime(timezone.now()).date()
-        qs = qs.filter(date=dt, shift=shiftinput)
-        return qs
+#     def test_func(self):
+#         return has_group(self.request.user, 'manager')

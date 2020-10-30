@@ -48,6 +48,10 @@ class Press(models.Model):
     pmed = models.BooleanField(default=False)
     contacts = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
+    joined = models.OneToOneField('self',
+                               on_delete=models.CASCADE,
+                               null=True,
+                               blank=True,)
 
     class Meta:
         verbose_name_plural = 'presses'
@@ -197,4 +201,3 @@ class Pmsched(models.Model):
 
     def get_absolute_url(self):
         return reverse('equip:pm-detail', kwargs={'pk': self.pk})
-
