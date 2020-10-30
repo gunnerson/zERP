@@ -47,8 +47,11 @@ class PressListView(LoginRequiredMixin, ListView):
             pass
         else:
             if group == 'PM':
-                unsorted_results = qs.filter(pmed=True)
-                qs = sorted(unsorted_results, key= lambda t: t.last_pm())
+                # unsorted_results = qs.filter(pmed=True)
+                # qs = sorted(unsorted_results, key= lambda t: t.last_pm())
+                # qs = Press.objects.filter(pmed=True).annotate(
+                    # lastpm=(last_pm())).order_by('lastpm')
+                qs = Press.objects.filter(pmed=True)
             else:
                 qs = qs.filter(group=group)
         return qs
