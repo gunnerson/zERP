@@ -89,7 +89,8 @@ class Press(models.Model):
         return status
 
     def last_pm(self):
-        last_pm = self.pmsched_set.first()
+        qs = self.pmsched_set.all().order_by('date')
+        last_pm = qs.last()
         if last_pm is not None:
             last_pm_date = last_pm.date
         else:
