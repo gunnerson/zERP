@@ -53,7 +53,7 @@
         {% if user.is_superuser %}
           <tr class="clickable-row row border justify-content-start" data-href={{object.get_admin_url}} style="width:700px;">
         {% else %}
-          <tr class="row border justify-content-start" style="width:700px;">
+          <tr class="row border justify-content-start" style="width:900px;">
         {% endif %}
           <th class="col border-right text-nowrap text-truncate align-self-center my-2">
             {{ object.descr }} {% if object.pm_part %}{{ object.pm_part.partnum }} x{{ object.pm_part_amount }}{% endif %}
