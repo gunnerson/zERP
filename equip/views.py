@@ -265,6 +265,7 @@ class PmListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         press_id = self.kwargs['pk']
         context['press_id'] = press_id
+        context['press'] = Press.objects.get(id=press_id)
         return context
 
     def get_queryset(self):
@@ -294,6 +295,8 @@ class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         self.object.local = press
         self.object.hours = self.object.freq
         self.object.save()
+        part = self.object.pm_part
+        part.cat.add(press)
         return redirect('equip:press-pm', pk=press_id)
 
 
