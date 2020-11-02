@@ -269,7 +269,7 @@ class PmListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         press_id = self.kwargs['pk']
-        qs = Pmproc.objects.filter(local=press_id)
+        qs = Pmproc.objects.filter(local=press_id).order_by('pk')
         return qs
 
 
