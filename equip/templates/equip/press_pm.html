@@ -56,7 +56,7 @@
           <tr class="row border justify-content-start" style="width:700px;">
         {% endif %}
           <th class="col border-right text-nowrap text-truncate align-self-center my-2">
-            {{ object.descr }} {% if object.pm_part %}{{ object.pm_part.partnum }}{% endif %}
+            {{ object.descr }} {% if object.pm_part %}{{ object.pm_part.partnum }} x{{ object.pm_part_amount }}{% endif %}
           </th>
           <th class="col-2 border-right text-nowrap text-truncate align-self-center">
             {{ object.hours_left }}

@@ -82,8 +82,11 @@
           <th class="col-2 border-right text-nowrap text-truncate">
               {{ object.partnum }}
           </th>
-          <th class="col text-nowrap text-truncate">
+          <th class="col border-right text-nowrap text-truncate">
             {{ object.descr }}
+          </th>
+          <th class="col-1 text-nowrap text-truncate">
+            {{ object.amount }}
           </th>
         </tr>
       {% endfor %}
