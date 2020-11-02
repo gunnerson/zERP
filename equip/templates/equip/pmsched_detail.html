@@ -6,6 +6,9 @@
     <li>
       <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
     </li>
+    <li>
+      <a href="{% url 'equip:pm-delete' object.id %}" class="side-menu-link" role="button">Unschedule</a>
+    </li>
   </ul>
 
 {% endblock left-menu %}

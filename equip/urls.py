@@ -13,6 +13,7 @@ from equip.views import (
     CalendarView,
     PmschedDetailView,
     PmprocCreateView,
+    PmschedDeleteView,
 )
 
 from mtn.views import OrderListView
@@ -41,6 +42,7 @@ urlpatterns = [
     path('api/data/equipment/press/<int:pk>/',
          DowntimeChartData.as_view(), name='chart-data'),
     path('equipment/press/<int:pk>/schedule-pm/', PmschedCreateView.as_view(), name='pmsched'),
+    path('equipment/press/<int:pk>/delete-pm/', PmschedDeleteView.as_view(), name='pm-delete'),
     path('equipment/pm/<int:pk>/', PmschedDetailView.as_view(), name='pm-detail'),
     path('calendar/', CalendarView.as_view(), name='calendar'),
 ]

@@ -5,10 +5,10 @@ from datetime import datetime, date
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.utils import timezone
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from rest_framework.generics import RetrieveAPIView
@@ -319,6 +319,21 @@ class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         self.object.local = press
         self.object.save()
         return redirect('equip:calendar')
+
+
+class PmschedDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Pmsched
+    success_url = reverse_lazy('equip:calendar')
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        press = self.object.local
+        context['press_id'] = press.id
+        context['press'] = press
+        return context
 
 
 class PmschedDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
