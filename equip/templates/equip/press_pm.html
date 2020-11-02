@@ -51,7 +51,7 @@
     <table>
       {% for object in object_list %}
         {% if user.is_superuser %}
-          <tr class="clickable-row row border justify-content-start" data-href={{object.get_admin_url}} style="width:700px;">
+          <tr class="clickable-row row border justify-content-start" data-href={{object.get_admin_url}} style="width:900px;">
         {% else %}
           <tr class="row border justify-content-start" style="width:900px;">
         {% endif %}
