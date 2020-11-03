@@ -160,7 +160,7 @@ class Pmproc(models.Model):
                                 blank=True,
                                 )
     pm_part_amount = models.PositiveIntegerField(null=True, blank=True)
-    descr = models.CharField(max_length=200, null=True)
+    descr = models.CharField(max_length=200, null=True, blank=True)
     hours = models.PositiveIntegerField(null=True)
 
     def hours_left(self):

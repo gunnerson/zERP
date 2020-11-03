@@ -22,9 +22,10 @@ from django.utils.safestring import mark_safe
 
 from .models import Press, Upload, Imprint, Pmproc, Pmsched
 from mtn.models import Order, Image
-from mtn.cm import has_group, get_shift, is_valid_param, get_url_kwargs
+from mtn.cm import has_group, get_shift, is_valid_param, get_url_kwargs, \
+    is_empty_param
 from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
-    PmprocCreateForm
+    PmprocCreateForm, PmprocUpdateForm
 from invent.models import Part, UsedPart
 from .utils import Calendar
 from prod.models import JobInst
@@ -297,6 +298,24 @@ class PmprocCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             part = self.object.pm_part
             part.cat.add(press)
         return redirect('equip:press-pm', pk=press_id)
+
+
+class PmprocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Pmproc
+    form_class = PmprocUpdateForm
+    template_name = 'equip/pmproc_update_form.html'
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        if is_empty_param(self.object.descr):
+            self.object.delete()
+        if self.object.pm_part is not None:
+            part = self.object.pm_part
+            part.cat.add(self.object.local)
+        return redirect('equip:press-pm', pk=self.object.local.id)
 
 
 class PmschedCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

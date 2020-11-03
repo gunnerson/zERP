@@ -17,12 +17,16 @@
     <li>
       <a href="{% url 'equip:press' press_id %}" class="side-menu-link" role="button">Back</a>
     </li>
-    <li>
-      <a href="{% url 'equip:pmsched' press_id %}" class="side-menu-link" role="button">Schedule</a>
-    </li>
-    <li>
-      <a href="{% url 'equip:add-pm' press_id %}" class="side-menu-link" role="button">Add PM</a>
-    </li>
+    {% if request.user|has_group:"supervisor" or request.user|has_group:"maintenance" %}
+      <li>
+        <a href="{% url 'equip:pmsched' press_id %}" class="side-menu-link" role="button">Schedule</a>
+      </li>
+    {% endif %}
+    {% if request.user|has_group:"maintenance" %}
+      <li>
+        <a href="{% url 'equip:add-pm' press_id %}" class="side-menu-link" role="button">Add PM</a>
+      </li>
+    {% endif %}
     <li>
       <a href="{% url 'equip:calendar' %}" class="side-menu-link" role="button">Calendar</a>
     </li>
@@ -50,8 +54,8 @@
   <div class="container justify-content-start ml-1">
     <table>
       {% for object in object_list %}
-        {% if user.is_superuser %}
-          <tr class="clickable-row row border justify-content-start" data-href={{object.get_admin_url}} style="width:900px;">
+        {% if request.user|has_group:"maintenance" %}
+          <tr class="clickable-row row border justify-content-start" data-href="{% url 'equip:update-pm' object.id %}" style="width:900px;">
         {% else %}
           <tr class="row border justify-content-start" style="width:900px;">
         {% endif %}

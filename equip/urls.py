@@ -14,6 +14,7 @@ from equip.views import (
     PmschedDetailView,
     PmprocCreateView,
     PmschedDeleteView,
+    PmprocUpdateView,
 )
 
 from mtn.views import OrderListView
@@ -31,6 +32,8 @@ urlpatterns = [
          name='press-pm'),
     path('equipment/press/<int:pk>/add_pm/', PmprocCreateView.as_view(),
          name='add-pm'),
+    path('equipment/pm/<int:pk>/update/', PmprocUpdateView.as_view(),
+         name='update-pm'),
     path('equipment/press/<int:pk>/notes/', PressUpdateView.as_view(
         template_name='equip/press_update_form.html'),
         name='notes'),
