@@ -58,7 +58,6 @@ class PressDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        uploads = self.object.upload_set.all()
         today = timezone.now()
         month = today.month
         year = today.year
@@ -94,11 +93,10 @@ class PressDetailView(LoginRequiredMixin, DetailView):
             cost_this_year += round(Order.cost_of_repair(order), 2)
         for order in last_year:
             cost_last_year += round(Order.cost_of_repair(order), 2)
-        images = self.object.image_set.all()
-        pmprocs = self.object.pmproc_set.all().order_by('pk')
-        context['pmprocs'] = pmprocs
-        context['uploads'] = uploads
-        context['images'] = images
+        context['pmprocs'] = self.object.pmproc_set.all().order_by('pk')
+        context['uploads'] = self.object.upload_set.all()
+        context['images'] = self.object.image_set.all()
+        context['parts'] = self.object.part_set.all()
         context['dts_total'] = dts_total
         context['dts_last'] = dts_last
         context['cost_this_year'] = cost_this_year

@@ -92,7 +92,7 @@
 
   <div class="row">
 
-    <div class="col-lg">
+    <div class="col-5">
       {% if press.pmed %}
         <div class="col">
           <div class="card">
@@ -129,7 +129,7 @@
                 {% else %}
                   <span>No notes</span>
                 {% endif %}
-              </h2>
+              </h4>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@
                 {% else %}
                   <span>No contacts</span>
                 {% endif %}
-              </h2>
+              </h4>
             </div>
           </div>
         </div>
@@ -163,11 +163,27 @@
                 {% else %}
                   <span>No uploads</span>
                 {% endif %}
-              </h2>
+              </h4>
             </div>
           </div>
         </div>
       </div>
+      {% if parts %}
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="header-title mb-3"><b>Parts:</b></div>
+              <div class="chart-content-bg text-start">
+                <h4 class="font-weight-normal mb-0">
+                  {% for part in parts %}
+                    <a href="{% url 'invent:part' part.id %}">{{ part }},&nbsp</a>
+                  {% endfor %}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <div class="col-lg-7">
@@ -204,6 +220,7 @@
         </div>
       </div>
     </div>
+  </div>
 
   {% if images %}
     <div class="card">
