@@ -1,0 +1,62 @@
+{% extends "mtn/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block left-menu %}
+
+ <ul>
+  <li>
+    <a href="" onClick="window.history.back();return false;" class="side-menu-link" role="button">Back</a>
+  </li>
+</ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item active">Update PM</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Update PM</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  {% if messages %}
+    <ul class="messages" style="color:red;">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><b>{{ message }}</b></li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form action="{% url 'equip:update-pm' object.id %}" method='post'>
+    {% csrf_token %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm">
+          {{ form.descr|as_crispy_field }}
+        </div>
+        <div class="col-sm-2">
+          {{ form.freq|as_crispy_field }}
+        </div>
+        <div class="col-sm-2">
+          {{ form.pm_part|as_crispy_field }}
+        </div>
+        <div class="col-sm-2">
+          {{ form.pm_part_amount|as_crispy_field }}
+        </div>
+        <div class="col-sm-2">
+          {{ form.hours|as_crispy_field }}
+        </div>
+      </div>
+    </div>
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Update</button>
+  </form>
+
+{% endblock content %}
