@@ -16,7 +16,7 @@ class JobInst(models.Model):
         dtime = datetime(ddate.year, ddate.month, ddate.day).replace(
             tzinfo=timezone.utc).astimezone(tz=None)
         if self.shift == 2:
-            start_time = dtime + timedelta(hours=20,minutes=30)
+            start_time = dtime + timedelta(hours=20, minutes=30)
         elif self.shift == 1:
             start_time = dtime + timedelta(hours=12)
         return start_time
@@ -28,5 +28,5 @@ class JobInst(models.Model):
         if self.shift == 2:
             end_time = dtime + timedelta(hours=29)
         elif self.shift == 1:
-            end_time = dtime + timedelta(hours=20,minutes=30)
+            end_time = dtime + timedelta(hours=20, minutes=30)
         return end_time

@@ -77,14 +77,21 @@ def get_url_kwargs(request):
 
 
 def get_shift():
-    now = timezone.localtime(timezone.now()).hour
-    if now in range(7, 15):
+    nowh = timezone.localtime(timezone.now()).hour
+    nowm = timezone.localtime(timezone.now()).minute
+    if nowh in range(7, 14):
         shift = 1
-    elif now in range(15, 23):
+    elif nowh in range(16, 23):
         shift = 2
+    elif nowh == 15:
+        if nowh < 30:
+            shift = 1
+        else:
+            shift = 2
     else:
         shift = None
     return shift
+
 
     # if(!!window.performance && window.performance.navigation.type == 2)
     # {
