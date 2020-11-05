@@ -2,7 +2,7 @@ import os
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from datetime import date
+from datetime import date, timedelta
 
 from mtn.cm import get_shift
 from invent.models import Part
@@ -94,7 +94,7 @@ class Press(models.Model):
         if last_pm is not None:
             last_pm_date = last_pm.date
         else:
-            last_pm_date = timezone.now().date()
+            last_pm_date = None
         return last_pm_date
 
     def pm_due(self):
@@ -109,7 +109,7 @@ class Press(models.Model):
 
     def pm_prior(self):
         today = timezone.now().date()
-        if self.last_pm() != 'Unknown':
+        if self.last_pm() != None:
             pm_prior = today - self.last_pm()
             return int(pm_prior.days)
         else:
