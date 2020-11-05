@@ -43,7 +43,7 @@
           <li class="nav-item" id="navItem4">
             <a class="nav-link" href="{% url 'prod:job-list' %}">Production</a>
           </li>
-          {% if user.is_superuser %}
+          {% if user.is_superuser or request.user|has_group:"staffer"%}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Admin
