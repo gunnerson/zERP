@@ -72,24 +72,18 @@ def generate_schedule(f):
             press_dict[press] = {}
             press_dict[press].update({'clocked1': False})
             press_dict[press].update({'clocked2': False})
-            if is_valid_param(fsj):
-                try:
-                    jobinst = iqs.get(press=press, shift=1, date=date1)
-                except JobInst.DoesNotExist:
-                    old_jobinsts = iqs.filter(press=press, shift=1)
-                    for job in old_jobinsts:
-                        job.delete()
-                    JobInst(press=press, shift=1, date=date1).save()
-                    press_dict[press].update({'clocked1': True})
             if is_valid_param(ssj):
                 try:
                     jobinst = iqs.get(press=press, shift=2, date=date2)
                 except JobInst.DoesNotExist:
-                    old_jobinsts = iqs.filter(press=press, shift=2)
-                    for job in old_jobinsts:
-                        job.delete()
                     JobInst(press=press, shift=2, date=date2).save()
                     press_dict[press].update({'clocked2': True})
+            if is_valid_param(fsj):
+                try:
+                    jobinst = iqs.get(press=press, shift=1, date=date1)
+                except JobInst.DoesNotExist:
+                    JobInst(press=press, shift=1, date=date1).save()
+                    press_dict[press].update({'clocked1': True})
         except Press.DoesNotExist:
             pass
     for press in press_dict:
@@ -121,14 +115,10 @@ def generate_schedule(f):
                     for proc in procs:
                         proc.hours += 8
                         proc.save(update_fields=['hours'])
-        qs = press.jobinst_set.all().order_by('-pk')
-        for i in range(3):
-            try:
-                qs = qs.exclude(id=qs[0].id)
-            except IndexError:
-                pass
-        for q in qs:
-            q.delete()
+        qs = press.jobinst_set.all().order_by('pk')
+        while qs.count() > 3:
+            qs[0].delete()
+
 
 
 class JobInstListView(LoginRequiredMixin, ListView):
