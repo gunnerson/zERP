@@ -49,8 +49,13 @@ svg .awaiting_parts {
 }
 
 svg .pmdue {
+  fill: #6A6A6A!important;
+}
+
+svg .pm {
   fill: black!important;
 }
+
 
 svg tspan {
   fill: white!important;

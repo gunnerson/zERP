@@ -233,7 +233,10 @@ class MapData(RetrieveAPIView):
         shift = get_shift()
         for press in qs:
             press_dict[press.pk] = {}
-            press_dict[press.pk].update({'status': press.status()})
+            if press.pm_today():
+                press_dict[press.pk].update({'status': 'PM'})
+            else:
+                press_dict[press.pk].update({'status': press.status()})
             press_dict[press.pk].update({'name': press.pname})
             pm_prior = press.pm_prior()
             if pm_prior > 0 and press.pm_due():

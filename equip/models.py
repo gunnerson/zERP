@@ -116,7 +116,6 @@ class Press(models.Model):
             return 0
 
     def job(self, shift=None):
-        """Get press status"""
         from prod.models import JobInst
         if shift is None:
             return None
@@ -125,6 +124,13 @@ class Press(models.Model):
                 return self.jobinst_set.get(shift=shift, date=date.today())
             except JobInst.DoesNotExist:
                 return None
+
+    def pm_today(self):
+        if self.last_pm() == timezone.now().date():
+            return True
+        else:
+            return False
+
 
 class Upload(models.Model):
     press = models.ManyToManyField(Press, blank=True)
