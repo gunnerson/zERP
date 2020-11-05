@@ -1,29 +1,24 @@
 import calendar
-import json
 import hashlib
 from datetime import datetime, date
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from django.utils import timezone
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from datetime import timedelta
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from pathlib import Path
 from django.contrib import messages
-from django.db.models import Q
 from django.core import serializers
 from django.utils.safestring import mark_safe
 # from rest_framework import authentication, permissions
 
 from .models import Press, Upload, Imprint, Pmproc, Pmsched
-from mtn.models import Order, Image
-from mtn.cm import has_group, get_shift, is_valid_param, get_url_kwargs, \
-    is_empty_param
+from mtn.models import Order
+from mtn.cm import has_group, get_shift, get_url_kwargs, is_empty_param
 from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
     PmprocCreateForm, PmprocUpdateForm
 from invent.models import Part, UsedPart

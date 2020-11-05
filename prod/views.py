@@ -121,14 +121,14 @@ def generate_schedule(f):
                     for proc in procs:
                         proc.hours += 8
                         proc.save(update_fields=['hours'])
-    qs = press.jobinst_set.all().order_by('-pk')
-    for i in range(3):
-        try:
-            qs = qs.exclude(id=qs[0].id)
-        except IndexError:
-            pass
-    for q in qs:
-        q.delete()
+        qs = press.jobinst_set.all().order_by('-pk')
+        for i in range(3):
+            try:
+                qs = qs.exclude(id=qs[0].id)
+            except IndexError:
+                pass
+        for q in qs:
+            q.delete()
 
 
 class JobInstListView(LoginRequiredMixin, ListView):
