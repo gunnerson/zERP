@@ -21,6 +21,11 @@
     <li>
       <a href="{% url 'equip:load_map' %}" class="side-menu-link" role="button">Map View</a>
     </li>
+    {% if request.user|has_group:"maintenance" %}
+      <li>
+        <a href="{% url 'equip:add-press' %}" class="side-menu-link" role="button">+ New Item</a>
+      </li>
+    {% endif %}
     <li>
       <a href="{% url 'equip:calendar' %}" class="side-menu-link" role="button">Calendar</a>
     </li>

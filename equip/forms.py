@@ -3,6 +3,17 @@ from .models import Press, Upload, Pmsched, Pmproc
 from tempus_dominus.widgets import DatePicker
 
 
+class PressCreateForm(forms.ModelForm):
+    class Meta:
+        model = Press
+        fields = ['pname', 'group', 'subgroup', 'pmed', ]
+        labels = {'pname': 'Name',
+                  'group': 'Group',
+                  'subgroup': 'Subgroup',
+                  'pmed': 'Track PM',
+                  }
+
+
 class PressUpdateForm(forms.ModelForm):
     class Meta:
         model = Press
@@ -74,7 +85,6 @@ class PmprocCreateForm(forms.ModelForm):
                 ('Fill-in description!'),
                 code='invalid')
             self.add_error('descr', msg)
-
 
 
 class PmprocUpdateForm(forms.ModelForm):

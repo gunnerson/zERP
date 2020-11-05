@@ -39,7 +39,8 @@ def auto_upload_sched(request):
     success = False
     while success == False:
         for fmonth in fmonths:
-            fname = '/mnt/rprod/PRODUCTION/Daily Production Report/Daily {0}/{1} Daily {2}.xlsx'.format(fyear,fmonth,fyear)
+            fname = '/mnt/rprod/PRODUCTION/Daily Production Report/Daily {0}/{1} Daily {2}.xlsx'.format(
+                fyear, fmonth, fyear)
             if os.path.exists(fname):
                 f = open(fname, 'rb')
                 success = True
@@ -118,7 +119,6 @@ def generate_schedule(f):
         qs = press.jobinst_set.all().order_by('pk')
         while qs.count() > 3:
             qs[0].delete()
-
 
 
 class JobInstListView(LoginRequiredMixin, ListView):

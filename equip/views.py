@@ -20,7 +20,7 @@ from .models import Press, Upload, Imprint, Pmproc, Pmsched
 from mtn.models import Order
 from mtn.cm import has_group, get_shift, get_url_kwargs, is_empty_param
 from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
-    PmprocCreateForm, PmprocUpdateForm
+    PmprocCreateForm, PmprocUpdateForm, PressCreateForm
 from invent.models import Part, UsedPart
 from .utils import Calendar
 from prod.models import JobInst
@@ -47,6 +47,14 @@ class PressListView(LoginRequiredMixin, ListView):
             else:
                 qs = qs.filter(group=group)
         return qs
+
+
+class PressCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Press
+    form_class = PressCreateForm
+
+    def test_func(self):
+        return has_group(self.request.user, 'maintenance')
 
 
 class PressDetailView(LoginRequiredMixin, DetailView):
