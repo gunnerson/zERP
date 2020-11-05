@@ -1,0 +1,56 @@
+{% extends "mtn/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block left-menu %}
+
+  <ul>
+    <li>
+      <a href="{% url 'equip:presslist' %}" class="side-menu-link" role="button">Back</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'mtn:index' %}">Rahco</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'equip:presslist' %}">Equipment</a></li>
+        <li class="breadcrumb-item active">New Item</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Add equipment</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+ <form enctype="multipart/form-data" action="{% url 'equip:add-press' %}" method='post'>
+    {% csrf_token %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          {{ form.pname|as_crispy_field }}
+        </div>
+        <div class="col-3">
+          {{ form.group|as_crispy_field }}
+        </div>
+        <div class="col-3">
+          {{ form.subgroup|as_crispy_field }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          {{ form.pmed|as_crispy_field }}
+        </div>
+      </div>
+    </div>
+    <br>
+    <button name="submit" role="button" class="btn btn-rahco">Save changes</button>
+  </form>
+
+{% endblock content %}
+
+
+
