@@ -116,9 +116,9 @@ def generate_schedule(f):
                     for proc in procs:
                         proc.hours += 8
                         proc.save(update_fields=['hours'])
-        qs = press.jobinst_set.all().order_by('pk')
-        while qs.count() > 3:
-            qs[0].delete()
+        # qs = press.jobinst_set.all().order_by('pk')
+        # while qs.count() > 3:
+        #     qs[0].delete()
 
 
 class JobInstListView(LoginRequiredMixin, ListView):
