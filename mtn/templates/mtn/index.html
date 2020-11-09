@@ -12,12 +12,13 @@
 {% block content %}
 
   <div class='jumbotron'>
-    <h2>Welcome to Rahco Rubber Production Management Dashboard</h2>
+    <h2>Welcome to Rahco Rubber Maintenance Dashboard</h2>
   </div>
-
-  <h2>
-    <a href="{% url 'users:register' %}">Register an account</a> to get
-    access
-  </h2>
+  {% if user.is_authenticated == False %}
+    <h2>
+      <a href="{% url 'users:register' %}">Register an account</a> to get
+      access
+    </h2>
+  {% endif %}
 
 {% endblock content %}
