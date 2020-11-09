@@ -134,7 +134,7 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 press.save()
             self.object.local = press
         self.object.save()
-        if self.object.status == 'DN':
+        if self.object.status == 'DN' and self.object.ordertype == 'RE':
             Downtime(order=self.object, start=timezone.now(),
                      dttype='DN').save()
         return redirect('mtn:order-list')
@@ -188,7 +188,12 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 for session in rep_dt_sessions:
                     if (is_valid_param(session.start) and
                             is_valid_param(session.end)):
-                        rep_dur += (session.end - session.start)
+                        count_days = session.end.day - session.start.day
+                        if count_days > 0:
+                            rep_dur += (session.end - session.start -
+                                        timedelta(hours=8) * count_days)
+                        else:
+                            rep_dur += (session.end - session.start)
                 self.object.timerep = rep_dur
             idle_dt_sessions = dt_sessions.exclude(dttype='RE')
             if idle_dt_sessions.exists():
@@ -196,7 +201,12 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 for session in idle_dt_sessions:
                     if (is_valid_param(session.start) and
                             is_valid_param(session.end)):
-                        dt_dur += (session.end - session.start)
+                        count_days = session.end.day - session.start.day
+                        if count_days > 0:
+                            dt_dur += (session.end - session.start -
+                                       timedelta(hours=8) * count_days)
+                        else:
+                            dt_dur += (session.end - session.start)
                 self.object.timerepidle = dt_dur
             else:
                 self.object.timerepidle = timedelta()

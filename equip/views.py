@@ -196,7 +196,6 @@ class DowntimeChartData(RetrieveAPIView):
     queryset = Press.objects.all()
 
     def get(self, request, *args, **kwargs):
-        # Calculate downtime
         today = timezone.now()
         month = today.month
         year = today.year

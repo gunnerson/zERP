@@ -65,7 +65,6 @@ class Press(models.Model):
         return reverse('equip:press', kwargs={'pk': self.id})
 
     def downtime(self, month, year):
-        """Calculate downtime on a monthly basis"""
         dt = 0
         press = self.get_object()
         orders = press.order_set.filter(
@@ -80,7 +79,6 @@ class Press(models.Model):
         return dt
 
     def status(self):
-        """Get press status"""
         last_order = self.order_set.filter(closed=False).first()
         if last_order is not None:
             status = last_order.get_status_display()
