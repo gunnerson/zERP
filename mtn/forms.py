@@ -31,7 +31,7 @@ class OrderCreateForm(forms.ModelForm):
                               ('DN', 'OUT OF ORDER'),
                               ('SB', 'OPERATING'), ]
         self.fields['status'].choices = status_choices
-        if press.job() is None:
+        if press_id is not None and press.job() is None:
             self.fields['status'].initial = 'SB'
             self.fields['status'].disabled = True
         else:
