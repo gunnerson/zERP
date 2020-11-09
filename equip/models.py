@@ -2,7 +2,7 @@ import os
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from datetime import date, timedelta
+from datetime import timedelta
 
 from mtn.cm import get_shift
 from invent.models import Part
@@ -107,21 +107,18 @@ class Press(models.Model):
 
     def pm_prior(self):
         today = timezone.now().date()
-        if self.last_pm() != None:
+        if self.last_pm() is not None:
             pm_prior = today - self.last_pm()
             return int(pm_prior.days)
         else:
             return 0
 
-    def job(self, shift=None):
+    def job(self, shift=get_shift()):
         from prod.models import JobInst
-        if shift is None:
+        try:
+            return self.jobinst_set.get(shift=shift, date=timezone.now().date())
+        except JobInst.DoesNotExist:
             return None
-        else:
-            try:
-                return self.jobinst_set.get(shift=shift, date=date.today())
-            except JobInst.DoesNotExist:
-                return None
 
     def pm_today(self):
         if self.last_pm() == timezone.now().date():

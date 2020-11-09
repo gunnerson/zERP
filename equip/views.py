@@ -232,7 +232,6 @@ class MapData(RetrieveAPIView):
         id_list = imps.values_list('press', flat=True)
         press_dict = {}
         qs = Press.objects.filter(id__in=id_list)
-        shift = get_shift()
         for press in qs:
             press_dict[press.pk] = {}
             if press.pm_today():
@@ -244,14 +243,14 @@ class MapData(RetrieveAPIView):
             if pm_prior > 0 and press.pm_due():
                 job = None
                 try:
-                    job = press.press.job(shift=shift)
+                    job = press.press.job()
                 except (JobInst.DoesNotExist, Press.DoesNotExist):
                     pass
                 if job is None:
                     press_dict[press.pk].update({'pmd': pm_prior})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
-            job = press.job(shift=shift)
+            job = press.job()
             if job is not None:
                 press_dict[press.pk].update({'job': 'Production'})
         data = {

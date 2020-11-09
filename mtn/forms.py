@@ -18,7 +18,7 @@ class OrderCreateForm(forms.ModelForm):
             'local': 'Location',
             'ordertype': 'Type',
             'descr': 'Description',
-            'status': 'Priority',
+            'status': 'Status',
         }
         widgets = {'descr': forms.Textarea(attrs={'cols': 80})}
 
@@ -28,15 +28,19 @@ class OrderCreateForm(forms.ModelForm):
             press = Press.objects.get(id=press_id)
             self.fields['local'].initial = press
         status_choices = [('', '---------'),
-                          ('DN', 'Priority 1: out of order, in production'),
-                          ('SB', 'Priority 2: operational or not in production'), ]
+                              ('DN', 'OUT OF ORDER'),
+                              ('SB', 'OPERATING'), ]
+        self.fields['status'].choices = status_choices
+        if press.job() is None:
+            self.fields['status'].initial = 'SB'
+            self.fields['status'].disabled = True
+        else:
+            self.fields['status'].initial = ''
         try:
             self.fields['origin'].initial = Employee.objects.get(
                 user=request.user)
         except Employee.DoesNotExist:
             pass
-        self.fields['status'].choices = status_choices
-        self.fields['status'].initial = ''
 
     def clean(self):
         cleaned_data = super().clean()
