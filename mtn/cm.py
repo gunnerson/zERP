@@ -91,7 +91,6 @@ def get_shift():
             shift = 2
     else:
         shift = None
-    print('>>>>>>>>>>>shift', shift)
     return shift
 
 
