@@ -22,12 +22,10 @@ from . import views
 app_name = "users"
 
 urlpatterns = [
-	# Login page
     path('login/', LoginView.as_view(template_name='users/login.html'),
-		name="login"),
-	# Logout page
+         name="login"),
     path('logout/', LogoutView.as_view(next_page='mtn:index'),
-		name="logout"),
-	# Register page
+         name="logout"),
     path('register/', views.register, name="register"),
+    path('password/', views.change_password, name="change_password"),
 ]

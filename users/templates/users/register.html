@@ -5,8 +5,9 @@
   <form method="post" action="{% url 'users:register' %}">
   {% csrf_token %}
   {{ form.as_p }}
-
-  <button name="submit" class="btn btn-rahco">register</button>
+  <br>
+  <br>
+  <button name="submit" class="btn btn-rahco">Register</button>
   <input type="hidden" name="next" value="{% url 'mtn:index' %}" />
   </form>
 

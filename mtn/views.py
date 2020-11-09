@@ -190,6 +190,13 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                             is_valid_param(session.end)):
                         count_days = session.end.day - session.start.day
                         if count_days > 0:
+                            # for i in range(count_days):
+                            next_day = session.start + timedelta(days=1)
+                            next_day.weekday = next_day.weekday()
+                            if next_day.weekday in range(0,5) and next_day.weekday < session.end:
+                                rep_dur += timedelta(hours=16)
+
+
                             rep_dur += (session.end - session.start -
                                         timedelta(hours=8) * count_days)
                         else:
