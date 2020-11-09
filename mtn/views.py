@@ -190,15 +190,24 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                             is_valid_param(session.end)):
                         count_days = session.end.day - session.start.day
                         if count_days > 0:
-                            # for i in range(count_days):
-                            next_day = session.start + timedelta(days=1)
-                            next_day.weekday = next_day.weekday()
-                            if next_day.weekday in range(0,5) and next_day.weekday < session.end:
-                                rep_dur += timedelta(hours=16)
-
-
-                            rep_dur += (session.end - session.start -
-                                        timedelta(hours=8) * count_days)
+                            start_day = session.start.replace(
+                                tzinfo=timezone.utc).astimezone(tz=None)
+                            end_day = session.end.replace(
+                                tzinfo=timezone.utc).astimezone(tz=None)
+                            rep_dur += (end_day - start_day - timedelta(days=1) * count_days)
+                            print('>>>>>>>>>>>>>>> PRE', rep_dur)
+                            for i in range(count_days):
+                                print(i, '>>>>>>>>>>>>>>>', start_day)
+                                next_day = start_day + timedelta(days=1)
+                                next_day_weekday = next_day.weekday()
+                                if next_day_weekday in range(0, 5) and next_day < end_day:
+                                    rep_dur += timedelta(hours=16)
+                                    print('>>>>>>>>>>>>>>> FULL DAY', rep_dur)
+                                elif next_day_weekday in range(0, 5) and next_day >= end_day:
+                                    rep_dur += (end_day -
+                                                start_day - timedelta(hours=8))
+                                    print('>>>>>>>>>>>>>>> SHORT DAY', rep_dur)
+                                start_day += timedelta(days=1)
                         else:
                             rep_dur += (session.end - session.start)
                 self.object.timerep = rep_dur

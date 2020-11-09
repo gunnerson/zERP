@@ -80,7 +80,7 @@ def get_shift():
     now = timezone.localtime(timezone.now())
     nowh = now.hour
     nowm = now.minute
-    if nowh in range(7, 14):
+    if nowh in range(7, 15):
         shift = 1
     elif nowh in range(16, 23):
         shift = 2
@@ -91,6 +91,7 @@ def get_shift():
             shift = 2
     else:
         shift = None
+    print('>>>>>>>>>>>shift', shift)
     return shift
 
 
