@@ -84,7 +84,7 @@ class PressDetailView(LoginRequiredMixin, DetailView):
         cost_last_year = 0
         start_date = today - timedelta(days=365)
         end_date = today
-        orders = Order.objects.filter(local=self.object.id)
+        orders = self.object.order_set.all()
         this_year = orders.filter(
             date_added__range=(start_date, end_date)
         )

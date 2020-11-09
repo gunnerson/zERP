@@ -71,7 +71,7 @@ class Order(models.Model):
     )
     descrrep = models.TextField(null=True, blank=True)
     timerep = models.DurationField(null=True, blank=True)
-    timerepidle = models.DurationField(null=True, blank=True)
+    # timerepidle = models.DurationField(null=True, blank=True)
     owner = models.ForeignKey(User,
                               on_delete=models.SET_NULL,
                               null=True,
