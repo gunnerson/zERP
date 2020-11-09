@@ -82,9 +82,12 @@ class OrderUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.has_dt = kwargs.pop('has_dt')
+        self.has_re_dt = kwargs.pop('has_re_dt')
         super(OrderUpdateForm, self).__init__(*args, **kwargs)
         self.fields['origin'].disabled = True
         self.fields['local'].disabled = True
+        if self.has_dt:
+            self.fields['timerep'].disabled = True
         if self.instance.ordertype in ("ST", "MD"):
             self.fields['cause'].disabled = True
 
@@ -92,7 +95,8 @@ class OrderUpdateForm(forms.ModelForm):
         cleaned_data = super().clean()
         cc_timerep = cleaned_data.get("timerep")
         cc_closed = cleaned_data.get("closed")
-        if cc_closed and is_empty_param(cc_timerep) and self.has_dt is False:
+        if cc_closed and is_empty_param(cc_timerep) and self.has_re_dt is False \
+                and self.has_dt is False:
             cleaned_data.update({'closed': False})
             msg = forms.ValidationError(
                 ('No repair downtime sessions clocked. Please fill-in!'),

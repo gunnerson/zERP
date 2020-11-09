@@ -261,12 +261,19 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        dt_sessions = Downtime.objects.filter(order=self.object, dttype='RE')
-        if dt_sessions.exists():
+        dt_sessions = self.object.downtime_set.all()
+        dt_re_sessions = dt_sessions.filter(dttype='RE')
+        dt_notre_sessions = dt_sessions.exclude(dttype='RE')
+        if dt_notre_sessions.exists():
             has_dt = True
         else:
             has_dt = False
+        if dt_re_sessions.exists():
+            has_re_dt = True
+        else:
+            has_re_dt = False
         kwargs.update(has_dt=has_dt)
+        kwargs.update(has_re_dt=has_re_dt)
         return kwargs
 
 
