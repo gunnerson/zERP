@@ -135,8 +135,6 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 press = Press(pname=format_moldstr, group='TL')
                 press.save()
             self.object.local = press
-        if self.object.local.job() is None:
-            self.object.status = 'SB'
         self.object.save()
         if self.object.status == 'DN' and self.object.ordertype == 'RE':
             Downtime(order=self.object, start=timezone.now(),
