@@ -97,6 +97,8 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         timereph = self.object.timerep
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
+        else:
+            timereph = self.object.idle_time().total_seconds() / 3600
         images = Image.objects.filter(order=self.object.id)
         context['timereph'] = timereph
         context['used_parts'] = used_parts
@@ -172,72 +174,14 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        # Convert repair time input to hours
         timerep = self.object.timerep
         if is_valid_param(timerep):
             timereph = timerep.seconds + timerep.microseconds / 1000000
             self.object.timerep = timedelta(hours=timereph)
         if self.object.closed:
-            dt_sessions = Downtime.objects.filter(order=self.object)
-            if dt_sessions.exists():
-                last_dt_session = dt_sessions.last()
-                if last_dt_session.end is None:
-                    last_dt_session.end = timezone.now()
-                    last_dt_session.save(update_fields=['end'])
-                rep_dt_sessions = dt_sessions.filter(dttype='RE')
-            if is_empty_param(timerep):
-                rep_dur = timedelta()
-                for session in rep_dt_sessions:
-                    if (is_valid_param(session.start) and
-                            is_valid_param(session.end)):
-                        count_days = session.end.day - session.start.day
-                        if count_days > 0:
-                            start_day = session.start.replace(
-                                tzinfo=timezone.utc).astimezone(tz=None)
-                            end_day = session.end.replace(
-                                tzinfo=timezone.utc).astimezone(tz=None)
-                            for i in range(count_days):
-                                next_day = start_day + timedelta(days=1)
-                                next_day_weekday = next_day.weekday()
-                                if next_day_weekday in range(0, 5) and next_day < end_day:
-                                    rep_dur += timedelta(hours=16)
-                                    if i == count_days - 1:
-                                        rep_dur += (end_day - next_day)
-                                elif next_day_weekday in range(0, 5) and next_day >= end_day:
-                                    rep_dur += (end_day -
-                                                start_day - timedelta(hours=8))
-                                start_day += timedelta(days=1)
-                        else:
-                            rep_dur += (session.end - session.start)
-                self.object.timerep = rep_dur
-            idle_dt_sessions = dt_sessions.exclude(dttype='RE')
-            if idle_dt_sessions.exists():
-                dt_dur = timedelta()
-                for session in idle_dt_sessions:
-                    if (is_valid_param(session.start) and
-                            is_valid_param(session.end)):
-                        count_days = session.end.day - session.start.day
-                        if count_days > 0:
-                            start_day = session.start.replace(
-                                tzinfo=timezone.utc).astimezone(tz=None)
-                            end_day = session.end.replace(
-                                tzinfo=timezone.utc).astimezone(tz=None)
-                            for i in range(count_days):
-                                next_day = start_day + timedelta(days=1)
-                                next_day_weekday = next_day.weekday()
-                                if next_day_weekday in range(0, 5) and next_day < end_day:
-                                    dt_dur += timedelta(hours=16)
-                                    if i == count_days - 1:
-                                        dt_dur += (end_day - next_day)
-                                elif next_day_weekday in range(0, 5) and next_day >= end_day:
-                                    dt_dur += (end_day -
-                                                start_day - timedelta(hours=8))
-                                start_day += timedelta(days=1)
-                        else:
-                            dt_dur += (session.end - session.start)
-                self.object.timerepidle = dt_dur
-            else:
-                self.object.timerepidle = timedelta()
+            if is_empty_param(self.object.timerep):
+                self.object.timerep = self.object.idle_time()
+            dt_sessions = self.object.downtime_set.all()
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
                 self.object.cause = 'UN'
@@ -264,18 +208,14 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         dt_sessions = self.object.downtime_set.all()
-        dt_re_sessions = dt_sessions.filter(dttype='RE')
-        dt_notre_sessions = dt_sessions.exclude(dttype='RE')
-        if dt_notre_sessions.exists():
+        if dt_sessions.exists():
             has_dt = True
         else:
             has_dt = False
-        if dt_re_sessions.exists():
-            has_re_dt = True
-        else:
-            has_re_dt = False
+        idle_time = self.object.idle_time()
+        idle_hours = idle_time.total_seconds() / 3600
+        kwargs.update(idle_hours=idle_hours)
         kwargs.update(has_dt=has_dt)
-        kwargs.update(has_re_dt=has_re_dt)
         return kwargs
 
 
