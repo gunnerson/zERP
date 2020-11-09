@@ -28,14 +28,10 @@ class OrderCreateForm(forms.ModelForm):
             press = Press.objects.get(id=press_id)
             self.fields['local'].initial = press
         status_choices = [('', '---------'),
-                              ('DN', 'OUT OF ORDER'),
-                              ('SB', 'OPERATING'), ]
+                          ('DN', 'OUT OF ORDER'),
+                          ('SB', 'OPERATING'), ]
         self.fields['status'].choices = status_choices
-        if press_id is not None and press.job() is None:
-            self.fields['status'].initial = 'SB'
-            self.fields['status'].disabled = True
-        else:
-            self.fields['status'].initial = ''
+        self.fields['status'].initial = ''
         try:
             self.fields['origin'].initial = Employee.objects.get(
                 user=request.user)
