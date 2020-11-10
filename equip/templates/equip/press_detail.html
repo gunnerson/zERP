@@ -14,10 +14,11 @@
       success: function(data){
         labels = data.labels
         defaultData = data.default
+        phs = data.phs
         setChart()
+        console.log(phs)
       },
       error: function(error_data){
-        console.log("error")
         console.log(error_data)
       }
     })
@@ -28,15 +29,38 @@
           type: 'bar',
           data: {
               labels: labels,
-              datasets: [{
+              datasets: [
+              {
                   label: 'Downtime, h',
                   backgroundColor: 'rgb(255, 99, 132, 0.2)',
                   borderColor: 'rgb(255, 99, 132, 1)',
                   borderWidth: 1,
-                  data: defaultData
-              }]
+                  data: defaultData,
+              },
+              {
+                  label: 'Production, h',
+                  backgroundColor: 'rgb(20, 218, 32, 0.2)',
+                  borderColor: 'rgb(20, 218, 32, 1)',
+                  borderWidth: 1,
+                  data: phs,
+              },
+              ]
           },
-          options: {}
+          options: {
+            scales: {
+              yAxes: [{
+                id: 'left-y-axis',
+                type: 'logarithmic',
+                position: 'left',
+                ticks: {
+                  min: 1,
+                  callback: function(tick, index, ticks) {
+                    return tick.toLocaleString()
+                  }
+                },
+              }]
+            }
+          }
       });
     }
 

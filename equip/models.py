@@ -78,6 +78,17 @@ class Press(models.Model):
             # dt += order.timerepidle.total_seconds() / 3600
         return dt
 
+    def prod_hours(self, month, year):
+        ph = int(0)
+        press = self.get_object()
+        shifts = press.jobinst_set.filter(
+            date__year__exact=year,
+            date__month__exact=month,
+        )
+        for shift in shifts:
+            ph += 8
+        return ph
+
     def status(self):
         last_order = self.order_set.filter(closed=False).first()
         if last_order is not None:

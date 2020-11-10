@@ -201,11 +201,14 @@ class DowntimeChartData(RetrieveAPIView):
         year = today.year
         dts = []
         labels = []
+        phs = []
         i = 0
         while i < 12:
             dt = Press.downtime(self, month, year)
             dt = round(dt, 1)
             dts.append(dt)
+            ph = Press.prod_hours(self, month, year)
+            phs.append(ph)
             month_name = calendar.month_abbr[month]
             labels.append(month_name)
             month -= 1
@@ -216,6 +219,7 @@ class DowntimeChartData(RetrieveAPIView):
         data = {
             "labels": labels,
             "default": dts,
+            "phs": phs,
         }
         return Response(data)
 
