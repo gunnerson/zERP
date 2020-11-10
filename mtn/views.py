@@ -334,7 +334,7 @@ def bulk_update(request):
 def Dt(request, pk):
     if has_group(request.user, 'maintenance'):
         order = Order.objects.get(id=pk)
-        dt_list = Downtime.objects.filter(order=order)
+        dt_list = order.downtime_set.all()
         DtFormSet = modelformset_factory(Downtime, form=DowntimeForm, fields=(
             'dttype', 'start', 'end'), extra=0)
         if request.method != 'POST':
@@ -349,7 +349,8 @@ def Dt(request, pk):
             if formset.is_valid():
                 formset.save()
                 for dt_session in dt_list:
-                    if dt_session.end == dt_session.start:
+                    if (is_empty_param(dt_session.start) or
+                            dt_session.end == dt_session.start):
                         dt_session.delete()
                 return redirect('mtn:edit_order', pk=pk)
             else:

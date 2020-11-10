@@ -9,7 +9,7 @@ from datetime import date, timedelta
 from staff.models import Employee
 from equip.models import Press
 from invent.models import Part
-from mtn.cm import is_valid_param
+from mtn.cm import is_valid_param, is_empty_param
 
 
 class Order(models.Model):
@@ -106,32 +106,28 @@ class Order(models.Model):
         dt_sessions = self.downtime_set.all()
         idle_time = timedelta()
         if dt_sessions.exists():
-            last_dt_session = dt_sessions.last()
-            if last_dt_session.end is None:
-                last_dt_session.end = timezone.now()
             for session in dt_sessions:
-                if (is_valid_param(session.start) and
-                        is_valid_param(session.end)):
-                    count_days = session.end.day - session.start.day
-                    if count_days > 0:
-                        start_day = session.start.replace(
-                            tzinfo=timezone.utc).astimezone(tz=None)
-                        end_day = session.end.replace(
-                            tzinfo=timezone.utc).astimezone(tz=None)
-                        for i in range(count_days):
-                            next_day = start_day + timedelta(days=1)
-                            next_day_weekday = next_day.weekday()
-                            if next_day_weekday in range(0, 5) and next_day < end_day:
-                                idle_time += timedelta(hours=16)
-                                if i == count_days - 1:
-                                    idle_time += (end_day - next_day)
-                            elif next_day_weekday in range(0, 5) and next_day >= end_day:
-                                idle_time += (end_day -
-                                            start_day - timedelta(hours=8))
-                            start_day += timedelta(days=1)
-                    else:
-                        idle_time += (session.end - session.start)
+                if is_empty_param(session.end):
+                    session.end = timezone.now()
+                count_days = session.end.day - session.start.day
+                if count_days > 0:
+                    start_day = session.start
+                    end_day = session.end
+                    for i in range(count_days):
+                        next_day = start_day + timedelta(days=1)
+                        next_day_weekday = next_day.weekday()
+                        if next_day_weekday in range(0, 5) and next_day < end_day:
+                            idle_time += timedelta(hours=16)
+                            if i == count_days - 1:
+                                idle_time += (end_day - next_day)
+                        elif next_day_weekday in range(0, 5) and next_day >= end_day:
+                            idle_time += (end_day -
+                                          start_day - timedelta(hours=8))
+                        start_day += timedelta(days=1)
+                else:
+                    idle_time += (session.end - session.start)
         return idle_time
+
 
 class Image(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
@@ -155,4 +151,3 @@ class Downtime(models.Model):
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
     dttype = models.CharField(max_length=2, null=True, choices=DT_TYPE,)
-

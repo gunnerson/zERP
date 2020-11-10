@@ -89,7 +89,8 @@ class OrderUpdateForm(forms.ModelForm):
         if self.instance.ordertype in ("ST", "MD"):
             self.fields['cause'].disabled = True
             self.fields['timerep'].disabled = True
-        self.fields['timerep'].widget.attrs.update({'placeholder': int(self.idle_hours)})
+        self.fields['timerep'].widget.attrs.update(
+            {'placeholder': int(self.idle_hours)})
 
     def clean(self):
         cleaned_data = super().clean()
@@ -156,7 +157,8 @@ class DowntimeForm(forms.ModelForm):
         cleaned_data = super().clean()
         cc_start = cleaned_data.get("start")
         cc_end = cleaned_data.get("end")
-        if is_valid_param(cc_end) and cc_end < cc_start:
+        if (is_valid_param(cc_end) and is_valid_param(cc_start) and
+                cc_end < cc_start):
             msg = forms.ValidationError(
                 ('End time must exceed start time!'),
                 code='invalid')
