@@ -53,7 +53,8 @@
                 type: 'logarithmic',
                 position: 'left',
                 ticks: {
-                  min: 1,
+                  beginAtZero: true,
+                  // min: 1,
                   callback: function(tick, index, ticks) {
                     return tick.toLocaleString()
                   }
