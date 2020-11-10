@@ -88,6 +88,7 @@ class OrderUpdateForm(forms.ModelForm):
         self.fields['local'].disabled = True
         if self.instance.ordertype in ("ST", "MD"):
             self.fields['cause'].disabled = True
+            self.fields['timerep'].disabled = True
         self.fields['timerep'].widget.attrs.update({'placeholder': int(self.idle_hours)})
 
     def clean(self):

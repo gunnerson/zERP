@@ -178,7 +178,10 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.object.timerep = timedelta(hours=timereph)
         if self.object.closed:
             if is_empty_param(self.object.timerep):
-                self.object.timerep = self.object.idle_time()
+                if self.object.ordertype != 'RE':
+                    self.object.timerep = timedelta()
+                else:
+                    self.object.timerep = self.object.idle_time()
             dt_sessions = self.object.downtime_set.all()
             dt_sessions.delete()
             if is_empty_param(self.object.cause):
@@ -190,6 +193,8 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                         user=self.request.user)
                 except Employee.DoesNotExist:
                     pass
+            if self.object.ordertype != 'RE':
+                self.object
         self.object.save()
         return redirect('mtn:order-list')
 
