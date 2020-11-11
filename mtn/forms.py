@@ -90,7 +90,7 @@ class OrderUpdateForm(forms.ModelForm):
             self.fields['cause'].disabled = True
             self.fields['timerep'].disabled = True
         self.fields['timerep'].widget.attrs.update(
-            {'placeholder': int(self.idle_hours)})
+            {'placeholder': round(self.idle_hours, 1)})
 
     def clean(self):
         cleaned_data = super().clean()

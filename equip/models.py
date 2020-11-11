@@ -1,8 +1,7 @@
-import os
+# import os
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from datetime import timedelta
 
 from mtn.cm import get_shift
 from invent.models import Part
@@ -110,7 +109,7 @@ class Press(models.Model):
         procs = self.pmproc_set.all()
         pm_due = False
         i = 0
-        while pm_due == False and i < procs.count():
+        while not pm_due and i < procs.count():
             if procs[i].hours >= procs[i].freq:
                 pm_due = True
             i += 1

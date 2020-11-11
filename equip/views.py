@@ -18,7 +18,7 @@ from django.utils.safestring import mark_safe
 
 from .models import Press, Upload, Imprint, Pmproc, Pmsched
 from mtn.models import Order
-from mtn.cm import has_group, get_shift, get_url_kwargs, is_empty_param
+from mtn.cm import has_group, get_url_kwargs, is_empty_param
 from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
     PmprocCreateForm, PmprocUpdateForm, PressCreateForm
 from invent.models import Part, UsedPart
