@@ -96,7 +96,9 @@ class OrderUpdateForm(forms.ModelForm):
         cleaned_data = super().clean()
         cc_timerep = cleaned_data.get("timerep")
         cc_closed = cleaned_data.get("closed")
-        if cc_closed and is_empty_param(cc_timerep) and self.has_dt is False:
+        cc_ordertype = cleaned_data.get("ordertype")
+        if (cc_closed and is_empty_param(cc_timerep) and self.has_dt is False
+                and cc_ordertype == 'RE'):
             cleaned_data.update({'closed': False})
             msg = forms.ValidationError(
                 ('No downtime sessions recorded. Please fill-in!'),
