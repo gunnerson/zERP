@@ -128,7 +128,7 @@ class Press(models.Model):
         try:
             return self.jobinst_set.get(shift=shift, date=timezone.now().date())
         except JobInst.DoesNotExist:
-            return None
+            pass
 
     def pm_today(self):
         if self.last_pm() == timezone.now().date():

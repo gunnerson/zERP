@@ -15,5 +15,5 @@ urlpatterns = [
     path('production/auto-upload/', auto_upload_sched, name='auto-upload'),
     path('production/generate/', generate_schedule, name='sched_gen'),
     # path('production/schedule/', ScheduleView.as_view(), name='prod_sched'),
-    path('production/job-list/', JobInstListView.as_view(), name='job-list'),
+    path('production/schedule/', JobInstListView.as_view(), name='job-list'),
 ]
