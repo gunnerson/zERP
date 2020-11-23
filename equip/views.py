@@ -235,6 +235,7 @@ class MapData(RetrieveAPIView):
         imps_json = serializers.serialize('json', imps)
         id_list = imps.values_list('press', flat=True)
         press_dict = {}
+        shift=get_shift()
         qs = Press.objects.filter(id__in=id_list)
         for press in qs:
             press_dict[press.pk] = {}
@@ -254,7 +255,7 @@ class MapData(RetrieveAPIView):
                     press_dict[press.pk].update({'pmd': pm_prior})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
-            if press.job(shift=get_shift()) is not None:
+            if press.job(shift=shift) is not None:
                 press_dict[press.pk].update({'job': 'Production'})
         data = {
             "impsDict": imps_json,
