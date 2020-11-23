@@ -18,7 +18,7 @@ from django.utils.safestring import mark_safe
 
 from .models import Press, Upload, Imprint, Pmproc, Pmsched
 from mtn.models import Order
-from mtn.cm import has_group, get_url_kwargs, is_empty_param
+from mtn.cm import has_group, get_url_kwargs, is_empty_param, get_shift
 from .forms import PressUpdateForm, UploadCreateForm, PmschedCreateForm, \
     PmprocCreateForm, PmprocUpdateForm, PressCreateForm
 from invent.models import Part, UsedPart
@@ -254,10 +254,8 @@ class MapData(RetrieveAPIView):
                     press_dict[press.pk].update({'pmd': pm_prior})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
-            if press.job() is not None:
+            if press.job(shift=get_shift()) is not None:
                 press_dict[press.pk].update({'job': 'Production'})
-            else:
-                print('>>>>', press, type(press.job()))
         data = {
             "impsDict": imps_json,
             "pressDict": press_dict,
