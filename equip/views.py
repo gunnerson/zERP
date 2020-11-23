@@ -256,6 +256,8 @@ class MapData(RetrieveAPIView):
                 {'short_name': press.pname.split(' ')[-1]})
             if press.job() is not None:
                 press_dict[press.pk].update({'job': 'Production'})
+            else:
+                print('>>>>', press, type(press.job()))
         data = {
             "impsDict": imps_json,
             "pressDict": press_dict,
