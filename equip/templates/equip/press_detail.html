@@ -144,56 +144,50 @@
           </div>
         </div>
       {% endif %}
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div class="header-title mb-3"><b>Notes:</b></div>
-            <div class="chart-content-bg text-start">
-              <h4 class="font-weight-normal mb-0">
-                {% if press.notes %}
-                  <span>{{ press.notes }}</span>
-                {% else %}
-                  <span>No notes</span>
-                {% endif %}
-              </h4>
+      {% if press.notes %}
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <div class="header-title mb-3"><b>Notes:</b></div>
+                <div class="chart-content-bg text-start">
+                  <h4 class="font-weight-normal mb-0">
+                    <span>{{ press.notes }}</span>
+                  </h4>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <div class="header-title mb-3"><b>Contacts:</b></div>
-            <div class="chart-content-bg text-start">
-              <h4 class="font-weight-normal mb-0">
-                {% if press.contacts %}
-                  <span>{{ press.contacts }}</span>
-                {% else %}
-                  <span>No contacts</span>
-                {% endif %}
-              </h4>
+      {% endif %}
+      {% if press.contacts %}
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <div class="header-title mb-3"><b>Contacts:</b></div>
+                <div class="chart-content-bg text-start">
+                  <h4 class="font-weight-normal mb-0">
+                    <span>{{ press.contacts }}</span>
+                  </h4>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+      {% endif %}
+      {% if uploads %}
       <div class="col">
         <div class="card">
           <div class="card-body">
             <div class="header-title mb-3"><b>Uploads:</b></div>
             <div class="chart-content-bg text-start">
               <h4 class="font-weight-normal mb-0">
-                {% if uploads %}
-                  {% for upload in uploads %}
-                    <p><a href='{{ MEDIA_URL }}{{ upload.file.url }}'>{{ upload.descr }}</a></p>
-                  {% endfor %}
-                {% else %}
-                  <span>No uploads</span>
-                {% endif %}
+                {% for upload in uploads %}
+                  <p><a href='{{ MEDIA_URL }}{{ upload.file.url }}'>{{ upload.descr }}</a></p>
+                {% endfor %}
               </h4>
             </div>
           </div>
         </div>
       </div>
+      {% endif %}
       {% if parts %}
         <div class="col">
           <div class="card">
