@@ -95,6 +95,11 @@
             <th class="col border-right text-nowrap text-truncate align-self-center">
               {{ object.last_pm }}
             </th>
+            <th class="col border-right text-nowrap text-truncate align-self-center" style="text-align: center;">
+            {% if object.pm_due %}
+              <span>PM Due</span>
+            {% endif %}
+            </th>
           {% endif %}
         </tr>
       {% endfor %}
