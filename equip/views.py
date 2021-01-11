@@ -247,12 +247,18 @@ class MapData(RetrieveAPIView):
             pm_prior = press.pm_prior()
             if pm_prior > 0 and press.pm_due():
                 job = None
+                job2 = None
                 try:
                     job = press.press.job()
                 except (JobInst.DoesNotExist, Press.DoesNotExist):
                     pass
                 if job is None:
-                    press_dict[press.pk].update({'pmd': pm_prior})
+                    try:
+                        job2 = press.press.joined.job()
+                    except (JobInst.DoesNotExist, Press.DoesNotExist):
+                        pass
+                    if job2 is None:
+                        press_dict[press.pk].update({'pmd': pm_prior})
             press_dict[press.pk].update(
                 {'short_name': press.pname.split(' ')[-1]})
             if press.job(shift=shift) is not None:
