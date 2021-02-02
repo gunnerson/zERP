@@ -249,12 +249,12 @@ class MapData(RetrieveAPIView):
                 job = None
                 job2 = None
                 try:
-                    job = press.press.job()
+                    job = press.job()
                 except (JobInst.DoesNotExist, Press.DoesNotExist):
                     pass
                 if job is None:
                     try:
-                        job2 = press.press.joined.job()
+                        job2 = press.press.job()
                     except (JobInst.DoesNotExist, Press.DoesNotExist):
                         pass
                     if job2 is None:
