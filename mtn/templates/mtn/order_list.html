@@ -105,7 +105,7 @@
         <input type="radio" id="customRadioInline9" name="closed" class="custom-control-input" value="yes" {% if closed == 'yes' %}checked{% endif %}>
         <label class="custom-control-label" for="customRadioInline9">Closed</label>
       </div>
-      <span class="ml-3 mr-4">|</span>
+      <span class="ml-2 mr-3">|</span>
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" id="customRadioInline6" name="ordertype" class="custom-control-input" {% if ordertype != 'repair' and ordertype != 'setup' and ordertype != 'mod' %}checked{% endif %}>
         <label class="custom-control-label" for="customRadioInline6">All</label>
@@ -122,7 +122,7 @@
         <input type="radio" id="customRadioInline11" name="ordertype" class="custom-control-input" value="mod" {% if ordertype == 'mod' %}checked{% endif %}>
         <label class="custom-control-label" for="customRadioInline11">Mod</label>
       </div>
-      <span class="ml-3 mr-4">|</span>
+      <span class="ml-2 mr-3">|</span>
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" id="customRadioInline1" name="lead" class="custom-control-input" {% if lead != 'personal' and lead != 'personal2' and lead != 'unassigned' %}checked{% endif %}>
         <label class="custom-control-label" for="customRadioInline1">All</label>
@@ -140,6 +140,13 @@
         <div class="custom-control custom-radio custom-control-inline">
           <input type="radio" id="customRadioInline10" name="lead" class="custom-control-input" value="personal2" {% if lead == 'personal2' %}checked{% endif %}>
           <label class="custom-control-label" for="customRadioInline10">Personal</label>
+        </div>
+      {% endif %}
+      {% if is_joined %}
+        <span class="ml-2 mr-3">|</span>
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="checkbox" class="form-check-input" name="joined" id="joined" {% if joined %} checked {% endif %}>
+          <label class="form-check-label" for="joined">Show cojoint</label>
         </div>
       {% endif %}
     </div>

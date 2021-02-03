@@ -2,6 +2,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models import Q
 
 from mtn.cm import get_shift
 from invent.models import Part
@@ -66,7 +67,15 @@ class Press(models.Model):
     def downtime(self, month, year):
         dt = 0
         press = self.get_object()
-        orders = press.order_set.filter(
+        # orders = press.order_set.filter(
+        #     closed=True,
+        #     ordertype='RE',
+        #     date_added__year__exact=year,
+        #     date_added__month__exact=month,
+        # )
+        from mtn.models import Order
+        orders = Order.objects.filter(
+            Q(local=press) | Q(local2=press),
             closed=True,
             ordertype='RE',
             date_added__year__exact=year,

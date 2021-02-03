@@ -93,6 +93,12 @@
         </div>
       </div>
       {{ form.descrrep|as_crispy_field }}
+      {% if is_joined %}
+        <div class="form-group form-check align-self-center ml-3">
+          <input type="checkbox" class="form-check-input" name="set_both" id="set_both" {% if set_both %} checked {% endif %}>
+          <label class="form-check-label" for="set_both">Assign to cojoint press</label>
+        </div>
+      {% endif %}
       {% if order.closed == False %}
         {{ form.closed|as_crispy_field }}
       {% endif %}

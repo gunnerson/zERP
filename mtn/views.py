@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
 from django.forms import modelformset_factory
+from django.db.models import Q
 
 from .models import Order, Image, Downtime
 from equip.models import Press
@@ -41,6 +42,8 @@ class OrderListView(LoginRequiredMixin, ListView):
             press_excl = True
             context['press_id'] = press_id
             context['press'] = press
+            if press.joined is not None:
+                context['is_joined'] = True
         query = context.get('query', None)
         if is_valid_param(query):
             search_exp = "collapse show"
@@ -53,7 +56,14 @@ class OrderListView(LoginRequiredMixin, ListView):
         qs = Order.objects.all()
         if 'pk' in self.kwargs:
             press = Press.objects.get(id=self.kwargs['pk'])
-            qs = qs.filter(local=press)
+            if press.joined is not None:
+                joined = self.request.GET.get('joined', False)
+                if joined:
+                    qs = qs.filter(Q(local=press) | Q(local2=press))
+                else:
+                    qs = qs.filter(local=press)
+            else:
+                qs = qs.filter(local=press)
         closed = self.request.GET.get('closed', None)
         if closed == "off":
             pass
@@ -172,6 +182,11 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+        set_both = self.request.POST.get('set_both', False)
+        if set_both:
+            self.object.local2 = self.object.local.joined
+        else:
+            self.object.local2 = None
         timerep = self.object.timerep
         if is_valid_param(timerep):
             timereph = timerep.seconds + timerep.microseconds / 1000000
@@ -204,6 +219,14 @@ class OrderUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if timereph is not None:
             timereph = timereph.total_seconds() / 3600
         used_parts = self.object.usedpart_set.all()
+        if self.object.local.joined is not None:
+            context['is_joined'] = True
+            if self.object.local2 is not None:
+                context['set_both'] = True
+            else:
+                context['set_both'] = False
+        else:
+            context['is_joined'] = False
         context['used_parts'] = used_parts
         context['timereph'] = timereph
         return context
