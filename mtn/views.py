@@ -59,9 +59,9 @@ class OrderListView(LoginRequiredMixin, ListView):
             if press.joined is not None:
                 joined = self.request.GET.get('joined', False)
                 if joined:
-                    qs = qs.filter(Q(local=press) | Q(local2=press))
+                    qs = qs.filter(Q(local=press) | Q(local=press.joined))
                 else:
-                    qs = qs.filter(local=press)
+                    qs = qs.filter(Q(local=press) | Q(local2=press))
             else:
                 qs = qs.filter(local=press)
         closed = self.request.GET.get('closed', None)
