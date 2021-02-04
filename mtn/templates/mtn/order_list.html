@@ -53,7 +53,7 @@
           <li class="breadcrumb-item active"> Work Orders</li>
       </ol>
     </div>
-    <h4 class="page-title">Work Orders</h4>
+    <h4 class="page-title">Work Orders ({{ object_list.count }}) </h4>
 
   {% else %}
 
@@ -65,7 +65,7 @@
           <li class="breadcrumb-item active">Orders</li>
       </ol>
     </div>
-    <h4 class="page-title">Work Orders for {{ press }}</h4>
+    <h4 class="page-title">Work Orders for {{ press }} ({{ object_list.count }})</h4>
 
   {% endif %}
 
