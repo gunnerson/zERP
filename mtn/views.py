@@ -50,6 +50,7 @@ class OrderListView(LoginRequiredMixin, ListView):
             context['count'] = self.count or 0
         context['search_exp'] = search_exp
         context['press_excl'] = press_excl
+        context['qs_count'] = self.get_queryset().count()
         return context
 
     def get_queryset(self):
