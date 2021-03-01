@@ -255,7 +255,7 @@ class MapData(RetrieveAPIView):
                 if job is None:
                     try:
                         job2 = press.joined.job()
-                    except (JobInst.DoesNotExist, Press.DoesNotExist):
+                    except (JobInst.DoesNotExist, Press.DoesNotExist, AttributeError):
                         pass
                     if job2 is None:
                         press_dict[press.pk].update({'pmd': pm_prior})
