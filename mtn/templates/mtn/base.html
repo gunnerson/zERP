@@ -21,7 +21,7 @@
     <!-- Topbar Start -->
     <nav class="navbar navbar-expand-md navbar-dark sticky-top" id="mainNavBar">
       <a class="navbar-brand" href="{% url 'mtn:index' %}">
-        <img src="https://heroku-zerp-assets.s3.us-east-2.amazonaws.com/static/img/rahco_rubber_logo-white.png" width="210" height="50" class="d-inline-block align-top" alt="">
+        <img src="{% static 'img/rahco_rubber_logo-white.png' %}" width="210" height="50" class="d-inline-block align-top" alt="">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -72,7 +72,7 @@
           {% endif %}
           <li>
             <a class="navbar-nav ml-5" href="{% url 'bugs:report-bug' %}">
-              <img src="https://heroku-zerp-assets.s3.us-east-2.amazonaws.com/static/img/bug.png" width="30" height="30" class="d-inline-block align-center" alt="">
+              <img src="{% static 'img/bug.png' %}" width="30" height="30" class="d-inline-block align-center" alt="">
             </a>
           </li>
         </ul>
