@@ -64,29 +64,33 @@ def generate_schedule(f):
         press_id = str(db_sheet.cell(row_idx, 0).value)
         fsj = db_sheet.cell(row_idx, 2).value
         ssj = db_sheet.cell(row_idx, 1).value
-        if press_id[0].isdigit():
-            press_name = 'Press ' + f'{int(press_id[:-2]):02}'
-        elif press_id[0] == 'I':
-            press_name = 'Inj ' + press_id[3]
         try:
-            press = pqs.get(pname=press_name)
-            press_dict[press] = {}
-            press_dict[press].update({'clocked1': False})
-            press_dict[press].update({'clocked2': False})
-            if is_valid_param(ssj):
-                try:
-                    jobinst = iqs.get(press=press, shift=2, date=date2)
-                except JobInst.DoesNotExist:
-                    JobInst(press=press, shift=2, date=date2).save()
-                    press_dict[press].update({'clocked2': True})
-            if is_valid_param(fsj):
-                try:
-                    jobinst = iqs.get(press=press, shift=1, date=date1)
-                except JobInst.DoesNotExist:
-                    JobInst(press=press, shift=1, date=date1).save()
-                    press_dict[press].update({'clocked1': True})
-        except Press.DoesNotExist:
-            pass
+            first_digit = press_id[0]
+            if first_digit.isdigit():
+                press_name = 'Press ' + f'{int(press_id[:-2]):02}'
+            elif first_digit == 'I':
+                press_name = 'Inj ' + press_id[3]
+            try:
+                press = pqs.get(pname=press_name)
+                press_dict[press] = {}
+                press_dict[press].update({'clocked1': False})
+                press_dict[press].update({'clocked2': False})
+                if is_valid_param(ssj):
+                    try:
+                        jobinst = iqs.get(press=press, shift=2, date=date2)
+                    except JobInst.DoesNotExist:
+                        JobInst(press=press, shift=2, date=date2).save()
+                        press_dict[press].update({'clocked2': True})
+                if is_valid_param(fsj):
+                    try:
+                        jobinst = iqs.get(press=press, shift=1, date=date1)
+                    except JobInst.DoesNotExist:
+                        JobInst(press=press, shift=1, date=date1).save()
+                        press_dict[press].update({'clocked1': True})
+            except Press.DoesNotExist:
+                pass
+        except IndexError:
+                pass
     for press in press_dict:
         if press_dict[press].get('clocked1'):
             if press.primary:
