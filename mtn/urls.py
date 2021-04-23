@@ -13,6 +13,7 @@ from .views import (
     Dt,
 )
 from invent.views import PartListView, OrderPartsListView
+from .cm import time_delay
 
 app_name = "mtn"
 
@@ -37,6 +38,7 @@ urlpatterns = [
     path('mwo/order-list/toggle/<int:pk>/<slug:func>/', repair_toggle,
          name='repair_toggle'),
     path('mwo/order/bulk-update/', bulk_update, name='bulk-update'),
+    path('time_delay/', time_delay, name='time_delay'),
     # path('mwo/pm/bulk-create/', create_pms, name='create-pms'),
     # path('mwo/pm-list/', PmListView.as_view(), name='pm-list'),
     # path('mwo/pm/<int:pk>/', PmUpdateView.as_view(), name='edit_pm'),
