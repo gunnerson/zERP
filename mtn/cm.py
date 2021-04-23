@@ -178,10 +178,11 @@ def time_delay(request):
             r2 = resistors[i2]
             impedance = r1 * r2 / (r1 + r2)
             error = abs((impedance - required_value) / required_value)
-            standart_deviation = sqrt((pow(r1 * x, 2) + pow(r2 * x, 2) / 2))
+            # standart_deviation = sqrt((pow(r1 * x, 2) + pow(r2 * x, 2) / 2))
+            deviation = r1 * x / (1 + r1 / r2) + r2 * x / (1 + r2 / r1)
             if error < best_result:
                 best_result = error
 
                 print('R1 = ', r1, ' Ohm, R2 = ', r2,
-                      ' Ohm, Impedance = ', impedance, ' Ohm, Error = ', round(error * 100, 2), '%, Deviation = ', round(standart_deviation, 4), '%')
+                      ' Ohm, Impedance = ', impedance, ' Ohm, Error = ', round(error * 100, 2), '%, Deviation = ', round(deviation, 4), '%')
     return render(request, 'mtn/index.html')
