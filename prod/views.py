@@ -69,7 +69,7 @@ def generate_schedule(f):
             if first_digit.isdigit():
                 press_name = 'Press ' + f'{int(press_id[:-2]):02}'
             elif first_digit == 'I':
-                press_name = 'Inj ' + press_id[3]
+                press_name = 'Inj ' + press_id[3,4]
             try:
                 press = pqs.get(pname=press_name)
                 press_dict[press] = {}
